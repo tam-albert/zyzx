@@ -66,6 +66,16 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     // std.log.info("response: {s}", .{body});
 }
 
+pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
+    var res = try sendRequest(allocator, userMessage);
+    defer allocator.free(res);
+    for (res) |c| {
+        std.log.info("{c}", .{c});
+    }
+    const CMD = "echo \"Hello, World!\"";
+    return CMD;
+}
+
 // pub fn sendGetRequest(allocator: std.mem.Allocator) !void {
 //     var client = std.http.Client{ .allocator = allocator };
 //     defer client.deinit();
