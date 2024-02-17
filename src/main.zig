@@ -1,94 +1,101 @@
 const std = @import("std");
-const client = @import("llm_client.zig");
-const Thread = std.Thread;
+const llm_client = @import("llm_client.zig");
 
-var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
-
-fn animationThreadFn() void {
-    const stdout = std.io.getStdOut().writer();
-    var spinner_chars = "|/-\\";
-    var index: usize = 0;
-
-    while (!should_stop.load(std.atomic.Ordering.SeqCst)) {
-        std.time.sleep(100000);
-        stdout.print("\r{c} ", .{spinner_chars[index % spinner_chars.len]}) catch {};
-        index += 1;
-    }
-    // Clear the spinner before exit
-    stdout.print("\r \r", .{}) catch {};
-}
+const stdin = std.io.getStdIn().reader();
+const stdout = std.io.getStdOut().writer();
 
 pub fn main() !void {
-    // Prep stdin and stdout
-    const stdin = std.io.getStdIn().reader();
-    const stdout_file = std.io.getStdOut().writer();
-
-    // Prep allocator
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer std.debug.assert(gpa.deinit() == .ok);
-    const allocator = gpa.allocator();
-
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
-
-    try stdout.print("\x1B[2J\x1B[H", .{}); // Clear screen and move cursor to top left
-    try stdout.print("> just type something\n", .{});
-    try bw.flush(); // Don't forget to flush!
-
-    var user_input = std.ArrayList(u8).init(allocator);
-    defer user_input.deinit();
-
-    stdin.streamUntilDelimiter(user_input.writer(), '\n', null) catch unreachable;
-
-    try stdout.print("You typed: {s}\n", .{user_input.items});
-    try bw.flush();
-
-    // Start animation thread
-    var thread = try Thread.spawn(.{}, animationThreadFn, .{});
-
-    // Make API request
-    var client_response = try client.sendRequest(allocator, user_input.items);
-    defer allocator.free(client_response);
-
-    // Stop animation
-    should_stop.store(true, std.atomic.Ordering.SeqCst);
-    thread.join();
-
-    try stdout.print("Response: {s}\n", .{client_response});
-    try bw.flush();
+    while (true) {
+        try processCommand();
+    }
 }
 
-// const std = @import("std");
-// const client = @import("llm_client.zig");
+fn processCommand() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
+    defer std.debug.assert(gpa.deinit() == .ok);
 
-// pub fn main() !void {
-//     // prep stdin and stdout
+    var repeat = true;
+    var in: [4096]u8 = undefined;
+
+    while (repeat) {
+        var natural_language = std.ArrayList(u8).init(allocator);
+        defer natural_language.deinit();
+        var argv = std.ArrayList(u8).init(allocator);
+        defer argv.deinit();
+
+        in = undefined;
+        try stdout.print(">> What can I help you with?\n>> ", .{});
+        _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+        for (in) |c| {
+            try natural_language.append(c);
+        }
+
+        var res: []const u8 = try llm_client.strip_response(allocator, natural_language.items);
+
+        for (res) |c| {
+            try argv.append(c);
+        }
+
+        try make_file(argv.items);
+        try run_sh();
+
+        in = undefined;
+        try stdout.print("Repeat? (y/n): ", .{});
+        _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+        if (in[0] != 'y') {
+            repeat = false;
+        }
+    }
+    // var token = std.mem.tokenize(u8, CMD, "\n");
+    // while (token.next()) |line| {
+    //     try argv.append(line);
+    // }
+    // try run_sh();
+}
+
+fn make_file(argv: []u8) !void {
+    var file = try std.fs.cwd().createFile("bash.sh", .{});
+    defer file.close();
+    try file.writeAll(argv);
+}
+
+fn run_sh() !void {
+    var in: [4096]u8 = undefined;
+
+    try stdout.print("Run Program? (y/n): ", .{});
+    _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+    if (in[0] != 'y') {
+        return;
+    }
+    const argv = [_][]const u8{
+        "bash",
+        "./bash.sh",
+    };
+    const alloc = std.heap.page_allocator;
+    var proc = try std.ChildProcess.exec(.{
+        .allocator = alloc,
+        .argv = &argv,
+    });
+    try stdout.print("stdout: {s}", .{proc.stdout});
+    std.log.info("stderr: {s}", .{proc.stderr});
+}
+
+// fn run_sh(argv: *std.ArrayList([]const u8)) !void {
 //     const stdin = std.io.getStdIn().reader();
-//     const stdout_file = std.io.getStdOut().writer();
+//     const stdout = std.io.getStdOut().writer();
 
-//     // prep allocator
-//     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-//     defer std.debug.assert(gpa.deinit() == .ok);
-//     const allocator = gpa.allocator();
+//     var in: [4096]u8 = undefined;
 
-//     var bw = std.io.bufferedWriter(stdout_file);
-//     const stdout = bw.writer();
-
-//     try stdout.print("\x1B[2J\x1B[H", .{}); // clear screen and move cursor to top left
-//     try stdout.print("> just type something\n", .{});
-//     try bw.flush(); // don't forget to flush!
-
-//     var user_input = std.ArrayList(u8).init(allocator);
-//     defer user_input.deinit();
-
-//     stdin.streamUntilDelimiter(user_input.writer(), '\n', null) catch unreachable;
-
-//     try stdout.print("you typed: {s}\n", .{user_input.items});
-//     try bw.flush();
-
-//     var client_response = try client.sendRequest(allocator, user_input.items);
-//     defer allocator.free(client_response);
-
-//     try stdout.print("response: {s}\n", .{client_response});
-//     try bw.flush();
+//     try stdout.print("Run Program? (y/n): ", .{});
+//     _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+//     if (in[0] != 'y') {
+//         return;
+//     }
+//     const alloc = std.heap.page_allocator;
+//     var proc = try std.ChildProcess.exec(.{
+//         .allocator = alloc,
+//         .argv = argv.items,
+//     });
+//     try stdout.print("{s}", .{proc.stdout});
 // }
