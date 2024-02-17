@@ -1,4 +1,5 @@
 const std = @import("std");
+const config = @import("config.zig");
 
 // const request_uri = "https://godsays.xyz/";
 
@@ -40,7 +41,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     var client = std.http.Client{ .allocator = allocator };
     defer client.deinit();
 
-    const uri = std.Uri.parse("https://api.openai.com/v1/chat/completions") catch unreachable;
+    const uri = std.Uri.parse(config.DOMAIN) catch unreachable;
     // const uri = std.Uri.parse("http://127.0.0.1:5000") catch unreachable;
 
     const messages = [_]Message{
@@ -67,7 +68,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     defer headers.deinit();
 
     try headers.append("Content-Type", "application/json");
-    try headers.append("Authorization", "Bearer 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");
+    try headers.append("Authorization", "Bearer " ++ config.API_KEY);
 
     var request = try client.request(.POST, uri, headers, .{});
     defer request.deinit();
@@ -95,7 +96,9 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
     var res = try sendRequest(allocator, userMessage);
     defer allocator.free(res);
-    // std.log.info("{s}", .{res});
+    // for (res) |c| {
+    //     // std.log.info("{c}", .{c});
+    // }
     const CMD = "echo \"Hello, World!\"";
     return CMD;
 }
