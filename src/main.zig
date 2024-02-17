@@ -12,9 +12,7 @@ var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0;
 
 pub fn main() !void {
-    while (true) {
-        try processCommand();
-    }
+    try processCommand();
 }
 
 fn processCommand() !void {
@@ -29,6 +27,7 @@ fn processCommand() !void {
     while (repeat) {
         var natural_language = std.ArrayList(u8).init(allocator);
         defer natural_language.deinit();
+
         var argv = std.ArrayList(u8).init(allocator);
         defer argv.deinit();
         while (true) {
@@ -172,11 +171,13 @@ fn make_file(argv: []u8) !void {
 fn run_sh() !void {
     var in: [4096]u8 = undefined;
 
+    // ask for approval
     try stdout.print("Run Program? (y/n): ", .{});
     _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
     if (in[0] != 'y') {
         return;
     }
+
     const argv = [_][]const u8{
         "bash",
         "./bash.sh",
