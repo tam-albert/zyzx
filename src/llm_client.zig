@@ -12,6 +12,25 @@ const RequestBody = struct {
     messages: []const Message,
 };
 
+const OpenAIResponseMessage = struct {
+    index: u8,
+    message: Message,
+    logprobs: ?[]const u8 = null,
+    finish_reason: []const u8,
+};
+
+const OpenAIUsageData = struct { prompt_tokens: u8, completion_tokens: u8, total_tokens: u8 };
+
+const OpenAIResponseBody = struct {
+    id: []const u8,
+    object: []const u8,
+    created: u64,
+    model: []const u8,
+    choices: []const OpenAIResponseMessage,
+    usage: OpenAIUsageData,
+    system_fingerprint: []const u8,
+};
+
 const system_message = Message{
     .role = "system",
     .content = "You are a helpful assistant.",
@@ -46,7 +65,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     defer headers.deinit();
 
     try headers.append("Content-Type", "application/json");
-    try headers.append("Authorization", "Bearer sk-Hee hee i took out my api key");
+    try headers.append("Authorization", "Bearer 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");
 
     var request = try client.request(.POST, uri, headers, .{});
     defer request.deinit();
@@ -61,7 +80,12 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
     defer allocator.free(body);
 
-    return allocator.dupe(u8, body);
+    const parsed_json = std.json.parseFromSlice(OpenAIResponseBody, allocator, body, .{}) catch unreachable;
+    defer parsed_json.deinit();
+
+    const response_body = parsed_json.value;
+
+    return allocator.dupe(u8, response_body.choices[0].message.content);
 
     // std.log.info("response: {s}", .{body});
 }
