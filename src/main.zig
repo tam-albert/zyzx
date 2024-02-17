@@ -5,9 +5,7 @@ const stdin = std.io.getStdIn().reader();
 const stdout = std.io.getStdOut().writer();
 
 pub fn main() !void {
-    while (true) {
-        try processCommand();
-    }
+    try processCommand();
 }
 
 fn processCommand() !void {
@@ -21,15 +19,21 @@ fn processCommand() !void {
     while (repeat) {
         var natural_language = std.ArrayList(u8).init(allocator);
         defer natural_language.deinit();
+
         var argv = std.ArrayList(u8).init(allocator);
         defer argv.deinit();
 
-        in = undefined;
+        // in = undefined;
         try stdout.print(">> What can I help you with?\n>> ", .{});
-        _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
-        for (in) |c| {
-            try natural_language.append(c);
-        }
+        // _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+        // for (in) |c| {
+        //     try natural_language.append(c);
+        // }
+
+        stdin.streamUntilDelimiter(natural_language.writer(), '\n', null) catch unreachable;
+
+        std.debug.print("Natural language: {s}\n", .{natural_language.items});
+        std.debug.print("---\n", .{});
 
         var res: []const u8 = try llm_client.strip_response(allocator, natural_language.items);
 
@@ -63,11 +67,13 @@ fn make_file(argv: []u8) !void {
 fn run_sh() !void {
     var in: [4096]u8 = undefined;
 
+    // ask for approval
     try stdout.print("Run Program? (y/n): ", .{});
     _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
     if (in[0] != 'y') {
         return;
     }
+
     const argv = [_][]const u8{
         "bash",
         "./bash.sh",

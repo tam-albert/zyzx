@@ -56,6 +56,8 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     // var buf: [16384]u8 = undefined;
     // var fba = std.heap.FixedBufferAllocator.init(&buf);
     // const fba_allocator = fba.allocator();
+
+    // try std.json.stringify(requestBody, .{}, std.io.getStdOut().writer());
     // const jsonString = try std.json.stringifyAlloc(fba_allocator, requestBody, .{});
     // defer fba_allocator.free(jsonString);
 
@@ -73,12 +75,14 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
 
     try request.start();
     try std.json.stringify(requestBody, .{}, request.writer());
-    // std.debug.print("Serialized JSON: {s}\n", .{request.writer().buffer});
+
     try request.finish();
     try request.wait();
 
     const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
     defer allocator.free(body);
+
+    std.debug.print("response: {s}\n", .{body});
 
     const parsed_json = std.json.parseFromSlice(OpenAIResponseBody, allocator, body, .{}) catch unreachable;
     defer parsed_json.deinit();
@@ -86,16 +90,12 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     const response_body = parsed_json.value;
 
     return allocator.dupe(u8, response_body.choices[0].message.content);
-
-    // std.log.info("response: {s}", .{body});
 }
 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
     var res = try sendRequest(allocator, userMessage);
     defer allocator.free(res);
-    for (res) |c| {
-        std.log.info("{c}", .{c});
-    }
+    std.log.info("{s}", .{res});
     const CMD = "echo \"Hello, World!\"";
     return CMD;
 }
