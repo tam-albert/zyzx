@@ -82,7 +82,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
     defer allocator.free(body);
 
-    std.debug.print("response: {s}\n", .{body});
+    // std.debug.print("response: {s}\n", .{body});
 
     const parsed_json = std.json.parseFromSlice(OpenAIResponseBody, allocator, body, .{}) catch unreachable;
     defer parsed_json.deinit();
@@ -95,7 +95,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
     var res = try sendRequest(allocator, userMessage);
     defer allocator.free(res);
-    std.log.info("{s}", .{res});
+    // std.log.info("{s}", .{res});
     const CMD = "echo \"Hello, World!\"";
     return CMD;
 }

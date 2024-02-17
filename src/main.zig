@@ -4,6 +4,26 @@ const llm_client = @import("llm_client.zig");
 const stdin = std.io.getStdIn().reader();
 const stdout = std.io.getStdOut().writer();
 
+var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
+
+fn waitingAnimation() void {
+    const colors = [_][]const u8{ "30", "31", "32", "33", "34", "35", "36", "37" };
+    var index: usize = 0;
+
+    while (!should_stop.load(std.atomic.Ordering.SeqCst)) {
+        std.time.sleep(500000);
+        stdout.print("\r \r", .{}) catch {};
+        for (0..index) |i| {
+            stdout.print("\x1B[{s}m•\x1B[0m", .{colors[i]}) catch {};
+        }
+        index += 1;
+        index %= colors.len;
+    }
+
+    // Clear spinner before exit
+    stdout.print("\r \r", .{}) catch {};
+}
+
 pub fn main() !void {
     try processCommand();
 }
@@ -32,10 +52,12 @@ fn processCommand() !void {
 
         stdin.streamUntilDelimiter(natural_language.writer(), '\n', null) catch unreachable;
 
-        std.debug.print("Natural language: {s}\n", .{natural_language.items});
-        std.debug.print("---\n", .{});
+        var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
 
         var res: []const u8 = try llm_client.strip_response(allocator, natural_language.items);
+
+        should_stop.store(true, std.atomic.Ordering.SeqCst);
+        thread.join();
 
         for (res) |c| {
             try argv.append(c);
