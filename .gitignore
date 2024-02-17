@@ -1,5 +1,4 @@
 zig-cache/
 zig-out/
 src/config.zig
-.bash.sh
-zig-out/
+bash.sh
