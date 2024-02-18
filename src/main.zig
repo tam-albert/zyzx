@@ -7,7 +7,8 @@ const stdout = std.io.getStdOut().writer();
 
 var context_cnt: u8 = 0;
 var max_contexts: u8 = 0;
-var verbose: bool = true;
+var verbose: bool = false;
+var skip_query: bool = false;
 
 var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0; //index of the next context to be added
@@ -47,6 +48,7 @@ fn processCommand() !void {
     var context: [40960]u8 = undefined;
 
     while (true) {
+        skip_query = false;
         var needUserInput: bool = true;
 
         var request = std.ArrayList(u8).init(allocator);
@@ -97,7 +99,7 @@ fn processCommand() !void {
                 try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
                 const error_msg = try parse_response(&in);
                 if (error_msg != null) {
-                    try stdout.print("Error with input, please try again\n>> ", .{});
+                    try stdout.print("\n\x1B[38;5;124m\x1B[1mError with input, please try again\n", .{});
                     continue;
                 }
                 break;
@@ -115,6 +117,7 @@ fn processCommand() !void {
                 if (c == 0) break;
             }
         }
+        if (skip_query) continue;
 
         // var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
 
@@ -144,7 +147,7 @@ fn processCommand() !void {
         // thread.join();
 
         make_file(argv.items, !codeBlock) catch |err| {
-            try stdout.print("Error Creating File: {}\n", .{err});
+            try stdout.print("\x1B[38;5;124m\x1B[1mError Creating File: {}\n", .{err});
         };
 
         if (codeBlock) {
@@ -251,10 +254,12 @@ fn parse_response(in: *[4096]u8) !?[]const u8 {
                 vflag = true;
             } else if (in[src + 1] == 'h' and (in[src + 2] == ' ' or in[src + 2] == '\n')) {
                 src += 2;
-                try stdout.print("Flags:\n", .{});
-                try stdout.print("    -c<number: N> - queries LLM with the last N exchanges as additional context. Enter no number to continue with messages before.\n", .{});
-                try stdout.print("    -v - query responses will be more verbose and will come with an explanation in addition to shell code.\n", .{});
-                try stdout.print("All flags must be placed before natural language queries.\n", .{});
+                try stdout.print("\n\x1B[38;5;69mFlags:\n", .{});
+                try stdout.print("    \x1B[38;5;99m\x1B[1m-c(ontinue)\x1B[22m\x1B[38;5;69m - continue querying with previous chain of messages. a number can be entered after 'c' to specify number of previous messages as context.\n", .{});
+                try stdout.print("    \x1B[38;5;99m\x1B[1m-v(erbose)\x1B[22m\x1B[38;5;69m - toggles verbose setting. query responses will come with an explanation in addition to shell code. this setting is currently {s}.\n", .{if (verbose) "on" else "off"});
+                try stdout.print("    \x1B[38;5;99m\x1B[1m-h(elp)\x1B[22m\x1B[38;5;69m - this page\n", .{});
+                try stdout.print("All flags must be placed before natural language queries.\n\x1B[0m", .{});
+                skip_query = true;
             } else {
                 return "invalid flag";
             }
@@ -278,7 +283,7 @@ fn make_file(argv: []u8, useless: bool) !void {
     defer file.close();
     try file.writeAll(argv);
     var it = std.mem.tokenizeSequence(u8, argv, "\n");
-    if (verbose and !useless) {
+    if (!useless) {
         try stdout.print("\n\x1b[38;5;216m╭─\x1b[38;5;160m\x1b[3m\x1b[48;5;224m bash.sh \x1b[0m\x1b[38;5;216m ────────────────────────────────────────────────────────────────────╮\n>\x1b[0m", .{});
         while (it.next()) |line| {
             try stdout.print("\n\x1b[38;5;216m>\x1b[0m {s}", .{line});
@@ -289,48 +294,102 @@ fn make_file(argv: []u8, useless: bool) !void {
 
 fn run_sh(allocator: std.mem.Allocator, assistantResponse: []const u8) !void {
     var in: [4096]u8 = undefined;
+    if (!verbose) {
+        while (true) {
+            // ask for approval
+            try stdout.print("⚠️  \x1b[1m\x1b[38;5;214mrun bash.sh?\x1b[0m ⚠️  (\x1b[1;32m(y)es\x1b[0m/\x1b[1;31m(n)o\x1b[0m/\x1b[1;34me(x)plain\x1b[0m): ", .{});
+            _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+            if (in[0] == 'n') {
+                return;
+            } else if (in[0] == 'y') {
+                const argv = [_][]const u8{
+                    "bash",
+                    "./bash.sh",
+                };
+                const alloc = std.heap.page_allocator;
+                var child = std.ChildProcess.init(&argv, alloc);
+                child.stdin_behavior = .Ignore;
+                child.stdout_behavior = .Inherit;
+                child.stderr_behavior = .Inherit;
 
-    while (true) {
-        // ask for approval
-        try stdout.print("⚠️  \x1b[1m\x1b[38;5;214mrun bash.sh?\x1b[0m ⚠️  (\x1b[1;32m(y)es\x1b[0m/\x1b[1;31m(n)o\x1b[0m/\x1b[1;34me(x)plain\x1b[0m): ", .{});
-        _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
-        if (in[0] == 'n') {
-            return;
-        } else if (in[0] == 'y') {
-            const argv = [_][]const u8{
-                "bash",
-                "./bash.sh",
-            };
-            const alloc = std.heap.page_allocator;
-            var child = std.ChildProcess.init(&argv, alloc);
-            child.stdin_behavior = .Ignore;
-            child.stdout_behavior = .Inherit;
-            child.stderr_behavior = .Inherit;
+                child.spawn() catch {
+                    try stdout.print("\x1B[38;5;124m\x1B[1mThere was an error while launching this command. \x1B[0m", .{});
+                };
 
-            child.spawn() catch {
-                try stdout.print("\x1B[38;5;124m\x1B[1mThere was an error while launching this command. \x1B[0m", .{});
-            };
+                const term = try child.wait();
+                switch (term) {
+                    .Exited => |code| {
+                        if (code == 0) {
+                            try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+                        } else {
+                            try stdout.print("\x1B[38;5;124m\x1B[1mProgram exited unexpectedly with code {} \x1B[0m", .{code});
+                        }
+                    },
+                    else => {
+                        try stdout.print("\x1B[38;5;124m\x1B[1mError while running :( \x1B[0m", .{});
+                    },
+                }
+                // var proc = try std.ChildProcess.exec(.{
+                //     .allocator = alloc,
+                //     .argv = &argv,
+                // });
+                // try stdout.print("\n{s}", .{proc.stdout});
+                // if (child.stderr.len > 0) {
+                //     try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{child.stderr});
+                // } else {
+                //     try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+                // }
+                return;
+            } else if (in[0] == 'x') {
+                try stdout.print("\n\x1b[38;5;123m──\x1b[38;5;18m\x1b[3m\x1b[48;5;159m What does this do? \x1b[0m\x1b[38;5;123m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
+                _ = try openai_agent.explainCommand(allocator, assistantResponse, true);
+                try stdout.print("\n", .{});
+                try stdout.print("\n\x1b[38;5;123m────────────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
+            } else continue;
+        }
+    } else {
+        // verbose mode
+        try stdout.print("\n\x1b[38;5;123m──\x1b[38;5;18m\x1b[3m\x1b[48;5;159m What does this do? \x1b[0m\x1b[38;5;123m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
+        _ = try openai_agent.explainCommand(allocator, assistantResponse, true);
+        try stdout.print("\n", .{});
+        try stdout.print("\n\x1b[38;5;123m────────────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
+        while (true) {
+            // ask for approval
+            try stdout.print("⚠️  \x1b[1m\x1b[38;5;214mrun bash.sh?\x1b[0m ⚠️  (\x1b[1;32m(y)es\x1b[0m/\x1b[1;31m(n)o\x1b[0m): ", .{});
+            _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+            if (in[0] == 'n') {
+                return;
+            } else if (in[0] == 'y') {
+                const argv = [_][]const u8{
+                    "bash",
+                    "./bash.sh",
+                };
+                const alloc = std.heap.page_allocator;
+                var child = std.ChildProcess.init(&argv, alloc);
+                child.stdin_behavior = .Ignore;
+                child.stdout_behavior = .Inherit;
+                child.stderr_behavior = .Inherit;
 
-            const term = try child.wait();
-            switch (term) {
-                .Exited => |code| {
-                    if (code == 0) {
-                        try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
-                    } else {
-                        try stdout.print("\x1B[38;5;124m\x1B[1mProgram exited unexpectedly with code {} \x1B[0m", .{code});
-                    }
-                },
-                else => {
-                    try stdout.print("\x1B[38;5;124m\x1B[1mError while running :( \x1B[0m", .{});
-                },
-            }
-            return;
-        } else if (in[0] == 'x') {
-            try stdout.print("\n\x1b[38;5;123m──\x1b[38;5;18m\x1b[3m\x1b[48;5;159m What does this do? \x1b[0m\x1b[38;5;123m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
-            _ = try openai_agent.explainCommand(allocator, assistantResponse, true);
-            try stdout.print("\n", .{});
-            try stdout.print("\n\x1b[38;5;123m────────────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
-        } else continue;
+                child.spawn() catch {
+                    try stdout.print("\x1B[38;5;124m\x1B[1mThere was an error while launching this command. \x1B[0m", .{});
+                };
+
+                const term = try child.wait();
+                switch (term) {
+                    .Exited => |code| {
+                        if (code == 0) {
+                            try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+                        } else {
+                            try stdout.print("\x1B[38;5;124m\x1B[1mProgram exited unexpectedly with code {} \x1B[0m", .{code});
+                        }
+                    },
+                    else => {
+                        try stdout.print("\x1B[38;5;124m\x1B[1mError while running :( \x1B[0m", .{});
+                    },
+                }
+                return;
+            } else continue;
+        }
     }
 }
 
