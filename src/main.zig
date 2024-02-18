@@ -6,10 +6,10 @@ const stdout = std.io.getStdOut().writer();
 
 var context_cnt: u8 = 0;
 var max_contexts: u8 = 0;
-var verbose: bool = false;
+var verbose: bool = true;
 
 var contexts: [10][4096]u8 = undefined;
-var c_index: u8 = 0;
+var c_index: u8 = 0; //index of the next context to be added
 
 pub fn main() !void {
     try processCommand();
@@ -20,20 +20,19 @@ fn processCommand() !void {
     const allocator = gpa.allocator();
     defer std.debug.assert(gpa.deinit() == .ok);
 
-    var repeat = true;
     var in: [4096]u8 = undefined;
     var context: [40960]u8 = undefined;
 
-    while (repeat) {
-        var natural_language = std.ArrayList(u8).init(allocator);
-        defer natural_language.deinit();
+    while (true) {
+        var request = std.ArrayList(u8).init(allocator);
+        defer request.deinit();
 
         var argv = std.ArrayList(u8).init(allocator);
         defer argv.deinit();
         while (true) {
             in = undefined;
             try stdout.print("What can I help you with?\n", .{});
-            _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+            _ = try stdin.readUntilDelimiter(&in, '\n');
             const error_msg = parse_response(&in);
             if (error_msg != null) {
                 try stdout.print("Error with input, please try again\n", .{});
@@ -43,41 +42,29 @@ fn processCommand() !void {
         }
 
         for (in) |c| {
-            try stdout.print("{c}", .{c});
-            if (c == '\n') {
-                break;
-            }
+            try request.append(c);
+            if (c == '\n') break;
         }
-        std.log.info("input: {}", .{context_cnt});
-        for (in) |c| {
-            try natural_language.append(c);
-        }
-        try natural_language.append('\n');
 
         gather_context(&context);
 
         for (context) |c| {
-            try natural_language.append(c);
-            try stdout.print("{c}", .{c});
+            try request.append(c);
             if (c == 0) break;
         }
 
-        var res: []const u8 = try llm_client.strip_response(allocator, natural_language.items);
+        std.log.info("INPUT: {s}", .{request.items});
+
+        var res = try llm_client.strip_response(allocator, request.items);
+        defer allocator.free(res);
         add_context(res);
 
-        for (res) |c| {
-            try argv.append(c);
-        }
+        // for (res) |c| {
+        //     try argv.append(c);
+        // }
 
-        try make_file(argv.items);
-        try run_sh();
-
-        in = undefined;
-        try stdout.print("Repeat? (y/n): ", .{});
-        _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
-        if (in[0] != 'y') {
-            repeat = false;
-        }
+        // try make_file(argv.items);
+        // try run_sh();
     }
 }
 
@@ -91,7 +78,7 @@ fn gather_context(context: *[40960]u8) void {
         }
     }
 
-    for (1..@min(context_cnt, max_contexts) + 1) |i| {
+    for (1..context_cnt + 1) |i| {
         context[src] = @as(u8, @truncate(i)) + '0';
         context[src + 1] = ' ';
         src += 2;
@@ -114,6 +101,7 @@ fn add_context(res: []const u8) void {
         contexts[c_index][src] = c;
         src += 1;
     }
+    //increment the index and add null terminator to the context
     c_index = (c_index + 1) % 10;
     contexts[c_index][src] = 0;
     max_contexts += 1;
@@ -122,40 +110,50 @@ fn add_context(res: []const u8) void {
 fn parse_response(in: *[4096]u8) ?[]const u8 {
     var src: u32 = 0;
     var dst: u32 = 0;
-    var flag: bool = false;
+    var cflag: bool = false;
+    var vflag: bool = false;
     while (in[src] == ' ') {
         src += 1;
     }
     while (in[src] != '\n') {
-        if (in[src] == '-' and !flag) {
+        if (in[src] == '-') {
             if (src + 2 >= 4096) {
                 return "buffer overflow";
             }
-            if (in[src + 1] == 'c' and in[src + 2] == ' ') {
+            if (!cflag and in[src + 1] == 'c' and (in[src + 2] == ' ' or in[src + 2] == '\n')) {
                 src += 2;
                 context_cnt += 1;
                 while (in[src] == ' ') {
                     src += 1;
                 }
-            } else if ((in[src + 1] >= '0' and in[src + 1] <= '9') and in[src + 2] == ' ') {
-                var num: u8 = in[src + 1] - '0';
-                context_cnt = num;
-                src += 2;
+                cflag = true;
+            } else if (!cflag and in[src + 1] == 'c' and (in[src + 2] >= '0' and in[src + 2] <= '9') and (in[src + 3] == ' ' or in[src + 3] == '\n')) {
+                var num: u8 = in[src + 2] - '0';
+                context_cnt = @min(num, max_contexts);
+                src += 3;
                 while (in[src] == ' ') {
                     src += 1;
                 }
+                cflag = true;
+            } else if (!vflag and in[src + 1] == 'v' and (in[src + 2] == ' ' or in[src + 2] == '\n')) {
+                src += 2;
+                verbose = !verbose;
+                while (in[src] == ' ') {
+                    src += 1;
+                }
+                vflag = true;
             } else {
-                return "bad flag";
+                return "invalid flag";
             }
-            flag = true;
         } else {
             in[dst] = in[src];
             dst += 1;
             src += 1;
-        }
-        if (!flag) {
-            flag = true;
-            context_cnt = 0;
+            if (!cflag) {
+                context_cnt = 0;
+            }
+            cflag = true;
+            vflag = true;
         }
     }
     in[dst] = '\n';
@@ -166,6 +164,11 @@ fn make_file(argv: []u8) !void {
     var file = try std.fs.cwd().createFile("bash.sh", .{});
     defer file.close();
     try file.writeAll(argv);
+    if (verbose) {
+        try stdout.print("--bash.sh ----------------------------------------\n", .{});
+        try stdout.writeAll(argv);
+        try stdout.print("\n--------------------------------------------------\n", .{});
+    }
 }
 
 fn run_sh() !void {

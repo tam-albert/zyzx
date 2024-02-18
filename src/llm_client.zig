@@ -80,7 +80,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     try request.finish();
     try request.wait();
 
-    const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
+    const body = request.reader().readAllAlloc(allocator, 40960) catch unreachable;
     defer allocator.free(body);
 
     std.debug.print("response: {s}\n", .{body});
@@ -96,11 +96,10 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
     var res = try sendRequest(allocator, userMessage);
     defer allocator.free(res);
-    // for (res) |c| {
-    //     std.log.info("{c}", .{c});
-    // }
-    const CMD = "echo \"Hello, World!\"";
-    return CMD;
+    std.log.info("{s}", .{res});
+    // const CMD = "echo \"HELLO WORLD\"";
+    // return CMD;
+    return allocator.dupe(u8, res);
 }
 
 // pub fn sendGetRequest(allocator: std.mem.Allocator) !void {
