@@ -1,5 +1,6 @@
 const std = @import("std");
 const llm_client = @import("llm_client.zig");
+const openai_agent = @import("openai_agent.zig");
 
 const stdin = std.io.getStdIn().reader();
 const stdout = std.io.getStdOut().writer();
@@ -32,7 +33,8 @@ fn waitingAnimation() void {
 }
 
 pub fn main() !void {
-    try processCommand();
+    try openai_agent.processCommandUsingAgent();
+    // try processCommand();
 }
 
 fn processCommand() !void {
