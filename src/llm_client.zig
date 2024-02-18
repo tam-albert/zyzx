@@ -20,7 +20,7 @@ const OpenAIResponseMessage = struct {
     finish_reason: []const u8,
 };
 
-const OpenAIUsageData = struct { prompt_tokens: u8, completion_tokens: u8, total_tokens: u8 };
+const OpenAIUsageData = struct { prompt_tokens: u64, completion_tokens: u64, total_tokens: u64 };
 
 const OpenAIResponseBody = struct {
     id: []const u8,
@@ -83,7 +83,7 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
     const body = request.reader().readAllAlloc(allocator, 40960) catch unreachable;
     defer allocator.free(body);
 
-    // std.debug.print("response: {s}\n", .{body});
+    std.debug.print("response: {s}\n", .{body});
 
     const parsed_json = std.json.parseFromSlice(OpenAIResponseBody, allocator, body, .{}) catch unreachable;
     defer parsed_json.deinit();
