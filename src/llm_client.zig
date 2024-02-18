@@ -1,5 +1,8 @@
 const std = @import("std");
 const config = @import("config.zig");
+const llms = @import("llm_client.zig");
+const openai_prompts = @import("openai_prompts.zig");
+const openai_agent = @import("openai_agent.zig");
 
 pub const Message = struct {
     role: []const u8,
@@ -123,11 +126,19 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
 }
 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
-    var res = try sendRequest(allocator, userMessage);
+    // var res = try sendRequest(allocator, userMessage);
+    const userMessage2 = llms.Message{
+        .role = "user",
+        .content = userMessage,
+    };
+
+    const messageHistory = [_]llms.Message{
+        openai_prompts.RAWDOG_PROMPT,
+        userMessage2,
+    };
+    var res = try llms.sendOpenaiRequest(allocator, &messageHistory);
     defer allocator.free(res);
-    std.log.info("{s}", .{res});
-    // const CMD = "echo \"HELLO WORLD\"";
-    // return CMD;
+    // std.log.info("{s}", .{res});
     return allocator.dupe(u8, res);
 }
 
