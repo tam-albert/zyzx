@@ -60,12 +60,26 @@ export default function Home() {
             </p>
 
             <p>
-              During all stages, we used QLoRA for fine-tuning, which was a good
-              fit because our model was heavily quantized.
+              The results from the first stage of fine-tuning led us to believe
+              that we could further improve performance with another round of
+              fine-tuning. We did not have more data, so we decided to generate
+              more. We concatenated together and sanitized our .zsh history
+              files and used this as a "high-quality" dataset. Every single
+              command (roughly 200) was verified by human, so we knew that this
+              set of data was a good starting point for generating data. In
+              conjunction with examples from the original training set, we fed
+              these into GPT to generate synthetic labels, and also entirely new
+              synthetic pairs of data. The result was a synthetic dataset of
+              around 10k more pairs of bash commands and their natural language
+              counterparts.
             </p>
+
             <div className={classes.flex}>
-              <img src="/images/pipeline.png" width={500}></img>
+              <img src="/images/pipeline.png" width={600}></img>
+              <i>Fine-tuning pipeline</i>
             </div>
+
+            <div>...</div>
           </div>
         </div>
       </div>
