@@ -1,0 +1,24 @@
+history > output.txt
+cd /usr/bin
+echo $PATH
+ls
+ls -a
+history 0
+python3 --version
+cd ~
+cd ..
+node --version
+cd .
+cd ~/Desktop/hackmit
+cd Desktop
+go version
+clear
+go help vcs
+cd ~/Desktop
+history
+cd ../..
+cd
+go help
+echo /bin/zsh
+export PATH="/Downloads:$PATH"\n
+node -v

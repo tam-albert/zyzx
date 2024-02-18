@@ -1,0 +1,165 @@
+ls /usr/bin/
+cowsay zsh>fish
+exit
+which pip
+echo -n $CONTAINER_ID | wc -m
+cd ~/Desktop/mit_classes/6.1060/project4_AmarBot
+pwd
+tree -H . -D -c
+cd ../..
+cowsay -p ihi
+cd ~/desktop/mit_classes/notes/notes
+ls -lrt
+tree -d -I 'node_modules|venv'
+cd $ZSH_CUSTOM
+cal february 2024
+echo $PATH
+tree -D -c
+dig CNAME pigeon.hackmit.org +short
+which aws
+host -a hackmit.org
+pbpaste
+tree -H dist
+tree -D --timefmt="%b %d %Y %R"
+uname
+tree -I "node_modules/*"
+history
+go help vcs
+cat test.c
+ls -laD '%MMM'
+nslookup my.hackmit.org
+dig www.azliu.cc any
+ls -l
+cd ..
+export npm_config_python=/path/to/python
+cd ${NVIM}/LuaSnip
+spicetify config current_theme THEME_NAME
+cd /usr/local
+tree -H . -I "index.html|*.aux|*.fls|*.out|*.pre|*.synctex*" -D --timefmt="%b %d %Y %R" --charset utf-8 -T "Test" > index.html
+tree -d
+vi --version
+/Users/andrew/Desktop/mit_classes/6.7900/proj/pytorch-AdaIN/input/style-art/rename-images.sh; exit
+ls -laD '%b %d %Y %R'
+docker ps
+CONTAINER_ID="(docker container ls | grep -i "ballot-backend" | awk '{print $1}')"
+cd ~/Desktop
+python3 --version
+dig ekzhang.com cname
+history > output.txt
+cd ~/Desktop/mit_classes/notes
+cd ~/Desktop/mit_classes/6.5660
+which brew
+ls
+$CILK_NWORKERS
+python3 unet.py | pbcopy
+dig www.azliu.cc +nostats +nocomments +nocmd
+more
+$CONTAINER_ID | awk '{print length}'
+cd /home
+ls -laD '%ddd'
+spicetify config current_theme Ziro
+docker container ls | grep -i ballot-backend | awk 1
+tree -H . -I "index.html|*.aux" -D --timefmt="%b %d %Y %R" --charset utf-8 -T "Test" > index.html
+dig www.ekzhang.com any
+echo ${NVIMRC}
+export PATH="/Downloads:$PATH"\n
+cd ~/.config/spicetify/Themes
+go version
+dig hackmit.org CNAME
+dig MX hackmit.org +short
+cd ~/.zsh_sessions
+echo $ZSHRC
+host bore.pub
+cal january 2024
+tree -H . -D
+cd /usr/local/
+dig bore.pub
+dig +noall +answer www.azliu.cc
+ls -ls /usr/bin/python*
+dig www.ekzhang.com cname
+cd ~/Dotfiles/.config/zathura
+if (($len == 12)); then echo "hi"; fi
+cd ~/Desktop/mit_classes
+python --version
+aa
+CILK_NWORKERS=1
+uname -p
+ls -laD '%Mon'
+cd ~/torch
+dig hackmit.org
+ls -a
+nslookup -type=cname www.ekzhang.com
+cd ~/Desktop/mit_classes/6.8611
+tree -C
+which pip3
+go help
+cd ~/Desktop/mit_classes/6.8611/hw3
+cd /usr/local/bin
+cowsay "hi"
+cd ~/Dotfiles/.config/latexmk
+echo $CONTAINER_ID
+cd ~/Downloads/
+cd . .
+tree -H . > index.html
+tree -D
+len=$(echo -n $CONTAINER_ID | wc -m)
+tree -H . -I "index.html" -Dc
+clear
+source /Users/andrew/Desktop/mit_classes/6.7900/proj/pytorch-AdaIN/venv/bin/activate
+cd Desktop
+pyenv install --list
+cd .
+LS
+leave 0316
+dig +noall +answer azliu.cc
+echo $len>12
+echo {#$CONTAINER_ID}
+nslookup -type=cname www.azliu.cc
+node --version
+node -v
+find . -inum 28709373
+dig MX my.hackmit.org +short
+cd ~/desktop
+cowsay lllll
+which aws\
+export OPENAI_API_KEY="esecret_s72mkg4giez16zfuhfcdp54ajq"
+tree -H . -I 'index.html' > index.html
+make -v
+cd ~/.config/zathura
+host 3.92.255.125
+ls -laD '%b'
+nslookup -q=cname google.com
+dig MX my/hackmit.org +short
+bore --help
+ulimit -n 1024
+aa --help
+cd /usr/bin
+cd ~/.oh-my-zsh/
+cd ~/Desktop/hackmit/dev-workshop/server
+history 0
+tree -H . -I 'index.html' -D --timefmt='%b %d %Y %R' --charset utf-8 -T 'mit-notes' > index.html && cd ..
+dig www.azliu.cc
+python3.10 --version
+ls /usr/local/include
+ls /usr/bin
+echo /bin/zsh
+tree -H . -I "index.html" -D --timefmt="%b %d %Y %R" --charset utf-8 -T "Test" > index.html
+tree -D --timefmt="%b %d %y %R"
+cd ~
+cd ~/.oh-my-zsh/custom/
+cd ~/Desktop/hackmit
+cowsay hello
+export OPENAI_BASE_URL="https://api.endpoints.anyscale.com/v1"
+tree -H . -I "index.html"
+dig hackmit.com
+echo out.txt
+leave 1
+cd
+\
+fc -l -n 1
+fortune | cowsay -f cheese
+cal 2023
+sed '$d' index.html
+cd ~/Desktop/mit_classes/18.615
+cd ~/Dotfiles/
+tree -I node_nodules
