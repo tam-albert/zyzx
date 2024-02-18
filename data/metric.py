@@ -3,8 +3,10 @@ import json
 import tqdm
 import random
 import csv
+import requests
 
 client = OpenAI(api_key="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")
+ENDPOINT = "https://17e5469d8a58.ngrok.app"
 
 
 def gen_message(query):
@@ -23,19 +25,35 @@ def gen_message(query):
     return response.choices
 
 
+def gen_message_mistral(query):
+    body = {"model": "1", "query": query}
+    response = requests.post(
+        ENDPOINT + f"/generate_many_code",
+        headers={"content-type": "application/json"},
+        data=json.dumps(body),
+    )
+    if (
+        response.status_code != 200
+        or response.headers["Content-Type"] != "application/json"
+    ):
+        print(f"Error: {response.status_code}")
+        return None
+    res_json = response.json()
+    return res_json["message"]
+
+
 data = []
-with open("validation.jsonl", "r") as file:
-    file_contents = file.read().splitlines()[250:]
+with open("/Users/andrew/jsonl/validation.jsonl", "r") as file:
+    file_contents = file.read().splitlines()[:]
     for i, test in tqdm.tqdm(enumerate(file_contents), total=len(file_contents)):
         test = json.loads(test)
-        responses = gen_message(test["input"])
+        responses = gen_message_mistral(test["input"])
+        responses = eval(responses)
         for res in responses:
-            total_logprob = 0
-            for token in res.logprobs.content:
-                total_logprob += token.logprob
-            data.append([i, total_logprob, test["output"], res.message.content])
-
-        if i % 50 == 0:
+            idx = res.find("[/INST]")
+            data.append([i, test["input"], test["output"], res[idx:]])
+        print(i)
+        if i % 1 == 0:
             csv_file = "data.csv"
             with open(csv_file, "a") as file:
                 writer = csv.writer(file)

@@ -22,8 +22,7 @@ export default function Home() {
           </div>
           <div className={`${classes.blogContent}`}>
             <div className={`${classes.flex}`}>
-              TODO: insert a scenic horizontal image here
-              <img src="/images/terminal.png" alt="term" height={400}></img>
+              <img src="/images/terminal.png" alt="term" width={700}></img>
             </div>
             <p>
               Our goal with this project was to address the issue of a lack of a
@@ -45,17 +44,17 @@ export default function Home() {
                   Faster tooling and development, compared to C/C++.
                 </span>{" "}
                 Building our project on Zig was incredibly smooth; despite the
-                language's relatively new status, its build ecosystem, language
-                server, and more felt mature and did not become pain points
-                during our project.
+                language&apos;s relatively new status, its build ecosystem,
+                language server, and more felt mature and did not become pain
+                points during our project.
               </li>
               <li>
                 <span className={`${classes.bold}`}>
                   Performance and safety.
                 </span>{" "}
-                Zig's performance and safety features were a big draw for us. We
-                wanted to build a tool that was fast and safe, and Zig seemed
-                like the perfect fit for this.
+                Zig&apos;s performance and safety features were a big draw for
+                us. We wanted to build a tool that was fast and safe, and Zig
+                seemed like the perfect fit for this.
               </li>
               <li>
                 <span className={`${classes.bold}`}>
@@ -70,10 +69,10 @@ export default function Home() {
 
             <h1>Model</h1>
             <p>
-              The LLM behind the scenes is a heavily fine-tuned Mistral AI's
-              Mixtral 8x7B mixture of experts model. We chose to focus on this
-              model because it is well known to be one the best, if not the
-              best, generally capable models for its size.
+              The LLM behind the scenes is a heavily fine-tuned Mistral
+              AI&apos;s Mixtral 8x7B mixture of experts model. We chose to focus
+              on this model because it is well known to be one the best, if not
+              the best, generally capable models for its size.
             </p>
             <p>
               Our fine-tuning process was split into two stages. During the
@@ -111,9 +110,9 @@ export default function Home() {
               that we could further improve performance with another round of
               fine-tuning. We did not have more data, so we decided to generate
               more synthetically. We concatenated together and sanitized our
-              .zsh history files and used this as a "high-quality" dataset.
-              Every single command (roughly 200) was verified by human, so we
-              knew that this set of data was a good starting point for
+              .zsh history files and used this as a &quot;high-quality&quot;
+              dataset. Every single command (roughly 200) was verified by human,
+              so we knew that this set of data was a good starting point for
               generating data. In conjunction with examples from the original
               training set, we fed these into GPT to generate synthetic labels,
               and also entirely new synthetic pairs of data. The result was a
