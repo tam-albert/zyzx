@@ -1,5 +1,8 @@
 const std = @import("std");
 const config = @import("config.zig");
+const llms = @import("llm_client.zig");
+const openai_prompts = @import("openai_prompts.zig");
+const openai_agent = @import("openai_agent.zig");
 
 pub const Message = struct {
     role: []const u8,
@@ -52,7 +55,7 @@ const OpenAIStreamingResponseBody = struct {
     choices: []const OpenAIStreamingResponseChoice,
 };
 
-pub fn sendOpenAIStreamingRequest(allocator: std.mem.Allocator, writer: anytype, messageHistory: []const Message) !void {
+pub fn sendOpenAIStreamingRequest(allocator: std.mem.Allocator, writer: anytype, messageHistory: []const Message) ![]const u8 {
     var client = std.http.Client{ .allocator = allocator };
     defer client.deinit();
 
@@ -79,6 +82,9 @@ pub fn sendOpenAIStreamingRequest(allocator: std.mem.Allocator, writer: anytype,
     try std.json.stringify(requestBody, .{}, request.writer());
     try request.finish();
     try request.wait();
+
+    var final_response = std.ArrayList(u8).init(allocator);
+    defer final_response.deinit();
 
     while (true) {
         var buffer: [10240]u8 = undefined;
@@ -108,6 +114,7 @@ pub fn sendOpenAIStreamingRequest(allocator: std.mem.Allocator, writer: anytype,
 
                     const response_chunk = parsed_json.value.choices[0].delta.content orelse "";
                     try writer.writeAll(response_chunk);
+                    try final_response.appendSlice(response_chunk);
                     // std.debug.print("Chunk {d}: {s}\n", .{ i, response_chunk });
 
                     event_start = event_end + "\n\n".len;
@@ -119,6 +126,8 @@ pub fn sendOpenAIStreamingRequest(allocator: std.mem.Allocator, writer: anytype,
             }
         }
     }
+
+    return final_response.toOwnedSlice();
 }
 
 pub fn sendOpenaiRequest(allocator: std.mem.Allocator, messageHistory: []const Message) ![]const u8 {
@@ -161,15 +170,37 @@ pub fn sendOpenaiRequest(allocator: std.mem.Allocator, messageHistory: []const M
     return allocator.dupe(u8, response_body.choices[0].message.content);
 }
 
-pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
-    const messageHistory = [_]Message{
-        .{ .role = "system", .content = "You are a helpful assistant." },
-        .{ .role = "user", .content = userMessage },
+pub fn startStreamingResponse(allocator: std.mem.Allocator, writer: anytype, userMessage: []u8) ![]const u8 {
+    const userMessage2 = llms.Message{
+        .role = "user",
+        .content = userMessage,
     };
-    var res = try sendOpenaiRequest(allocator, &messageHistory);
+
+    const messageHistory = [_]llms.Message{
+        openai_prompts.SYSTEM_PROMPT,
+        openai_prompts.PROMPT_EXAMPLES,
+        userMessage2,
+    };
+
+    const response = try llms.sendOpenAIStreamingRequest(allocator, writer, &messageHistory);
+    defer allocator.free(response);
+
+    return allocator.dupe(u8, response);
+}
+
+pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
+    // var res = try sendRequest(allocator, userMessage);
+    const userMessage2 = llms.Message{
+        .role = "user",
+        .content = userMessage,
+    };
+
+    const messageHistory = [_]llms.Message{
+        openai_prompts.SYSTEM_PROMPT,
+        userMessage2,
+    };
+    var res = try llms.sendOpenaiRequest(allocator, &messageHistory);
     defer allocator.free(res);
-    std.log.info("{s}", .{res});
-    // const CMD = "echo \"HELLO WORLD\"";
-    // return CMD;
+    // std.log.info("{s}", .{res});
     return allocator.dupe(u8, res);
 }

@@ -12,86 +12,133 @@ var verbose: bool = true;
 var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0; //index of the next context to be added
 
-const asciiArt = "         ,. –  - .,  °           ,-·-.          ,'´¨;             ,. –  - .,  °                              .,'\n        ';_,.., _     '`. '       ';   ';\\      ,'´  ,':\\          ';_,.., _     '`. '        ,.,           ,'´  ;\\\n         \\:::::::::::';   ,'\\       ;   ';:\\   .'   ,'´::'\\          \\:::::::::::;   ,'\\       \\`, '`·.    ,·' ,·´\\::'\\ \n          '\\_;::;:,·´  .·´::\\‘     '\\   ';::;'´  ,'´::::;\\           '\\_;::;:,·´  .·´::\\‘      \\:';  '`·,'´,·´::::'\\:;'\n              , '´ .·´:::::;'         \\  '·:'  ,'´:::::;' '                , '´ .·´:::::;'         `';'\\    ,':::::;·´    \\\n            .´  .'::::::;·´'           '·,   ,'::::::;'´                .´  .'::::::;·´'            ,·´,   \\:;·´    '    \n        .·´ ,·´:::::;·´                ,'  /::::::;'  '            .·´ ,·´:::::;·´            .·´ ,·´:\\   '\\           \n     ,·´  .´;::–·~^*'´';\\‚          ,´  ';\\::::;'  '           ,·´  .´;::–·~^*'´';\\‚     ,·´  .;:::::'\\   ';    '     \n     '.,_ ,. -·~:*'´¨¯:\\:\\ °       \\`*ª'´\\\\::/‘              '.,_ ,. -·~:*'´¨¯:\\:\\ ° ;    '.·'\\::::;'   ,'\\        \n      \\:::::::::::::::::::\\;          '\\:::::\\';  '              \\:::::::::::::::::::\\;   ;·-'´:::::\\·´ \\·:´:::\\       \n       \\:;_;::-·~^*'´¨¯'              `*ª'´‘                   \\:;_;::-·~^*'´¨¯'      \\::::;:·'     '\\;:·'´        \n                                          '                                                `*'´           ‘            \n";
+const asciiArt = "                                              \n     _/_/_/_/  _/    _/  _/_/_/_/  _/    _/   \n        _/    _/    _/      _/      _/_/       \n     _/      _/    _/    _/      _/    _/      \n  _/_/_/_/    _/_/_/  _/_/_/_/  _/    _/        \n                 _/                           \n            _/_/                              \n  ";
 
-var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
+// var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
 
-fn waitingAnimation() void {
-    // const colors = [_][]const u8{ "30", "31", "32", "33", "34", "35", "36", "37" };
-    // var index: usize = 0;
+// fn waitingAnimation() void {
+//     const colors = [_][]const u8{ "30", "31", "32", "33", "34", "35", "36", "37" };
+//     var index: usize = 0;
 
-    // while (!should_stop.load(std.atomic.Ordering.SeqCst)) {
-    //     std.time.sleep(500000);
-    //     stdout.print("\r \r", .{}) catch {};
-    //     for (0..index) |i| {
-    //         stdout.print("\x1B[{s}m•\x1B[0m", .{colors[i]}) catch {};
-    //     }
-    //     index += 1;
-    //     index %= colors.len;
-    // }
+//     while (!should_stop.load(std.atomic.Ordering.SeqCst)) {
+//         std.time.sleep(500000);
+//         stdout.print("\r \r", .{}) catch {};
+//         for (0..index) |i| {
+//             stdout.print("\x1B[{s}m•\x1B[0m", .{colors[i]}) catch {};
+//         }
+//         index += 1;
+//         index %= colors.len;
+//     }
 
-    // // Clear spinner before exit
-    // stdout.print("\r \r", .{}) catch {};
-}
-
-pub fn main() !void {
-    std.debug.print("\x1B[2J\x1B[H", .{});
-    std.debug.print("{s}", .{asciiArt});
-    try openai_agent.processCommandUsingAgent(true);
-    // try processCommand();
-}
+//     // Clear spinner before exit
+//     stdout.print("\r \r", .{}) catch {};
+// }
 
 fn processCommand() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
     defer std.debug.assert(gpa.deinit() == .ok);
 
+    var firstCommand: bool = true;
+
     var in: [4096]u8 = undefined;
     var context: [40960]u8 = undefined;
 
     while (true) {
+        var needUserInput: bool = true;
+
         var request = std.ArrayList(u8).init(allocator);
         defer request.deinit();
 
         var argv = std.ArrayList(u8).init(allocator);
         defer argv.deinit();
-        while (true) {
-            in = undefined;
-            try stdout.print("What can I help you with?\n>> ", .{});
-            _ = try stdin.readUntilDelimiter(&in, '\n');
-            const error_msg = try parse_response(&in);
-            if (error_msg != null) {
-                try stdout.print("Error with input, please try again\n>> ", .{});
-                continue;
+
+        if (firstCommand) {
+            var args = std.process.args();
+            var argList = std.ArrayList([]const u8).init(allocator);
+            defer argList.deinit();
+
+            _ = args.next();
+            while (args.next()) |arg| {
+                try argList.append(arg);
             }
-            break;
+
+            if (argList.items.len > 0) {
+                const joinedArgs = try std.mem.join(allocator, " ", argList.items);
+                defer allocator.free(joinedArgs);
+
+                try stdout.print("\n\x1b[38;5;68m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
+                try stdout.print(" {s}\n", .{joinedArgs});
+                try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
+
+                var i: u64 = 0;
+                for (joinedArgs) |c| {
+                    try request.append(c);
+                    in[i] = c;
+                    i += 1;
+                }
+
+                in[i] = '\n';
+
+                gather_context(&context);
+
+                needUserInput = false;
+            }
         }
 
-        for (in) |c| {
-            try request.append(c);
-            if (c == '\n') break;
+        if (needUserInput) {
+            while (true) {
+                in = undefined;
+                try stdout.print("\n\x1b[38;5;68m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
+                _ = try stdin.readUntilDelimiter(&in, '\n');
+                try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
+                const error_msg = try parse_response(&in);
+                if (error_msg != null) {
+                    try stdout.print("Error with input, please try again\n>> ", .{});
+                    continue;
+                }
+                break;
+            }
+
+            for (in) |c| {
+                try request.append(c);
+                if (c == '\n') break;
+            }
+
+            gather_context(&context);
+
+            for (context) |c| {
+                try request.append(c);
+                if (c == 0) break;
+            }
         }
 
-        gather_context(&context);
+        // var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
 
-        for (context) |c| {
-            try request.append(c);
-            if (c == 0) break;
-        }
+        // std.log.info("INPUT: {s}", .{request.items});
 
-        var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
-
-        std.log.info("INPUT: {s}", .{request.items});
-
-        var res = try llm_client.strip_response(allocator, request.items);
+        var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
         defer allocator.free(res);
         add_context(&in, res);
 
-        should_stop.store(true, std.atomic.Ordering.SeqCst);
-        thread.join();
+        var it = std.mem.tokenizeSequence(u8, res, "\n");
+        while (it.next()) |line| {
+            if (line[0] == '`') continue;
+            try argv.writer().print("{s}\n", .{line});
+        }
 
-        // try make_file(argv.items);
-        // try run_sh();
+        // should_stop.store(true, std.atomic.Ordering.SeqCst);
+        // thread.join();
+
+        make_file(argv.items) catch |err| {
+            try stdout.print("Error Creating File: {}\n", .{err});
+        };
+
+        run_sh() catch |err| {
+            try stdout.print("Error Running Program: {}\n", .{err});
+        };
+
+        firstCommand = false;
     }
 }
 
@@ -211,10 +258,13 @@ fn make_file(argv: []u8) !void {
     var file = try std.fs.cwd().createFile("bash.sh", .{});
     defer file.close();
     try file.writeAll(argv);
+    var it = std.mem.tokenizeSequence(u8, argv, "\n");
     if (verbose) {
-        try stdout.print("--bash.sh ----------------------------------------\n", .{});
-        try stdout.writeAll(argv);
-        try stdout.print("\n--------------------------------------------------\n", .{});
+        try stdout.print("\n\x1b[38;5;216m╭─\x1b[38;5;160m\x1b[3m\x1b[48;5;224m bash.sh \x1b[0m\x1b[38;5;216m ────────────────────────────────────────────────────────────────────╮\n>\x1b[0m", .{});
+        while (it.next()) |line| {
+            try stdout.print("\n\x1b[38;5;216m>\x1b[0m {s}", .{line});
+        }
+        try stdout.print("\n\x1b[38;5;216m>\n╰───────────────────────────────────────────────────────────────────────────────╯\x1b[0m\n", .{});
     }
 }
 
@@ -222,7 +272,7 @@ fn run_sh() !void {
     var in: [4096]u8 = undefined;
 
     // ask for approval
-    try stdout.print("Run Program? (y/n): ", .{});
+    try stdout.print("⚠️  \x1b[1m\x1b[38;5;214mrun bash.sh?\x1b[0m ⚠️  (\x1b[1;32my\x1b[0m/\x1b[1;31mn\x1b[0m): ", .{});
     _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
     if (in[0] != 'y') {
         return;
@@ -237,6 +287,18 @@ fn run_sh() !void {
         .allocator = alloc,
         .argv = &argv,
     });
-    try stdout.print("stdout: {s}", .{proc.stdout});
-    std.log.info("stderr: {s}", .{proc.stderr});
+    try stdout.print("\n{s}", .{proc.stdout});
+    if (proc.stderr.len > 0) {
+        try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{proc.stderr});
+    } else {
+        try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+    }
+}
+
+pub fn main() !void {
+    try stdout.print("\x1B[2J\x1B[H", .{});
+    try stdout.print("\x1B[1m\x1B[38;5;93m{s}\x1B[0m", .{asciiArt});
+    try stdout.print("\n\x1B[38;5;69m> Welcome to the \x1B[1m\x1B[38;5;99mzyzx\x1B[22m\x1B[38;5;69m shell!\n> \x1B[1m\x1B[38;5;99mzyzx\x1B[22m\x1B[38;5;69m is your personal AI assistant helping to boost your terminal productivity!\n\x1B[0m", .{});
+    // try openai_agent.processCommandUsingAgent();
+    try processCommand();
 }

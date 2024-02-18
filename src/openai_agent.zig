@@ -31,7 +31,8 @@ pub fn processCommandUsingAgent(streaming: bool) !void {
     };
 
     const messageHistory = [_]llms.Message{
-        openai_prompts.RAWDOG_PROMPT,
+        openai_prompts.SYSTEM_PROMPT,
+        openai_prompts.PROMPT_EXAMPLES,
         userMessage,
     };
 
