@@ -44,17 +44,17 @@ export default function Home() {
                   Faster tooling and development, compared to C/C++.
                 </span>{" "}
                 Building our project on Zig was incredibly smooth; despite the
-                language's relatively new status, its build ecosystem, language
-                server, and more felt mature and did not become pain points
-                during our project.
+                language&apos;s relatively new status, its build ecosystem,
+                language server, and more felt mature and did not become pain
+                points during our project.
               </li>
               <li>
                 <span className={`${classes.bold}`}>
                   Performance and safety.
                 </span>{" "}
-                Zig's performance and safety features were a big draw for us. We
-                wanted to build a tool that was fast and safe, and Zig seemed
-                like the perfect fit for this.
+                Zig&apos;s performance and safety features were a big draw for
+                us. We wanted to build a tool that was fast and safe, and Zig
+                seemed like the perfect fit for this.
               </li>
               <li>
                 <span className={`${classes.bold}`}>
@@ -69,10 +69,10 @@ export default function Home() {
 
             <h1>Model</h1>
             <p>
-              The LLM behind the scenes is a heavily fine-tuned Mistral AI's
-              Mixtral 8x7B mixture of experts model. We chose to focus on this
-              model because it is well known to be one the best, if not the
-              best, generally capable models for its size.
+              The LLM behind the scenes is a heavily fine-tuned Mistral
+              AI&apos;s Mixtral 8x7B mixture of experts model. We chose to focus
+              on this model because it is well known to be one the best, if not
+              the best, generally capable models for its size.
             </p>
             <p>
               Our fine-tuning process was split into two stages. During the

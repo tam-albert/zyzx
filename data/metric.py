@@ -53,7 +53,7 @@ with open("/Users/andrew/jsonl/validation.jsonl", "r") as file:
             idx = res.find("[/INST]")
             data.append([i, test["input"], test["output"], res[idx:]])
         print(i)
-        if i % 50 == 0:
+        if i % 1 == 0:
             csv_file = "data.csv"
             with open(csv_file, "a") as file:
                 writer = csv.writer(file)
