@@ -12,7 +12,7 @@ export default function Home() {
         </div>
         <div className={`${classes.subTitle} ${classes.animate}`}>
           Natural language queries that supercharge your development workflow.
-          Powered by offline, safe and secure AI.
+          Powered by AI that is offline, safe, and secure.
         </div>
         <div className={`${classes.buttonContainer} ${classes.animate}`}>
           <button
