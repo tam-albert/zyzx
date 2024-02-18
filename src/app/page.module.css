@@ -15,18 +15,40 @@
 
 .titleContainer {
   margin-top: 12rem;
+  padding: 1rem;
 }
 
 .title {
-  font-size: 45px;
-  font-weight: bold;
+  font-size: 50px;
+  font-weight: 800;
   display: flex; 
   flex-direction: column;
   align-items: center;
+  text-align: center;
+}
+
+.animate {
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+  animation-delay: 200ms;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .subTitle {
-  margin-top: 1rem;
+  animation-delay: 0.25s;
+  margin-top: 1.2rem;
   font-size: 18px;
-  max-width: 550px;
+  max-width: 500px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
