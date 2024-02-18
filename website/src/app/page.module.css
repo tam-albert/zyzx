@@ -10,7 +10,7 @@
 }
 
 .gradientText {
-  background-image: linear-gradient(150deg,#a252ee,#6962f7);
+  background-image: linear-gradient(150deg,#a252ee,#867ffc);
   -webkit-text-fill-color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
@@ -115,4 +115,21 @@
   border: 1px;
   border: solid;
   border-color: purple;
+}
+
+.implementationFlexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.implementationContainer {
+  width: 850px; 
+}
+
+.blogContent {
+  padding: 0 2rem 2rem 2rem;
+  font-size: 18px;
+  line-height: 1.75;
 }
