@@ -6,7 +6,7 @@ const llms = @import("llm_client.zig");
 const stdin = std.io.getStdIn().reader();
 const stdout = std.io.getStdOut().writer();
 
-pub fn processCommandUsingAgent() !void {
+pub fn processCommandUsingAgent(streaming: bool) !void {
     // make openai call
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
@@ -35,13 +35,17 @@ pub fn processCommandUsingAgent() !void {
         userMessage,
     };
 
-    const assistantMessage = try llms.sendOpenaiRequest(allocator, &messageHistory);
-    defer allocator.free(assistantMessage);
+    if (!streaming) {
+        const assistantMessage = try llms.sendOpenaiRequest(allocator, &messageHistory);
+        defer allocator.free(assistantMessage);
 
-    // purely for pretty printing
-    // try stdout.print("{s}\n", .{assistantMessage});
-    var it = std.mem.tokenizeSequence(u8, assistantMessage, "\n");
-    while (it.next()) |line| {
-        try stdout.print("│ {s}\n", .{line});
+        // purely for pretty printing
+        // try stdout.print("{s}\n", .{assistantMessage});
+        var it = std.mem.tokenizeSequence(u8, assistantMessage, "\n");
+        while (it.next()) |line| {
+            try stdout.print("│ {s}\n", .{line});
+        }
+    } else {
+        try llms.sendOpenAIStreamingRequest(allocator, stdout, &messageHistory);
     }
 }
