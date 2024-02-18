@@ -89,19 +89,36 @@ export default function Home() {
               language description of each command.
             </p>
 
-            <p>
+            <div className={classes.flex}>
+              <div className={classes.flex}>
+                <img src="/images/1to2.png" width={600} />
+                <i>First stage of fine-tuning</i>
+              </div>
+              <div className={classes.flex}>
+                <img
+                  src="/images/2to3.png"
+                  width={600}
+                  style={{ marginTop: "3rem" }}
+                />
+                <i style={{ marginBottom: "2rem" }}>
+                  Second stage of fine-tuning
+                </i>
+              </div>
+            </div>
+
+            <p className={classes.mt}>
               The results from the first stage of fine-tuning led us to believe
               that we could further improve performance with another round of
               fine-tuning. We did not have more data, so we decided to generate
-              more. We concatenated together and sanitized our .zsh history
-              files and used this as a "high-quality" dataset. Every single
-              command (roughly 200) was verified by human, so we knew that this
-              set of data was a good starting point for generating data. In
-              conjunction with examples from the original training set, we fed
-              these into GPT to generate synthetic labels, and also entirely new
-              synthetic pairs of data. The result was a synthetic dataset of
-              around 10k more pairs of bash commands and their natural language
-              counterparts.
+              more synthetically. We concatenated together and sanitized our
+              .zsh history files and used this as a "high-quality" dataset.
+              Every single command (roughly 200) was verified by human, so we
+              knew that this set of data was a good starting point for
+              generating data. In conjunction with examples from the original
+              training set, we fed these into GPT to generate synthetic labels,
+              and also entirely new synthetic pairs of data. The result was a
+              synthetic dataset of around 10k more pairs of bash commands and
+              their natural language counterparts.
             </p>
 
             <div className={classes.flex}>
