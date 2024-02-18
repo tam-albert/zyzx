@@ -55,6 +55,10 @@ const OpenAIStreamingResponseBody = struct {
     choices: []const OpenAIStreamingResponseChoice,
 };
 
+const MixtralResponseBody = struct {
+    data: []const u8,
+};
+
 pub fn sendOpenAIStreamingRequest(allocator: std.mem.Allocator, writer: anytype, messageHistory: []const Message) ![]const u8 {
     var client = std.http.Client{ .allocator = allocator };
     defer client.deinit();
@@ -168,6 +172,61 @@ pub fn sendOpenaiRequest(allocator: std.mem.Allocator, messageHistory: []const M
     const response_body = parsed_json.value;
 
     return allocator.dupe(u8, response_body.choices[0].message.content);
+}
+
+pub fn sendMixtralRequest(allocator: std.mem.Allocator, messageHistory: []const Message) ![]const u8 {
+    var client = std.http.Client{ .allocator = allocator };
+    defer client.deinit();
+
+    const uri = std.Uri.parse(config.DOMAIN) catch unreachable;
+
+    const requestBody = OpenAIRequestBody{
+        .model = "gpt-3.5-turbo",
+        .messages = messageHistory,
+    };
+
+    var headers = std.http.Headers{ .allocator = allocator };
+    defer headers.deinit();
+
+    try headers.append("Content-Type", "application/json");
+
+    var request = try client.request(.POST, uri, headers, .{});
+    defer request.deinit();
+    request.transfer_encoding = .chunked;
+
+    try request.start();
+    try std.json.stringify(requestBody, .{}, request.writer());
+    try request.finish();
+    try request.wait();
+
+    var body = std.ArrayList(u8).init(allocator);
+    defer body.deinit();
+    try request.reader().readAllArrayList(&body, 40960);
+
+    // std.debug.print("response: {s}\n", .{body.items});
+
+    const parsed_json = try std.json.parseFromSlice(MixtralResponseBody, allocator, body.items, .{});
+    defer parsed_json.deinit();
+
+    const response_body = parsed_json.value;
+
+    return allocator.dupe(u8, response_body.data);
+}
+
+pub fn startMixtralResponse(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
+    const userMessage2 = llms.Message{
+        .role = "user",
+        .content = userMessage,
+    };
+
+    const messageHistory = [_]llms.Message{
+        userMessage2,
+    };
+
+    const response = try llms.sendMixtralRequest(allocator, &messageHistory);
+    defer allocator.free(response);
+
+    return allocator.dupe(u8, response);
 }
 
 pub fn startStreamingResponse(allocator: std.mem.Allocator, writer: anytype, userMessage: []u8) ![]const u8 {

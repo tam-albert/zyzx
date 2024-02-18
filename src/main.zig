@@ -121,7 +121,9 @@ fn processCommand() !void {
         // std.log.info("INPUT: {s}", .{request.items});
 
         try stdout.print("\n\x1b[38;5;55m──\x1b[38;5;18m\x1b[3m\x1b[48;5;189m zyzx says... \x1b[0m\x1b[38;5;55m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
-        var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
+        // var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
+        var res = try llm_client.startMixtralResponse(allocator, request.items);
+        defer allocator.free(res);
         try stdout.print("\n\x1b[38;5;55m───────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
         defer allocator.free(res);
         add_context(&in, res);
@@ -322,16 +324,6 @@ fn run_sh(allocator: std.mem.Allocator, assistantResponse: []const u8) !void {
                     try stdout.print("\x1B[38;5;124m\x1B[1mError while running :( \x1B[0m", .{});
                 },
             }
-            // var proc = try std.ChildProcess.exec(.{
-            //     .allocator = alloc,
-            //     .argv = &argv,
-            // });
-            // try stdout.print("\n{s}", .{proc.stdout});
-            // if (child.stderr.len > 0) {
-            //     try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{child.stderr});
-            // } else {
-            //     try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
-            // }
             return;
         } else if (in[0] == 'x') {
             try stdout.print("\n\x1b[38;5;123m──\x1b[38;5;18m\x1b[3m\x1b[48;5;159m What does this do? \x1b[0m\x1b[38;5;123m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
