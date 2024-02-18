@@ -8,7 +8,6 @@ const stdout = std.io.getStdOut().writer();
 var context_cnt: u8 = 0;
 var max_contexts: u8 = 0;
 var verbose: bool = false;
-var skip_query: bool = false;
 
 var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0; //index of the next context to be added
@@ -48,14 +47,16 @@ fn processCommand() !void {
     var context: [40960]u8 = undefined;
 
     while (true) {
-        skip_query = false;
+        // try stdout.print("bruh\n", .{});
         var needUserInput: bool = true;
 
         var request = std.ArrayList(u8).init(allocator);
         defer request.deinit();
+        // try stdout.print("bruh2\n", .{});
 
         var argv = std.ArrayList(u8).init(allocator);
         defer argv.deinit();
+        // try stdout.print("bruh3\n", .{});
 
         if (firstCommand) {
             var args = std.process.args();
@@ -91,12 +92,16 @@ fn processCommand() !void {
             }
         }
 
+        // try stdout.print("bruh4\n", .{});
+
         if (needUserInput) {
             while (true) {
+                // try stdout.print("bruh5\n", .{});
                 in = undefined;
                 try stdout.print("\n\x1b[38;5;68m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
                 _ = try stdin.readUntilDelimiter(&in, '\n');
                 try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
+                // try stdout.print("bruh6\n", .{});
                 const error_msg = try parse_response(&in);
                 if (error_msg != null) {
                     try stdout.print("\n\x1B[38;5;124m\x1B[1mError with input, please try again\n", .{});
@@ -117,7 +122,6 @@ fn processCommand() !void {
                 if (c == 0) break;
             }
         }
-        if (skip_query) continue;
 
         // var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
 
@@ -127,8 +131,8 @@ fn processCommand() !void {
         // var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
         var res = try llm_client.startMixtralResponse(allocator, request.items);
         defer allocator.free(res);
+        try stdout.print("{s}", .{res});
         try stdout.print("\n\x1b[38;5;55m───────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
-        defer allocator.free(res);
         add_context(&in, res);
 
         var it = std.mem.tokenizeSequence(u8, res, "\n");
@@ -155,12 +159,16 @@ fn processCommand() !void {
                 try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {} \x1B[0m\n", .{err});
             };
         } else {
-            try stdout.print("\x1b[3m\x1b[38;5;236m\x1b[1m(I couldn't think of a good command for that request, but I can help you run commands if I come up with them! please try again.)\n\x1b[0m", .{});
+            try stdout.print("\x1b[3m\x1b[38;5;236m\x1b[1m(I couldn't think of a good command for that request, but I can help you run commands if I come up with them! Please try again.)\n\x1b[0m", .{});
         }
+
+        // try stdout.print("bruh", .{});
 
         firstCommand = false;
 
+        // try stdout.print("bruh2", .{});
         if (calledWithArgs) break;
+        // try stdout.print("bruh3", .{});
     }
 }
 
@@ -259,7 +267,6 @@ fn parse_response(in: *[4096]u8) !?[]const u8 {
                 try stdout.print("    \x1B[38;5;99m\x1B[1m-v(erbose)\x1B[22m\x1B[38;5;69m - toggles verbose setting. query responses will come with an explanation in addition to shell code. this setting is currently {s}.\n", .{if (verbose) "on" else "off"});
                 try stdout.print("    \x1B[38;5;99m\x1B[1m-h(elp)\x1B[22m\x1B[38;5;69m - this page\n", .{});
                 try stdout.print("All flags must be placed before natural language queries.\n\x1B[0m", .{});
-                skip_query = true;
             } else {
                 return "invalid flag";
             }
