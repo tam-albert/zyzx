@@ -1,22 +1,22 @@
 EXAMPLES:
 -------------------------------------------------------------------------------
-PROMPT: Kill the process running on port 3000
+USER: Kill the process running on port 3000
 
-SCRIPT:
+OUTPUT:
 ```
 kill $(lsof -t -i:3000)
 ```
 -------------------------------------------------------------------------------
-PROMPT: Compress and create a backup archive of the photos/ directory
+USER: Compress and create a backup archive of the photos/ directory
 
-SCRIPT:
+OUTPUT:
 ```
 tar -czf backup.tar.gz photos/
 ```
 -------------------------------------------------------------------------------
-PROMPT: Summarize the text from the three most recently downloaded PDFs in this directory.
+USER: Summarize the text from the three most recently downloaded PDFs in this directory.
 
-SCRIPT:
+OUTPUT:
 ```
 find . -maxdepth 1 -name "*.txt" -type f -exec stat -f "%m %N" {} + | sort -rn | head -n 3 | cut -d' ' -f2- | while IFS= read -r file; do echo "Contents of $file:"; cat "$file"; echo; done
 ```
@@ -34,7 +34,7 @@ Take out the trash
 Wash dishes
 ...
 
-SCRIPT:
+OUTPUT:
 ```
 echo "a.txt is about Super Bowl LVIII..."
 echo "b.txt is about road races..."

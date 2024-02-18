@@ -117,26 +117,38 @@ fn processCommand() !void {
 
         // std.log.info("INPUT: {s}", .{request.items});
 
+        try stdout.print("\n\x1b[38;5;55m──\x1b[38;5;18m\x1b[3m\x1b[48;5;189m zyzx says... \x1b[0m\x1b[38;5;55m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
         var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
+        try stdout.print("\n\x1b[38;5;55m───────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
         defer allocator.free(res);
         add_context(&in, res);
 
         var it = std.mem.tokenizeSequence(u8, res, "\n");
+        var codeBlock = false;
         while (it.next()) |line| {
-            if (line[0] == '`') continue;
+            if (line[0] == '`' and line[1] == '`' and line[2] == '`') break;
+        }
+
+        while (it.next()) |line| {
+            codeBlock = true;
+            if (line[0] == '`' and line[1] == '`' and line[2] == '`') break;
             try argv.writer().print("{s}\n", .{line});
         }
 
         // should_stop.store(true, std.atomic.Ordering.SeqCst);
         // thread.join();
 
-        make_file(argv.items) catch |err| {
+        make_file(argv.items, !codeBlock) catch |err| {
             try stdout.print("Error Creating File: {}\n", .{err});
         };
 
-        run_sh() catch |err| {
-            try stdout.print("Error Running Program: {}\n", .{err});
-        };
+        if (codeBlock) {
+            run_sh(allocator, res) catch |err| {
+                try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {} \x1B[0m\n", .{err});
+            };
+        } else {
+            try stdout.print("\x1b[3m\x1b[38;5;236m\x1b[1m(I couldn't think of a good command for that request, but I can help you run commands if I come up with them! please try again.)\n\x1b[0m", .{});
+        }
 
         firstCommand = false;
     }
@@ -254,12 +266,12 @@ fn parse_response(in: *[4096]u8) !?[]const u8 {
     return null;
 }
 
-fn make_file(argv: []u8) !void {
+fn make_file(argv: []u8, useless: bool) !void {
     var file = try std.fs.cwd().createFile("bash.sh", .{});
     defer file.close();
     try file.writeAll(argv);
     var it = std.mem.tokenizeSequence(u8, argv, "\n");
-    if (verbose) {
+    if (verbose and !useless) {
         try stdout.print("\n\x1b[38;5;216m╭─\x1b[38;5;160m\x1b[3m\x1b[48;5;224m bash.sh \x1b[0m\x1b[38;5;216m ────────────────────────────────────────────────────────────────────╮\n>\x1b[0m", .{});
         while (it.next()) |line| {
             try stdout.print("\n\x1b[38;5;216m>\x1b[0m {s}", .{line});
@@ -268,30 +280,60 @@ fn make_file(argv: []u8) !void {
     }
 }
 
-fn run_sh() !void {
+fn run_sh(allocator: std.mem.Allocator, assistantResponse: []const u8) !void {
     var in: [4096]u8 = undefined;
 
-    // ask for approval
-    try stdout.print("⚠️  \x1b[1m\x1b[38;5;214mrun bash.sh?\x1b[0m ⚠️  (\x1b[1;32my\x1b[0m/\x1b[1;31mn\x1b[0m): ", .{});
-    _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
-    if (in[0] != 'y') {
-        return;
-    }
+    while (true) {
+        // ask for approval
+        try stdout.print("⚠️  \x1b[1m\x1b[38;5;214mrun bash.sh?\x1b[0m ⚠️  (\x1b[1;32m(y)es\x1b[0m/\x1b[1;31m(n)o\x1b[0m/\x1b[1;34me(x)plain\x1b[0m): ", .{});
+        _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
+        if (in[0] == 'n') {
+            return;
+        } else if (in[0] == 'y') {
+            const argv = [_][]const u8{
+                "bash",
+                "./bash.sh",
+            };
+            const alloc = std.heap.page_allocator;
+            var child = std.ChildProcess.init(&argv, alloc);
+            child.stdin_behavior = .Ignore;
+            child.stdout_behavior = .Inherit;
+            child.stderr_behavior = .Inherit;
 
-    const argv = [_][]const u8{
-        "bash",
-        "./bash.sh",
-    };
-    const alloc = std.heap.page_allocator;
-    var proc = try std.ChildProcess.exec(.{
-        .allocator = alloc,
-        .argv = &argv,
-    });
-    try stdout.print("\n{s}", .{proc.stdout});
-    if (proc.stderr.len > 0) {
-        try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{proc.stderr});
-    } else {
-        try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+            child.spawn() catch {
+                try stdout.print("\x1B[38;5;124m\x1B[1mThere was an error while launching this command. \x1B[0m", .{});
+            };
+
+            const term = try child.wait();
+            switch (term) {
+                .Exited => |code| {
+                    if (code == 0) {
+                        try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+                    } else {
+                        try stdout.print("\x1B[38;5;124m\x1B[1mProgram exited unexpectedly with code {} \x1B[0m", .{code});
+                    }
+                },
+                else => {
+                    try stdout.print("\x1B[38;5;124m\x1B[1mError while running :( \x1B[0m", .{});
+                },
+            }
+            // var proc = try std.ChildProcess.exec(.{
+            //     .allocator = alloc,
+            //     .argv = &argv,
+            // });
+            // try stdout.print("\n{s}", .{proc.stdout});
+            // if (child.stderr.len > 0) {
+            //     try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{child.stderr});
+            // } else {
+            //     try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
+            // }
+            return;
+        } else if (in[0] == 'x') {
+            try stdout.print("\n\x1b[38;5;123m──\x1b[38;5;18m\x1b[3m\x1b[48;5;159m What does this do? \x1b[0m\x1b[38;5;123m ─────────────────────────────────────────────────────────────────────\x1b[0m\n\n", .{});
+            _ = try openai_agent.explainCommand(allocator, assistantResponse, true);
+            try stdout.print("\n", .{});
+            try stdout.print("\n\x1b[38;5;123m────────────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
+        } else continue;
     }
 }
 
