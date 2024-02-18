@@ -110,9 +110,9 @@ export default function Home() {
               that we could further improve performance with another round of
               fine-tuning. We did not have more data, so we decided to generate
               more synthetically. We concatenated together and sanitized our
-              .zsh history files and used this as a "high-quality" dataset.
-              Every single command (roughly 200) was verified by human, so we
-              knew that this set of data was a good starting point for
+              .zsh history files and used this as a &quot;high-quality&quot;
+              dataset. Every single command (roughly 200) was verified by human,
+              so we knew that this set of data was a good starting point for
               generating data. In conjunction with examples from the original
               training set, we fed these into GPT to generate synthetic labels,
               and also entirely new synthetic pairs of data. The result was a

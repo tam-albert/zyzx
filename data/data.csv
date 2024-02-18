@@ -175,3 +175,42 @@ Note: This command assumes that the network interface you want to get the IP add
 40,Gets all IP addresses from host network configuration and prints first one.,"ifconfig | grep ""inet addr:"" | grep -v ""127.0.0.1"" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'  | head -1","[/INST] `ipconfig getifaddr en0 | head -n 1`
 
 Note: This command assumes that the network interface you want to get the IP address for is ""en0"". You may need to use a different interface name depending on your specific system configuration. You can use the command `networksetup -listallnetworkserviceorder` to see a list of your network interfaces.</s>"
+41,Find all *.m4a files under /home/family/Music directory and convert them to ogg,find /home/family/Music -name '*.m4a' -print0 | xargs -0 -i ffmpeg -i {} -acodec libvorbis -aq 6 -vn -ac 2 {}.ogg,"[/INST] ```bash
+find /home/family/Music -name ""*.m4a"" -exec ffmpeg -i {} {}.ogg \;
+```</s>"
+41,Find all *.m4a files under /home/family/Music directory and convert them to ogg,find /home/family/Music -name '*.m4a' -print0 | xargs -0 -i ffmpeg -i {} -acodec libvorbis -aq 6 -vn -ac 2 {}.ogg,"[/INST] ```bash
+find /home/family/Music -name ""*.m4a"" -exec ffmpeg -i {} {}.ogg \;
+```</s>"
+41,Find all *.m4a files under /home/family/Music directory and convert them to ogg,find /home/family/Music -name '*.m4a' -print0 | xargs -0 -i ffmpeg -i {} -acodec libvorbis -aq 6 -vn -ac 2 {}.ogg,"[/INST] ```bash
+find /home/family/Music -name ""*.m4a"" -exec ffmpeg -i {} {}.ogg \;
+```</s>"
+42,Find all directories under /home/username/public_html/sites/default/files and set their permission to 770,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +,"[/INST] ```bash
+find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +
+```</s>"
+42,Find all directories under /home/username/public_html/sites/default/files and set their permission to 770,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +,"[/INST] ```bash
+find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +
+```</s>"
+42,Find all directories under /home/username/public_html/sites/default/files and set their permission to 770,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +,"[/INST] ```bash
+find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +
+```</s>"
+43,Print all files and directories in the `.' directory tree skipping SCCS directories,find . -name SCCS -prune -o -print,[/INST] `find . -type d -name SCCS -prune -o -print`</s>
+43,Print all files and directories in the `.' directory tree skipping SCCS directories,find . -name SCCS -prune -o -print,[/INST] `find . -type d -name SCCS -prune -o -print`</s>
+43,Print all files and directories in the `.' directory tree skipping SCCS directories,find . -name SCCS -prune -o -print,[/INST] `find . -type d -name SCCS -prune -o -print`</s>
+44,Change to location of '$TARGET_FILE' file.,cd `dirname $TARGET_FILE`,"[/INST] cd ""$(dirname ""$TARGET\_FILE"")""</s>"
+44,Change to location of '$TARGET_FILE' file.,cd `dirname $TARGET_FILE`,"[/INST] cd ""$(dirname ""$TARGET\_FILE"")""</s>"
+44,Change to location of '$TARGET_FILE' file.,cd `dirname $TARGET_FILE`,"[/INST] cd ""$(dirname ""$TARGET\_FILE"")""</s>"
+45,"set alias ""mkdir"" for command ¨mkdir -p¨",alias mkdir=¨mkdir -p¨,"[/INST] echo 'alias mkdir=""mkdir -p""' >> ~/.bash\_profile</s>"
+45,"set alias ""mkdir"" for command ¨mkdir -p¨",alias mkdir=¨mkdir -p¨,"[/INST] echo 'alias mkdir=""mkdir -p""' >> ~/.bash\_profile</s>"
+45,"set alias ""mkdir"" for command ¨mkdir -p¨",alias mkdir=¨mkdir -p¨,"[/INST] echo 'alias mkdir=""mkdir -p""' >> ~/.bash\_profile</s>"
+46,List the directory paths of all *.ext (case insensitive) files under /path directory,"find /path -type f -iname ""*.ext"" -printf ""%h\n""","[/INST] `find /path -iname ""*.ext"" -type f -print0 | xargs -0 dirname`<br><br>This command uses the `find` command to search for all files with the extension `.ext` (case insensitive) under the `/path` directory. The `-print0` option is used to separate the file paths with null characters, which allows for file paths with spaces or special characters to be handled correctly. The `xargs"
+46,List the directory paths of all *.ext (case insensitive) files under /path directory,"find /path -type f -iname ""*.ext"" -printf ""%h\n""","[/INST] `find /path -iname ""*.ext"" -type f -print0 | xargs -0 dirname`<br><br>This command uses the `find` command to search for all files with the extension `.ext` (case insensitive) under the `/path` directory. The `-print0` option is used to separate the file paths with null characters, which allows for file paths with spaces or special characters to be handled correctly. The `xargs"
+46,List the directory paths of all *.ext (case insensitive) files under /path directory,"find /path -type f -iname ""*.ext"" -printf ""%h\n""","[/INST] `find /path -iname ""*.ext"" -type f -print0 | xargs -0 dirname`<br><br>This command uses the `find` command to search for all files with the extension `.ext` (case insensitive) under the `/path` directory. The `-print0` option is used to separate the file paths with null characters, which allows for file paths with spaces or special characters to be handled correctly. The `xargs"
+47,"Count the number of lines in ""/dir/file.txt""",cat /dir/file.txt | wc -l,"[/INST] `wc -l ""/dir/file.txt""`</s>"
+47,"Count the number of lines in ""/dir/file.txt""",cat /dir/file.txt | wc -l,"[/INST] `wc -l ""/dir/file.txt""`</s>"
+47,"Count the number of lines in ""/dir/file.txt""",cat /dir/file.txt | wc -l,"[/INST] `wc -l ""/dir/file.txt""`</s>"
+48,Run 'git pull' in every git repository in the current directory,"find . -name "".git"" -type d | sed 's/\/.git//' |  xargs -P10 -I{} git -C {} pull",[/INST] `find . -type d -name '.git' -execdir git pull \;`</s>
+48,Run 'git pull' in every git repository in the current directory,"find . -name "".git"" -type d | sed 's/\/.git//' |  xargs -P10 -I{} git -C {} pull",[/INST] `find . -type d -name '.git' -execdir git pull \;`</s>
+48,Run 'git pull' in every git repository in the current directory,"find . -name "".git"" -type d | sed 's/\/.git//' |  xargs -P10 -I{} git -C {} pull",[/INST] `find . -type d -name '.git' -execdir git pull \;`</s>
+49,"Print summary of new/missing files, and which files differ between folder1 and folder2.",diff -arq folder1 folder2,[/INST] `diff -r folder1 folder2 | diff -x folder1 -x folder2 --summary`</s>
+49,"Print summary of new/missing files, and which files differ between folder1 and folder2.",diff -arq folder1 folder2,[/INST] `diff -r folder1 folder2 | diff -x folder1 -x folder2 --summary`</s>
+49,"Print summary of new/missing files, and which files differ between folder1 and folder2.",diff -arq folder1 folder2,[/INST] `diff -r folder1 folder2 | diff -x folder1 -x folder2 --summary`</s>
