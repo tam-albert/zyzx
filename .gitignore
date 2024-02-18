@@ -2,3 +2,5 @@ zig-cache/
 zig-out/
 src/config.zig
 bash.sh
+main
+main.o

@@ -35,9 +35,39 @@ export default function Home() {
             </p>
             <h1>Stack</h1>
             <p>
-              Our entire interface was implemented in Zig. We did this because
-              ...
+              Our entire interface was implemented in Zig. This was a new
+              experience for all of us—none of us had ever written a project of
+              Zig before—but we were drawn to Zig for several reasons:
             </p>
+            <ul>
+              <li>
+                <span className={`${classes.bold}`}>
+                  Faster tooling and development, compared to C/C++.
+                </span>{" "}
+                Building our project on Zig was incredibly smooth; despite the
+                language's relatively new status, its build ecosystem, language
+                server, and more felt mature and did not become pain points
+                during our project.
+              </li>
+              <li>
+                <span className={`${classes.bold}`}>
+                  Performance and safety.
+                </span>{" "}
+                Zig's performance and safety features were a big draw for us. We
+                wanted to build a tool that was fast and safe, and Zig seemed
+                like the perfect fit for this.
+              </li>
+              <li>
+                <span className={`${classes.bold}`}>
+                  As an extra challenge.
+                </span>{" "}
+                We also wanted to learn a new language! In the end, our team
+                learned a lot by implementing server-sent events parsing from
+                scratch, wrangling with different terminal emulators in a new
+                language, and more.
+              </li>
+            </ul>
+
             <h1>Model</h1>
             <p>
               The LLM behind the scenes is a heavily fine-tuned Mistral AI's

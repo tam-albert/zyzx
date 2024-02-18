@@ -7,8 +7,8 @@ export default function Home() {
     <main className={classes.main}>
       <div className={`${classes.flex} ${classes.titleContainer}`}>
         <div className={`${classes.title} ${classes.animate}`}>
-          Talk to the Terminal{" "}
-          <div className={classes.gradientText}>in Plain English</div>
+          Talk to your terminal{" "}
+          <div className={classes.gradientText}>in Plain English.</div>
         </div>
         <div className={`${classes.subTitle} ${classes.animate}`}>
           Natural language queries that supercharge your development workflow.
@@ -17,7 +17,7 @@ export default function Home() {
         <div className={`${classes.buttonContainer} ${classes.animate}`}>
           <button
             onClick={() => {
-              window.location.href = "https://github.com/tam-albert/copilot";
+              window.location.href = "https://github.com/tam-albert/zyzx";
             }}
             className={classes.githubButton}
             style={{
