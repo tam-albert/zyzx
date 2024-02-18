@@ -12,7 +12,7 @@ var verbose: bool = true;
 var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0; //index of the next context to be added
 
-const asciiArt = "         ,. –  - .,  °           ,-·-.          ,'´¨;             ,. –  - .,  °                              .,'\n        ';_,.., _     '`. '       ';   ';\\      ,'´  ,':\\          ';_,.., _     '`. '        ,.,           ,'´  ;\\\n         \\:::::::::::';   ,'\\       ;   ';:\\   .'   ,'´::'\\          \\:::::::::::;   ,'\\       \\`, '`·.    ,·' ,·´\\::'\\ \n          '\\_;::;:,·´  .·´::\\‘     '\\   ';::;'´  ,'´::::;\\           '\\_;::;:,·´  .·´::\\‘      \\:';  '`·,'´,·´::::'\\:;'\n              , '´ .·´:::::;'         \\  '·:'  ,'´:::::;' '                , '´ .·´:::::;'         `';'\\    ,':::::;·´    \\\n            .´  .'::::::;·´'           '·,   ,'::::::;'´                .´  .'::::::;·´'            ,·´,   \\:;·´    '    \n        .·´ ,·´:::::;·´                ,'  /::::::;'  '            .·´ ,·´:::::;·´            .·´ ,·´:\\   '\\           \n     ,·´  .´;::–·~^*'´';\\‚          ,´  ';\\::::;'  '           ,·´  .´;::–·~^*'´';\\‚     ,·´  .;:::::'\\   ';    '     \n     '.,_ ,. -·~:*'´¨¯:\\:\\ °       \\`*ª'´\\\\::/‘              '.,_ ,. -·~:*'´¨¯:\\:\\ ° ;    '.·'\\::::;'   ,'\\        \n      \\:::::::::::::::::::\\;          '\\:::::\\';  '              \\:::::::::::::::::::\\;   ;·-'´:::::\\·´ \\·:´:::\\       \n       \\:;_;::-·~^*'´¨¯'              `*ª'´‘                   \\:;_;::-·~^*'´¨¯'      \\::::;:·'     '\\;:·'´        \n                                          '                                                `*'´           ‘            \n";
+const asciiArt = "                                              \n     _/_/_/_/  _/    _/  _/_/_/_/  _/    _/   \n        _/    _/    _/      _/      _/_/       \n     _/      _/    _/    _/      _/    _/      \n  _/_/_/_/    _/_/_/  _/_/_/_/  _/    _/        \n                 _/                           \n            _/_/                              \n  ";
 
 // var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
 
@@ -50,7 +50,7 @@ fn processCommand() !void {
         defer argv.deinit();
         while (true) {
             in = undefined;
-            try stdout.print("\n\x1b[38;5;68m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
+            try stdout.print("\n\x1B[38;5;99m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
             _ = try stdin.readUntilDelimiter(&in, '\n');
             try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
             const error_msg = try parse_response(&in);
@@ -253,8 +253,9 @@ fn run_sh() !void {
 }
 
 pub fn main() !void {
-    std.debug.print("\x1B[2J\x1B[H", .{});
-    std.debug.print("{s}", .{asciiArt});
+    try stdout.print("\x1B[2J\x1B[H", .{});
+    try stdout.print("\x1B[1m\x1B[38;5;93m{s}\x1B[0m", .{asciiArt});
+    try stdout.print("\n\x1B[38;5;69m> Welcome to the \x1B[1m\x1B[38;5;99mzyzx\x1B[22m\x1B[38;5;69m shell!\n> \x1B[1m\x1B[38;5;99mzyzx\x1B[22m\x1B[38;5;69m is your personal AI assistant helping to boost your terminal productivity!\n\x1B[0m", .{});
     // try openai_agent.processCommandUsingAgent();
     try processCommand();
 }
