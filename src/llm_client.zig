@@ -42,7 +42,6 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
 
     // try headers.append("Content-Type", "application/json");
     try headers.append("Accept", "text/event-stream");
-    // try headers.append("Authorization", "Bearer " ++ config.API_KEY);
 
     var request = try client.request(.GET, uri, headers, .{});
     defer request.deinit();
@@ -62,23 +61,11 @@ pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 
         if (bytes_read == 0) break; // End of stream
 
         const event = buffer[0..bytes_read];
-        std.debug.print("Received event: {s}\n", .{event});
+        // std.debug.print("Received event: {s}\n", .{event});
         try final_response.appendSlice(event);
     }
 
     return try final_response.toOwnedSlice();
-
-    // const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
-    // defer allocator.free(body);
-
-    // // std.debug.print("response: {s}\n", .{body});
-
-    // const parsed_json = std.json.parseFromSlice(ResponseBody, allocator, body, .{}) catch unreachable;
-    // defer parsed_json.deinit();
-
-    // const response_body = parsed_json.value;
-
-    // return allocator.dupe(u8, response_body.choices[0].message.content);
 }
 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
