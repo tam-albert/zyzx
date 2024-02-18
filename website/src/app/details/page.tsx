@@ -22,8 +22,7 @@ export default function Home() {
           </div>
           <div className={`${classes.blogContent}`}>
             <div className={`${classes.flex}`}>
-              TODO: insert a scenic horizontal image here
-              <img src="/images/terminal.png" alt="term" height={400}></img>
+              <img src="/images/terminal.png" alt="term" width={700}></img>
             </div>
             <p>
               Our goal with this project was to address the issue of a lack of a
