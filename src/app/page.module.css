@@ -69,7 +69,7 @@
   margin-bottom: 1rem;
   display: flex;
   justify-content: apart;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .black {
@@ -77,18 +77,34 @@
   background-color: white;
   font-size: 15px;
   font-weight: 600;
+}
+
+.ml {
   margin-left: 0.5rem;
 }
 
 .githubButton {
-  animation-delay: 0.7s;
+  animation-delay: 1.1s;
   background-color: white;
   padding: 0.5rem 1rem;
   width: 8rem;
   border-radius: 5px;
   cursor: pointer;
   font: inherit;
+  border: 1px;
+  border: solid;
   transition: 0.3s;
+}
+
+.plainButton {
+  background-color: white;
+  padding: 0.5rem 1rem;
+  width: 8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font: inherit;
+  border: 1px;
+  border: solid;
 }
 
 .githubButton:hover {
