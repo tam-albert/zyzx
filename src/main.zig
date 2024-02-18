@@ -41,6 +41,8 @@ fn processCommand() !void {
 
     var firstCommand: bool = true;
 
+    var calledWithArgs: bool = false;
+
     var in: [4096]u8 = undefined;
     var context: [40960]u8 = undefined;
 
@@ -60,6 +62,7 @@ fn processCommand() !void {
 
             _ = args.next();
             while (args.next()) |arg| {
+                calledWithArgs = true;
                 try argList.append(arg);
             }
 
@@ -151,6 +154,8 @@ fn processCommand() !void {
         }
 
         firstCommand = false;
+
+        if (calledWithArgs) break;
     }
 }
 
