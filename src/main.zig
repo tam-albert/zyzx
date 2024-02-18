@@ -39,45 +39,85 @@ fn processCommand() !void {
     const allocator = gpa.allocator();
     defer std.debug.assert(gpa.deinit() == .ok);
 
+    var firstCommand: bool = true;
+
     var in: [4096]u8 = undefined;
     var context: [40960]u8 = undefined;
 
     while (true) {
+        var needUserInput: bool = true;
+
         var request = std.ArrayList(u8).init(allocator);
         defer request.deinit();
 
         var argv = std.ArrayList(u8).init(allocator);
         defer argv.deinit();
-        while (true) {
-            in = undefined;
-            try stdout.print("\n\x1B[38;5;99m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
-            _ = try stdin.readUntilDelimiter(&in, '\n');
-            try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
-            const error_msg = try parse_response(&in);
-            if (error_msg != null) {
-                try stdout.print("Error with input, please try again\n>> ", .{});
-                continue;
+
+        if (firstCommand) {
+            var args = std.process.args();
+            var argList = std.ArrayList([]const u8).init(allocator);
+            defer argList.deinit();
+
+            _ = args.next();
+            while (args.next()) |arg| {
+                try argList.append(arg);
             }
-            break;
+
+            if (argList.items.len > 0) {
+                const joinedArgs = try std.mem.join(allocator, " ", argList.items);
+                defer allocator.free(joinedArgs);
+
+                try stdout.print("\n\x1b[38;5;68m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
+                try stdout.print(" {s}\n", .{joinedArgs});
+                try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
+
+                var i: u64 = 0;
+                for (joinedArgs) |c| {
+                    try request.append(c);
+                    in[i] = c;
+                    i += 1;
+                }
+
+                in[i] = '\n';
+
+                gather_context(&context);
+
+                needUserInput = false;
+            }
         }
 
-        for (in) |c| {
-            try request.append(c);
-            if (c == '\n') break;
-        }
+        if (needUserInput) {
+            while (true) {
+                in = undefined;
+                try stdout.print("\n\x1b[38;5;68m\x1b[3mzyzx\x1b[0m\x1b[38;5;43m\x1b[5m > \x1b[0m", .{});
+                _ = try stdin.readUntilDelimiter(&in, '\n');
+                try stdout.print("\x1B[1F\x1B[5C\x7F\x1b[38;5;46m>\x1b[0E\x1b[0m", .{});
+                const error_msg = try parse_response(&in);
+                if (error_msg != null) {
+                    try stdout.print("Error with input, please try again\n>> ", .{});
+                    continue;
+                }
+                break;
+            }
 
-        gather_context(&context);
+            for (in) |c| {
+                try request.append(c);
+                if (c == '\n') break;
+            }
 
-        for (context) |c| {
-            try request.append(c);
-            if (c == 0) break;
+            gather_context(&context);
+
+            for (context) |c| {
+                try request.append(c);
+                if (c == 0) break;
+            }
         }
 
         // var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
 
         // std.log.info("INPUT: {s}", .{request.items});
 
-        var res = try llm_client.strip_response(allocator, request.items);
+        var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
         defer allocator.free(res);
         add_context(&in, res);
 
@@ -93,9 +133,12 @@ fn processCommand() !void {
         make_file(argv.items) catch |err| {
             try stdout.print("Error Creating File: {}\n", .{err});
         };
+
         run_sh() catch |err| {
             try stdout.print("Error Running Program: {}\n", .{err});
         };
+
+        firstCommand = false;
     }
 }
 
