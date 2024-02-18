@@ -8,7 +8,7 @@ export default function Home() {
       <div className={`${classes.flex} ${classes.titleContainer}`}>
         <div className={`${classes.title} ${classes.animate}`}>
           Talk to the Terminal{" "}
-          <div className={classes.gradientText}>in English</div>
+          <div className={classes.gradientText}>in Plain English</div>
         </div>
         <div className={`${classes.subTitle} ${classes.animate}`}>
           Natural language queries that supercharge your development workflow.
