@@ -21,6 +21,10 @@ export default function Home() {
             </div>
           </div>
           <div className={`${classes.blogContent}`}>
+            <div className={`${classes.flex}`}>
+              TODO: insert a scenic horizontal image here
+              <img src="/images/terminal.png" alt="term" height={400}></img>
+            </div>
             <p>
               Our goal with this project was to address the issue of a lack of a
               reliable GitHub copilot-like assistant in the terminal. We know
@@ -59,6 +63,9 @@ export default function Home() {
               During all stages, we used QLoRA for fine-tuning, which was a good
               fit because our model was heavily quantized.
             </p>
+            <div className={classes.flex}>
+              <img src="/images/pipeline.png" width={500}></img>
+            </div>
           </div>
         </div>
       </div>
