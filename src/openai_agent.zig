@@ -50,3 +50,25 @@ pub fn processCommandUsingAgent(streaming: bool) !void {
         try llms.sendOpenAIStreamingRequest(allocator, stdout, &messageHistory);
     }
 }
+
+pub fn explainCommand(allocator: std.mem.Allocator, outputResponse: []const u8, streaming: bool) ![]const u8 {
+    const userMessage = llms.Message{
+        .role = "user",
+        .content = outputResponse,
+    };
+
+    const messageHistory = [_]llms.Message{
+        openai_prompts.EXPLAINER_SYSTEM_PROMPT,
+        userMessage,
+    };
+
+    if (!streaming) {
+        const assistantMessage = try llms.sendOpenaiRequest(allocator, &messageHistory);
+        defer allocator.free(assistantMessage);
+
+        return assistantMessage;
+    } else {
+        const assistantMessage = try llms.sendOpenAIStreamingRequest(allocator, stdout, &messageHistory);
+        return assistantMessage;
+    }
+}
