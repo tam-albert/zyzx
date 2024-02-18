@@ -17,7 +17,7 @@ export default function Home() {
         <div className={`${classes.buttonContainer} ${classes.animate}`}>
           <button
             onClick={() => {
-              console.log("github");
+              window.location.href = "https://github.com/tam-albert/copilot";
             }}
             className={classes.githubButton}
             style={{
