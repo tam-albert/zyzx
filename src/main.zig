@@ -17,21 +17,21 @@ const asciiArt = "         ,. –  - .,  °           ,-·-.          ,'´¨;   
 var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
 
 fn waitingAnimation() void {
-    const colors = [_][]const u8{ "30", "31", "32", "33", "34", "35", "36", "37" };
-    var index: usize = 0;
+    // const colors = [_][]const u8{ "30", "31", "32", "33", "34", "35", "36", "37" };
+    // var index: usize = 0;
 
-    while (!should_stop.load(std.atomic.Ordering.SeqCst)) {
-        std.time.sleep(500000);
-        stdout.print("\r \r", .{}) catch {};
-        for (0..index) |i| {
-            stdout.print("\x1B[{s}m•\x1B[0m", .{colors[i]}) catch {};
-        }
-        index += 1;
-        index %= colors.len;
-    }
+    // while (!should_stop.load(std.atomic.Ordering.SeqCst)) {
+    //     std.time.sleep(500000);
+    //     stdout.print("\r \r", .{}) catch {};
+    //     for (0..index) |i| {
+    //         stdout.print("\x1B[{s}m•\x1B[0m", .{colors[i]}) catch {};
+    //     }
+    //     index += 1;
+    //     index %= colors.len;
+    // }
 
-    // Clear spinner before exit
-    stdout.print("\r \r", .{}) catch {};
+    // // Clear spinner before exit
+    // stdout.print("\r \r", .{}) catch {};
 }
 
 pub fn main() !void {
@@ -240,22 +240,3 @@ fn run_sh() !void {
     try stdout.print("stdout: {s}", .{proc.stdout});
     std.log.info("stderr: {s}", .{proc.stderr});
 }
-
-// fn run_sh(argv: *std.ArrayList([]const u8)) !void {
-//     const stdin = std.io.getStdIn().reader();
-//     const stdout = std.io.getStdOut().writer();
-
-//     var in: [4096]u8 = undefined;
-
-//     try stdout.print("Run Program? (y/n): ", .{});
-//     _ = try stdin.readUntilDelimiterOrEof(&in, '\n');
-//     if (in[0] != 'y') {
-//         return;
-//     }
-//     const alloc = std.heap.page_allocator;
-//     var proc = try std.ChildProcess.exec(.{
-//         .allocator = alloc,
-//         .argv = argv.items,
-//     });
-//     try stdout.print("{s}", .{proc.stdout});
-// }
