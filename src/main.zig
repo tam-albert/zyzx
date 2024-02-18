@@ -11,6 +11,8 @@ var verbose: bool = true;
 var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0; //index of the next context to be added
 
+const asciiArt = "         ,. –  - .,  °           ,-·-.          ,'´¨;             ,. –  - .,  °                              .,'\n        ';_,.., _     '`. '       ';   ';\\      ,'´  ,':\\          ';_,.., _     '`. '        ,.,           ,'´  ;\\\n         \\:::::::::::';   ,'\\       ;   ';:\\   .'   ,'´::'\\          \\:::::::::::;   ,'\\       \\`, '`·.    ,·' ,·´\\::'\\ \n          '\\_;::;:,·´  .·´::\\‘     '\\   ';::;'´  ,'´::::;\\           '\\_;::;:,·´  .·´::\\‘      \\:';  '`·,'´,·´::::'\\:;'\n              , '´ .·´:::::;'         \\  '·:'  ,'´:::::;' '                , '´ .·´:::::;'         `';'\\    ,':::::;·´    \\\n            .´  .'::::::;·´'           '·,   ,'::::::;'´                .´  .'::::::;·´'            ,·´,   \\:;·´    '    \n        .·´ ,·´:::::;·´                ,'  /::::::;'  '            .·´ ,·´:::::;·´            .·´ ,·´:\\   '\\           \n     ,·´  .´;::–·~^*'´';\\‚          ,´  ';\\::::;'  '           ,·´  .´;::–·~^*'´';\\‚     ,·´  .;:::::'\\   ';    '     \n     '.,_ ,. -·~:*'´¨¯:\\:\\ °       \\`*ª'´\\\\::/‘              '.,_ ,. -·~:*'´¨¯:\\:\\ ° ;    '.·'\\::::;'   ,'\\        \n      \\:::::::::::::::::::\\;          '\\:::::\\';  '              \\:::::::::::::::::::\\;   ;·-'´:::::\\·´ \\·:´:::\\       \n       \\:;_;::-·~^*'´¨¯'              `*ª'´‘                   \\:;_;::-·~^*'´¨¯'      \\::::;:·'     '\\;:·'´        \n                                          '                                                `*'´           ‘            \n";
+
 var should_stop: std.atomic.Atomic(bool) = std.atomic.Atomic(bool).init(false);
 
 fn waitingAnimation() void {
@@ -32,6 +34,8 @@ fn waitingAnimation() void {
 }
 
 pub fn main() !void {
+    std.debug.print("\x1B[2J\x1B[H", .{});
+    std.debug.print("{s}", .{asciiArt});
     try processCommand();
 }
 
@@ -51,11 +55,11 @@ fn processCommand() !void {
         defer argv.deinit();
         while (true) {
             in = undefined;
-            try stdout.print("What can I help you with?\n", .{});
+            try stdout.print("What can I help you with?\n>> ", .{});
             _ = try stdin.readUntilDelimiter(&in, '\n');
-            const error_msg = parse_response(&in);
+            const error_msg = try parse_response(&in);
             if (error_msg != null) {
-                try stdout.print("Error with input, please try again\n", .{});
+                try stdout.print("Error with input, please try again\n>> ", .{});
                 continue;
             }
             break;
@@ -79,7 +83,7 @@ fn processCommand() !void {
 
         var res = try llm_client.strip_response(allocator, request.items);
         defer allocator.free(res);
-        add_context(res);
+        add_context(&in, res);
 
         should_stop.store(true, std.atomic.Ordering.SeqCst);
         thread.join();
@@ -100,9 +104,10 @@ fn gather_context(context: *[40960]u8) void {
     }
 
     for (1..context_cnt + 1) |i| {
-        context[src] = @as(u8, @truncate(i)) + '0';
-        context[src + 1] = ' ';
-        src += 2;
+        // printing numbered past responses
+        // context[src] = @as(u8, @truncate(i)) + '0';
+        // context[src + 1] = ' ';
+        // src += 2;
         for (contexts[(c_index + 10 - i) % 10]) |c| {
             if (c == 0) {
                 context[src] = '\n';
@@ -116,8 +121,21 @@ fn gather_context(context: *[40960]u8) void {
     context[src] = 0;
 }
 
-fn add_context(res: []const u8) void {
+fn add_context(in: *[4096]u8, res: []const u8) void {
     var src: u32 = 0;
+    for ("You: ") |c| {
+        contexts[c_index][src] = c;
+        src += 1;
+    }
+    for (in) |c| {
+        contexts[c_index][src] = c;
+        src += 1;
+        if (c == '\n') break;
+    }
+    for ("User: ") |c| {
+        contexts[c_index][src] = c;
+        src += 1;
+    }
     for (res) |c| {
         contexts[c_index][src] = c;
         src += 1;
@@ -128,7 +146,7 @@ fn add_context(res: []const u8) void {
     max_contexts += 1;
 }
 
-fn parse_response(in: *[4096]u8) ?[]const u8 {
+fn parse_response(in: *[4096]u8) !?[]const u8 {
     var src: u32 = 0;
     var dst: u32 = 0;
     var cflag: bool = false;
@@ -163,6 +181,12 @@ fn parse_response(in: *[4096]u8) ?[]const u8 {
                     src += 1;
                 }
                 vflag = true;
+            } else if (in[src + 1] == 'h' and (in[src + 2] == ' ' or in[src + 2] == '\n')) {
+                src += 2;
+                try stdout.print("Flags:\n", .{});
+                try stdout.print("    -c<number: N> - queries LLM with the last N exchanges as additional context. Enter no number to continue with messages before.\n", .{});
+                try stdout.print("    -v - query responses will be more verbose and will come with an explanation in addition to shell code.\n", .{});
+                try stdout.print("All flags must be placed before natural language queries.\n", .{});
             } else {
                 return "invalid flag";
             }
