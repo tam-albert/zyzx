@@ -77,7 +77,8 @@ fn processCommand() !void {
 
         // std.log.info("INPUT: {s}", .{request.items});
 
-        var res = try llm_client.strip_response(allocator, request.items);
+        // var res = try llm_client.strip_response(allocator, request.items);
+        var res = try llm_client.startStreamingResponse(allocator, stdout, request.items);
         defer allocator.free(res);
         add_context(&in, res);
 
