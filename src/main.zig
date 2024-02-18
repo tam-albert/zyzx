@@ -37,7 +37,7 @@ fn waitingAnimation() void {
 pub fn main() !void {
     std.debug.print("\x1B[2J\x1B[H", .{});
     std.debug.print("{s}", .{asciiArt});
-    try openai_agent.processCommandUsingAgent();
+    try openai_agent.processCommandUsingAgent(true);
     // try processCommand();
 }
 
