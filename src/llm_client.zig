@@ -9,27 +9,7 @@ const Message = struct {
 };
 
 const RequestBody = struct {
-    model: []const u8,
     messages: []const Message,
-};
-
-const OpenAIResponseMessage = struct {
-    index: u8,
-    message: Message,
-    logprobs: ?[]const u8 = null,
-    finish_reason: []const u8,
-};
-
-const OpenAIUsageData = struct { prompt_tokens: u8, completion_tokens: u8, total_tokens: u8 };
-
-const OpenAIResponseBody = struct {
-    id: []const u8,
-    object: []const u8,
-    created: u64,
-    model: []const u8,
-    choices: []const OpenAIResponseMessage,
-    usage: OpenAIUsageData,
-    system_fingerprint: []const u8,
 };
 
 const system_message = Message{
@@ -37,68 +17,98 @@ const system_message = Message{
     .content = "You are a helpful assistant.",
 };
 
+const ResponseBody = struct {
+    chunk: []const u8,
+    time: []const u8,
+};
+
 pub fn sendRequest(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
     var client = std.http.Client{ .allocator = allocator };
     defer client.deinit();
 
     const uri = std.Uri.parse(config.DOMAIN) catch unreachable;
-    // const uri = std.Uri.parse("http://127.0.0.1:5000") catch unreachable;
 
     const messages = [_]Message{
         system_message,
         .{ .role = "user", .content = userMessage },
     };
 
-    const requestBody = RequestBody{
-        .model = "gpt-3.5-turbo",
+    const request_body = RequestBody{
         .messages = &messages,
     };
-
-    // var buf: [16384]u8 = undefined;
-    // var fba = std.heap.FixedBufferAllocator.init(&buf);
-    // const fba_allocator = fba.allocator();
-
-    // try std.json.stringify(requestBody, .{}, std.io.getStdOut().writer());
-    // const jsonString = try std.json.stringifyAlloc(fba_allocator, requestBody, .{});
-    // defer fba_allocator.free(jsonString);
-
-    // std.debug.print("Serialized JSON: {s}\n", .{jsonString});
 
     var headers = std.http.Headers{ .allocator = allocator };
     defer headers.deinit();
 
-    try headers.append("Content-Type", "application/json");
-    try headers.append("Authorization", "Bearer " ++ config.API_KEY);
+    // try headers.append("Content-Type", "application/json");
+    try headers.append("Accept", "text/event-stream");
+    // try headers.append("Authorization", "Bearer " ++ config.API_KEY);
 
-    var request = try client.request(.POST, uri, headers, .{});
+    var request = try client.request(.GET, uri, headers, .{});
     defer request.deinit();
     request.transfer_encoding = .chunked;
 
     try request.start();
-    try std.json.stringify(requestBody, .{}, request.writer());
-
+    try std.json.stringify(request_body, .{}, request.writer());
     try request.finish();
     try request.wait();
 
-    const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
-    defer allocator.free(body);
+    var final_response = std.ArrayList(u8).init(allocator);
+    defer final_response.deinit();
 
-    // std.debug.print("response: {s}\n", .{body});
+    while (true) {
+        var buffer: [1024]u8 = undefined;
+        const bytes_read = try request.read(buffer[0..]);
+        if (bytes_read == 0) break; // End of stream
 
-    const parsed_json = std.json.parseFromSlice(OpenAIResponseBody, allocator, body, .{}) catch unreachable;
-    defer parsed_json.deinit();
+        const event = buffer[0..bytes_read];
+        std.debug.print("Received event: {s}\n", .{event});
+        try final_response.appendSlice(event);
+    }
 
-    const response_body = parsed_json.value;
+    return try final_response.toOwnedSlice();
 
-    return allocator.dupe(u8, response_body.choices[0].message.content);
+    // const body = request.reader().readAllAlloc(allocator, 16384) catch unreachable;
+    // defer allocator.free(body);
+
+    // // std.debug.print("response: {s}\n", .{body});
+
+    // const parsed_json = std.json.parseFromSlice(ResponseBody, allocator, body, .{}) catch unreachable;
+    // defer parsed_json.deinit();
+
+    // const response_body = parsed_json.value;
+
+    // return allocator.dupe(u8, response_body.choices[0].message.content);
 }
 
 pub fn strip_response(allocator: std.mem.Allocator, userMessage: []u8) ![]const u8 {
     var res = try sendRequest(allocator, userMessage);
     defer allocator.free(res);
-    // for (res) |c| {
-    //     // std.log.info("{c}", .{c});
-    // }
+
+    // we need to process res so it doesn't include the "data: " events from SSE
+    // and the newlines between separate events
+
+    // Process the accumulated data to strip "data: " and newlines
+    var processedEvents = std.ArrayList(u8).init(allocator);
+    defer processedEvents.deinit();
+
+    var i: usize = 0;
+    while (i < res.len) {
+        // Find the start of the next event data
+        const start = std.mem.indexOf(u8, res[i..], "data: ");
+        if (start) |idx| {
+            i += idx + "data: ".len; // Skip "data: "
+
+            // Find the end of the current event data (marked by "\n\n")
+            const end = std.mem.indexOf(u8, res[i..], "\n\n") orelse break;
+            try processedEvents.appendSlice(res[i .. i + end]);
+            i += end + "\n\n".len; // Move past the current event
+        } else {
+            break; // No more events
+        }
+    }
+
+    std.log.info("response: {s}", .{processedEvents.items});
     const CMD = "echo \"Hello, World!\"";
     return CMD;
 }
