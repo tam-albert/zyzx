@@ -1,0 +1,268 @@
+0,-1.9510915589855,find . \( -type d ! -name . -prune \) -o \( -mtime -1 -print \),find . -type f -mtime -1 ! -type d
+0,-1.2895125975563,find $HOME -newer ~joeuser/lastbatch.txt,find ~ -type f -newer /path/to/file
+1,-2.4944788565804994,ln -sf $keyname     id_rsa,"`ln -s -f ""$keyname"" id_rsa`"
+2,-1.0570895235235,"find . -type f|grep -i ""\.jpg$"" |sort","find . -name ""*.jpg"" | sort"
+3,-9.574224414082952,find . -mtime -1 ! -name '.DS_Store' -type f -printf '%f\n',"find . -type f -name -mmin -1440 ! -name ""*.DS_Store"""
+4,-0.6830845688699999,ps -p $$ | awk '$1 == PP {print $4}' PP=$$,ps -p $$ -o comm=
+5,-1.86625798902139,"find . -type f  -name '*.java' -exec sh -c 'iconv -f cp1252 -t utf-8 ""$1"" > converted && mv converted ""$1""' -- {} \;","find . -name ""*.java"" -exec iconv -f cp1252 -t utf-8 -o {} {} \;"
+6,-1.013005809839,find . -perm -600 -print,find -type f -perm /u=rw
+7,-1.6588817626232,find ./ -type f -exec sed -i 's/string1/string2/' {} \;,"find . -type f -exec sed -i '0,/string1/s/string1/string2/' {} +"
+8,-1.9104370601719995,find dir/ -name '*.txt' | tar -c --files-from=- | bzip2 > dir_txt.tar.bz2,"tar -cvf archive.tar $(find dir/ -type f -name ""*.txt"")"
+9,-0.9256926280199197,find / -name *.mp3,"```bash
+find . -type f -name ""*.mp3""
+```"
+10,-1.2794576887426994,find /the/path -type f -name '*.abc' -execdir rename 's/\.\/(.+)\.abc$/version1_$1.abc/' {} \;,"find /the/path -maxdepth 1 -type f -name ""*.abc"" -execdir mv {} $(basename {} .abc).edefg \;"
+11,-0.012769904,history,history
+12,-0.019807957254649997,find . -type f -print | xargs -L1 wc -l,wc -l *
+13,-3.850698733064,groups user,`groups <username>`
+14,-2.9915020631277,"find . -type f -fprintf /tmp/files.txt ""%i,%b,%M,%n,%u,%g,%s,%CY-%Cm-%Cd %CT,%p\n""","find . -printf ""%i %D %M %n %u %g %s %t %p\n"" > /tmp/files.txt"
+15,-0.028326630499999998,find . -print,find .
+16,-0.6774115473499999,du -sh */ | sort -n,du -h --max-depth=1 | sort -h
+17,-6.878434541705999,"ifconfig | grep ""inet addr:"" | grep -v ""127.0.0.1"" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'  | head -1",ip addr show | grep inet | awk 'NR==2 {print $2}'
+18,-5.751175352477397,find /home/family/Music -name '*.m4a' -print0 | xargs -0 -i ffmpeg -i {} -acodec libvorbis -aq 6 -vn -ac 2 {}.ogg,"`find /home/family/Music -type f -name ""*.m4a"" -exec ffmpeg -i {} -c:a libvorbis {}.ogg \;`"
+19,-1.151098425782,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} \;
+20,-1.6865815515699,find . -name SCCS -prune -o -print,find . -type d -name SCCS -prune -o -print
+21,-1.0958947585180001,cd `dirname $TARGET_FILE`,"cd ""$(dirname ""$TARGET_FILE"")"""
+22,-0.048778763421900004,alias mkdir=¨mkdir -p¨,alias mkdir='mkdir -p'
+23,-1.2807850334386999,"find /path -type f -iname ""*.ext"" -printf ""%h\n""","find /path -type f -iname ""*.ext"" -exec dirname {} \;"
+24,-0.032466694753230003,cat /dir/file.txt | wc -l,wc -l /dir/file.txt
+25,-4.7892420424181505,"find . -name "".git"" -type d | sed 's/\/.git//' |  xargs -P10 -I{} git -C {} pull",find . -mindepth 1 -maxdepth 1 -type d -exec sh -c '(cd {} && git pull)' \;
+26,-0.5749154853426499,diff -arq folder1 folder2,diff -rq folder1 folder2
+27,-1.5804815244486499,yum update | tee mylogfile,sudo apt update && sudo apt upgrade -y | tee mylogfile
+28,-0.05776904813149999,find . 2>&1 | grep -v 'Permission denied' > some_file,"find . 2>&1 | grep -v ""Permission denied"" > some_file"
+29,-0.9619114114736401,"find "".performance_test"" -path "".performance_test/prune_me"" -prune -o -exec bash -c 'echo ""$0""' {} \;",find .performance_test -type d -name prune_me -prune -o -type f -print
+30,-1.1509247435760002,"find ""$sourceDir"" -type d | sed -e ""s?$sourceDir?$targetDir?"" | xargs mkdir -p","cp -R ""$sourceDir"" ""$targetDir"""
+31,-0.17033688957530002,find -mtime +2,find . -type f -mtime +2
+32,-3.1103002178844004,find -mindepth 10 -iname $TARGET,"find . -mindepth 10 -iname ""$TARGET"""
+33,-9.37017681371864,"find . -type d -name ""?????????????????????????????????""",find . -type d -name '???????????????????????????????????????????????????????????????????*'
+34,-2.0868542857676196,find /path/to/base/dir -type d -print0 | xargs -0 chmod 755,"```bash
+find /path/to/base/dir -type d -exec chmod 755 {} +
+```"
+35,-4.3561893654848,find . -type f,find . -type f -maxdepth 1
+36,-6.749568949710251,find .  -path '*/*config',"```bash
+find /path/to/search/directory -type f -name ""*config""
+```"
+37,-4.635860741369539,seq 10000 | parallel -j100 wget https://www.example.com/page{}.html,"```bash
+for i in {1..10000..100}; do seq $i $((i+99)); done | xargs -n 1 -P 10 -I {} wget -q ""https://www.example.com/page{}.html""
+```"
+38,-0.3845518542293,find . -type f -perm 0777 -print,"```bash
+find . -type f -perm 777
+```"
+39,-2.0678338484873398,find . -maxdepth 1 -type d | sed '/^\.$/d',find . -maxdepth 1 -type d -not -name '.'
+40,-0.31478501325524993,find /path/to/search -type l -xtype l,find /path/to/search -type l ! -exec test -e {} \; -print
+41,-0.23196023324755002,"find . -type f -print0 | xargs -0 grep -I ""needle text""","grep -r ""needle text"" ."
+42,-0.29358267622864,find / -group root,"```bash
+find / -group root
+```"
+43,-0.1763242871999,(cd A && find .) > tmp.txt,cd A && ls > tmp.txt
+44,-17.737604693279305,"set lastdaymonth=`cal $month $year  |tr -s "" "" ""\n""|tail -1`","lastdaymonth=$(date -d ""$(date + '1 month ago') + $(date + '1 month ago' + '%d days')"")"
+45,-6.798422481383752,find $HOME/. -name *.txt -exec head -n 1 -v {} \; > report.txt,"find ~/ -type f -name ""*.txt"" -exec sh -c 'echo $0; head -n 1 $0' {} \; > report.txt"
+46,-0.9097692329636,find /dir/containing/unsigned -name '*.pdf' -print0,"find /dir/containing/unsigned -name ""*.pdf"" -print0"
+47,-11.9779657672239,find folder -type f -print0 | xargs -0 file --media-type | egrep 'image|video' | cut -f1 -d : | tr '\n' '\0',find . -type f -exec file {} \; | grep -E ':.*video|.*image'
+48,-8.1475578086887,"find . -name ""*.txt"" -exec egrep -l '^string' {} \;","```bash
+grep -r -l ""^string"" *.txt
+```"
+49,-1.1573912634243004,mount --bind olddir newdir,"```bash
+mount --bind olddir newdir
+```"
+50,-2.0183460459014,"find . -name ""*failed.ipynb"" | cpio -pd ./fails","find . -type f -name ""*failed.ipynb"" -exec cp --parents {} ./fails \;"
+51,-1.5272845020083001,find bar1 -name '*foo*' -not -type d -not -name '*.cc' -exec ln -s $PWD/'{}' bar2/ \;,"find bar1 -type f ! -name ""*.cc"" -exec ln -s {} . \;"
+52,-2.6825228745852,dig @8.8.8.8 domain. a,`dig A domain. @8.8.8.8`
+53,-2.1545769407435,less `find -maxdepth 1 -type f -daystart -mtime -1`,find . -maxdepth 1 -mtime -1 -type f
+54,-0.15223613855183,"mkdir ""${HOME}/.npm-packages""",mkdir $HOME/.npm-packages
+55,-12.0030480077136,head -5 tst.txt | tail -1 |cut -c 5-8,"awk 'NR==5 {print $5}' tst.txt ; awk 'NR==5 {print substr($0, 5, 4)}' tst.txt"
+56,-0.29641240475,find /dir -amin -60,find dir -amin -60
+57,-4.934461249166651,"find . -name ""*.mpg"" -type f -print0 | xargs -0 -I {} -n 1 -P 4 ffmpeg -i {} {}.mp4","```bash
+for file in *.mpg; do ffmpeg -i ""$file"" -c copy ""${file%.*}.mp4""; done
+```"
+58,-0.29511284283464,od -t c file,xxd file
+59,-4.134774661133239,diff /destination/dir/1 /destination/dir/2 -r -x *.xml,"diff -r --exclude=""*.xml"" /destination/dir/1 /destination/dir/2"
+60,-3.4110125102206994,find /data -type f -perm 400 -exec echo Modifying {} \; -exec chmod 755 {} \;,"```bash
+find /data -type f -perm 400 -exec sh -c 'echo ""Modifying $1""; chmod 755 ""$1""' _ {} \;
+```"
+61,-0.42419092209993997,gzip -d ${set1[@]} &,"for file in ""${set1[@]}""; do gzip -d ""$file""; done"
+62,-2.13753389867615,find /usr -follow -name '*.sh',"find /usr -name ""*.sh"" -type f -exec readlink -f {} \;"
+63,-0.0521785606836,"find . -name ""*.txt""","```bash
+ls *.txt
+```"
+64,-3.0490013021053697,"ssh -i keyFile user@host bash -c ""\""nohup ./script arg1 arg2 > output.txt 2>&1 &\""""","ssh -i keyFile user@host ""./script arg1 arg2 > output.txt 2>&1"" &"
+65,-0.05533127726194,find -type d,find . -type d
+66,-2.1407448893809,find / -name foo.bar -print -xdev,"find / -name ""foo.bar"" -xdev"
+67,-7.376016782034501,"find . -iname ""$srch*"" -exec grep ""Processed Files"" {} \; -print| sed -r 'N;s/(.*)\n(.*)/\2 \1/'  > temp2","grep -ri ""Processed Files"" ./* | sed 'N;s/(.*)\n(.*)/\2 \1/' > temp2"
+68,-0.25841323622100004,find /usr -mtime +356 -daystart,find /usr -type f -mtime +356
+69,-0.009331293417000001,"find ""$dir"" -type f",find $dir -type f
+70,-0.5160552378912399,find . -name '*foo',"find . -name ""*foo"""
+71,-0.8252067817403499,find /tmp/a1 -print0 | tar --null -T- -cvf dirall.tar,tar -cf dirall.tar -C /tmp/a1 .
+72,-5.9267572051854,find / -type f|awk -F'/' '{print $NF}'| awk 'length($0) < 25',find / -type f -name '??????????????????????????????*' 
+73,-11.673651993373998,"find … -exec sh -c 'trap ""echo \$?"" EXIT; invalid_command ""$0""' {} \;","find /path/to/directory -type f -exec sh -c 'grep -q ""desired_syntax"" {} && echo ""Syntax is correct"" && exit || echo ""Invalid command""' \;"
+74,-2.2526946861000003,diff -dbU0 a b,`diff -w -u0 a b`
+75,-8.352827899881602,find . -type f -iname '*.CR2' -print0 | xargs -0 -n 1 -P 8 -I {},find . -name '*.raw' | xargs -P 0 -n 1 echo
+76,-1.2357575712037,find . -type f -inum 314167125 -delete,find . -inum 314167125 -exec rm {} \;
+77,-3.4493283428166994,find /prog -type f -size +1000 -print -name core -exec rm {} \;,find /prog -name core -type f -size +500k -exec rm {} +
+78,-0.378792625943,"ssh askapache 'sh -c ""( ( nohup chown -R ask:ask /www/askapache.com &>/dev/null ) & )""'","ssh askapache ""nohup chown -R ask:ask /www/askapache.com &"""
+79,-0.055660270093300004,shopt dotglob,shopt dotglob
+80,-1.6665238513093001,"find /home -iname ""*.txt""","find ~ -iname ""*.txt"""
+81,-0.29680182175173003,"find . -name ""openssl"" 2>&1 | sed '/Permission denied/d;'","find . -name ""specific_file"" 2>/dev/null | grep -v ""Permission denied"""
+82,-2.8449074021920002,"sed 's/,,/, ,/g;s/,,/, ,/g' data.csv | column -s, -t","sed 's/,,/, ,/g; s/,,/, ,/g' data.csv | column -t -s ','"
+83,-1.7336783818702401,for i in `find . -exec echo {} \;`; do cmd1 $i; cmd2 $i; done,"for file in *; do cmd1 ""$file""; cmd2 ""$file""; done"
+84,-1.7375841810492998,read -n1 -s,read -n 1 REPLY < /dev/tty
+85,-0.3007576651373,find . -type f -exec file '{}' \;,find . -type f -exec file {} \;
+86,-0.9797606185097401,"find /home/family/Music -name '*.m4a' -exec ffmpeg -i ""{}"" -acodec libvorbis -aq 6 -vn -ac 2 ""{}.ogg"" \;","for file in /home/family/Music/*.m4a; do ffmpeg -i ""$file"" ""${file%.m4a}.ogg""; done"
+87,-0.059262544959999996,pstree -a -p 20238,pstree -p 20238
+88,-0.25647302235829,rev file,"```bash
+rev file
+```"
+89,-2.3051430409713998,find ~ -name 'arrow*.xbm',ls ~/arrow*xbm
+90,-8.375354535709,"tac infile.txt | sed ""s/a/c/; ta ; b ; :a ; N ; ba"" | tac","echo ""banana"" | sed 's/[^a]*a/ccc/'"
+91,-0.8427108032825001,"files = ""`find ""'""$dirs""'"" -type f |& grep -v '^find: '`""","files=$(find /path/to/folder -type f ! -name ""find*"")"
+92,-2.4860582384358993,ifconfig eth0:fakenfs 192.0.2.55 netmask 255.255.255.255,"```bash
+sudo ip addr add 192.0.2.55/32 dev eth0
+```"
+93,-2.4530222863519797,find . -name '*.php' -type f | xargs cat | wc -l,"find . -type f -name ""*.php"" | xargs wc -l"
+94,-6.059497217467828,split -b 500M -d -a 4 INPUT_FILE_NAME input.part.,split --bytes=500MiB --numeric-suffixes=4 --suffix-length=4 --additional-suffix=.part INPUT_FILE_NAME input.part.
+95,-17.77763582477995,"find . -type f \! -iregex '.\|./.git' -exec perl -i'' -pe ""s/$1/$upper2/gi"" {} +","```bash
+grep -irlZ .\|./.git | xargs -0 sed -i 's/\([^.]*\)\|\([^.]*\.git\)/\U\2/g'
+```"
+96,-2.5637589120077005,"find /etc -maxdepth 1 -name ""*.conf"" | tail","find /etc -maxdepth 2 -type f -name ""*.conf"" -exec tail {} +"
+97,-1.7293557430163904,"find . -type f -name ""*.txt"" -exec gzip {} \;","find . -type f -name ""*.txt"" -exec gzip {} +"
+98,-0.47422043226303,find / -type f -perm 0777,"```bash
+find / -type f -perm 777
+```"
+99,-0.79353988805,fg 1,`fg %1`
+100,-0.08727956237798,find -name met*,"```bash
+ls met*
+```"
+101,-3.724336929896,"find sourceDir -mindepth 1 -exec mv ""{}"" --target-directory=destDir \;",`mv sourceDir/**/* destDir/`
+102,-2.897413238037949,find /opt -type f -empty,find /opt -type f -size 0 -exec ls -l {} +
+103,-0.05278584786405001,find /data1/realtime -mmin -60 -type d,find /data1/realtime -type d -mmin -60
+104,-1.4124273755398298,find / -type f -perm -002,"```bash
+find / -type f -perm -002
+```"
+105,-7.23094123041215,rsync -chavzP --stats /path/to/copy user@host.remoted.from:/path/to/local/storage,rsync -avzh --compress-level=9 --progress --stats --checksum --update user@host.remoted.from:/path/to/copy /path/to/local/storage
+106,-0.08812053036224,find . — size +1000k -print,find . -type f -size +1M
+107,-1.2124580512947998,find /home -group test,find /home -group test -type f
+108,-7.706368985064602,find ./ -type f -name \*.php -exec sed -i ’s/^.*iframe bla bla bla.*$//g’ {} \;,"find . -name ""*.php"" -exec sed -i -r '/^.*iframe bla bla bla.*$/d' {} +"
+109,-0.24775267171984997,find . -type f -name *.php,"find . -type f -name ""*.php"""
+110,-14.5228194988,"echo -e ""$(TZ=GMT+30 date +%Y-%m-%d)\n$(TZ=GMT+20 date +%Y-%m-%d)"" | grep -v $(date +%Y-%m-%d) | tail -1","date -d ""30 minutes"" +%F %T 
+"
+111,-1.2169275021483,"find / -name ""*.core"" | xargs rm","find . -name ""*.core"" -exec rm {} +"
+112,-3.22341920051334,ping -W 1 -c 1 10.0.0.$i | grep 'from' &,"ping -c 1 -I 10.0.0.$i -W 1 | grep ""from"""
+113,-0.05412025653424,find . | xargs sed -i ‘s/foo/bar/g’,find . -type f -exec sed -i 's/foo/bar/g' {} +
+114,-1.3692641128936,"find /home/you -iname ""*.c"" -atime -30 -type -f","find /home/you -name ""*.c"" -atime -720 -type f"
+115,-7.435733223118599,find . -type l -daystart -mtime $date_dif -exec copy_it.sh $verbose -s {} -t $to_dir \;,find /path/to/directory -type l -newermt YYYY-MM-DD -exec cp '{}' /path/to/destination \;
+116,-0.0508086590206,find /tmp -type d -empty,find /tmp -type d -empty
+117,-4.52563621103045,find -E /somefolder -type f -regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$',find /somefolder -type f -iregex '\./(.*\.error.*|second.*log|.*FFPC\.log)$'
+118,-0.8118854751606499,find / -name myfile -type f -print 2> /dev/null,"find / -type f -name ""myfile"" 2>/dev/null"
+119,-1.2954584089863999,find / -type f -perm -002 -printf '%p has world write permissions\n',"```bash
+find / -perm -002 -exec echo {} has world write permissions \;
+```"
+120,-1.1963777561803,diff -arq folder1 folder2,diff -rq folder1 folder2
+121,-8.261654779586634,find /etc -type f -exec cat '{}' \; | tr -c '.[:digit:]' '\n'  | grep '^[^.][^.]*\.[^.][^.]*\.[^.][^.]*\.[^.][^.]*$',"grep -rohE ""\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"" /etc | grep -oE ""\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"" | sort -u"
+122,-5.3872208413518,find . -mindepth 1 -maxdepth 1 -type d| xargs -n 1 cp -i index.html,find . -maxdepth 1 -type d -exec cp -i index.html {}/index.html \;
+123,-1.2228672199964,find $LOGDIR -type d -mtime +5 -exec rm -rf {} \;,find $LOGDIR -type d -ctime +7 -exec rm -r {} +
+124,-2.5762905268410004,"find . -name ""pattern"" | xargs git diff --","find . -name ""pattern"" -exec git diff {} +"
+125,-5.58418055310633,"bind '""e"":self-insert'","xinput set-prop ""AT Translated Set 2 keyboard"" ""Device Enabled"" 1"
+126,-1.50365876938098,find /etc -name '*.conf',"```bash
+find /etc -type f -name ""*.conf""
+```"
+127,-9.6309017810901,find  / -iname findcommandexamples.txt,sudo find / -iname findcommandexamples.txt 
+128,-0.29235538771265,"find . -type f -name "".*""",ls -a
+129,-1.8573482366535499,find . -type f -name 'abc*' ! -name '*.py',"```bash
+find . -type f -name 'abc*' ! -name '*.py'
+```"
+130,-0.42460663217630007,find /path/you/need -type f -exec md5sum {} \; > checksums.md5,find /path/you/need -type f -exec md5sum {} + > checksums.md5
+131,-0.043450713,find . -exec echo {} ;,ls
+132,-6.14251314391291,"curl -L -C - -b ""oraclelicense=accept-securebackup-cookie"" -O http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip","```bash
+curl -LOJb ""oraclelicense=accept-securebackup-cookie"" ""http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip""
+```"
+133,-4.3051169192701995,"read -r -p ""${1:-Are you sure? [y/N]} "" response","IFS= read -r -p ""${1:-Are you sure? [y/N]} "" response"
+134,-0.7121854602765297,find / -user root -name tecmint.txt,"```bash
+sudo find / -name tecmint.txt -user root
+```"
+135,-2.4807022155757994,"find ../../$name-module -name 'Name*' -type f -exec bash -c ""mv \""\$1\"" \""\${1/Name/$Name}\"""" -- {} \;","find ../../$name-module -type f -name ""Name*"" -exec bash -c 'mv ""$1"" ""${1/Name/$Name}""' _ {} \;"
+136,-2.8453811099744306,find . -name something -exec ls -l {} \;,"find . -type f -name ""something"" -exec ls -l {} \;"
+137,-2.2443156510294,"find ./ -type f -name ""*.php""  | xargs -r rename ""s/php/html/""","find . -type f -name ""*.php"" -exec rename 's/php/html/' {} +"
+138,-1.06710338260444,"echo ""hello `sleep 2 &`""","sleep 2 && echo ""hello"""
+139,-0.0063408251514500006,find /path/to/dir -type f -exec printf %.sX {} + | wc -c,find /path/to/dir -type f | wc -l
+140,-4.4220089496636,find /myfiles -atime +30 -exec rm {} ;,find myfiles/* -type f -atime +30 -exec rm {} +
+141,-11.303199475994997,"find . -name ""sample*_1.txt"" | perl -pe 's/_1\.txt$//' | parallel program {}-out {}_1.txt {}_2.txt","find . -type f -name ""sample*_1.txt"" -exec bash -c 'echo {} | sed ""s/_1.txt$/_2.txt/"" | xargs -I {} parallel program {}-out {}_1.txt {}_2.txt' \;"
+142,-0.7204195442,true | echo `tty | sed 's:/dev/::'`,`true | tty`
+143,-0.3637870710894501,"find /usr /home  /tmp -name ""*.jar"" 2>/dev/null","find /usr /home /tmp -name ""*.jar"" 2>/dev/null"
+144,-4.45684877860588,"find / -maxdepth 1 -xdev -type f -exec grep -li ""stringtofind"" {} + | parallel sed ""'/./d'"" '{}'","```bash
+find / -type f -exec grep -l ""stringtofind"" {} + | xargs -I{} cp /dev/null {}
+```"
+145,-0.05377210932115,find . -type f,find . -type f
+146,-2.1382173762947003,read PASSWORD,"read -p ""Enter password: "" PASSWORD"
+147,-1.2439908931360002,find . -print0 > mypipe,find . -type f -print0
+148,-0.06331279649514,chown amzadm.root  /usr/bin/aws,sudo chown amzadm:root /usr/bin/aws
+149,-0.3234951686406,find /mydir -atime +100 -ok rm {} \;,find /mydir -type f -atime +100 -exec rm -i {} +
+150,-0.01583413156,unset -v latest,unset latest
+151,-7.251099161848631,"crontab -l | awk '$1 == ""*"" || $1 ~ /^[0-9]+$/ && $1 < 15 {print}'","```bash
+crontab -l | grep -E '^[^#].*[\s\t]+([0-9]|1[0-4]|\*)[\s\t]+'
+```"
+152,-4.314774126536899,find .  -type f  -name '*.txt' -exec wc -w {} \; | awk '{total += $1} END{print total}',grep -o -w '\w*' *.txt | wc -w
+153,-0.8962832444040001,"find ./ -type f -regex "".*\.[Jj][Pp][gG]$"" | wc -l","find . -iname ""*.jpg"" | wc -l"
+154,-2.29247889137,find . -name .snapshot -prune -o \( -type f -mtime 0 -print0 \),find . -path './.snapshot' -prune -o -type f -mtime -1 -print0
+155,-0.0191932188,"exec /usr/bin/find ""$@""","find ""$@"""
+156,-0.49974747485785004,find . -atime +30 -exec ls \; | wc -l,find . -type f -atime -30 | wc -l
+157,-1.5503379570212996,"find . -name '*[+{;""\\=?~()<>&*|$ ]*' -exec rm -f '{}' \;","find . -type f -name '*[+{;""\\=?~()<>&*|$ ]*' -exec rm {} +"
+158,-3.9889936032386,find -name test2,"find ./ -type f -name ""test2"""
+159,-0.04060691188175001,find . -daystart -mtime -1 -ls,find . -type f -mtime -1
+160,-4.251528334244651,join -a1 -a2 <(sed s/^Gene/00ne/ S43.txt | sort) <(sed s/^Gene/00ne/ S44.txt | sort) | column -t | sed s/^00ne/Gene/,"awk 'NR==FNR{a[$1]=$0;next} $1 in a{print $0,a[$1]}' S43.txt S44.txt"
+161,-1.3841793801785003,find / -size 0 -ok rm { } \;,find . -type f -empty -exec rm -i {} +
+162,-2.7472826632857,kill `pidof firefox`,pkill -15 firefox
+163,-0.43683745751133,find . -size -9k,find . -type f -size -9M
+164,-2.69618690907493,find . -name .svn -exec rm -rf {} \;,"```bash
+find . -type d -name .svn -exec rm -rf {} \;
+```"
+165,-0.41120500896622986,"find . -name ""*.php"" -exec sed -i 's/foo/bar/g' {} \;","find . -type f -name ""*.php"" -exec sed -i 's/foo/bar/g' {} +"
+166,-0.17504811,readlink `pwd`,pwd
+167,-11.26505668540879,"find . -name ""*.jar"" -exec jar -tf {} \;|grep  ""message_track.properties""","find . -name ""*.jar"" -exec jar tvf {} \; | grep ""file-to-search"""
+168,-3.9541034907021997,find / \! -readable -prune -o -name '*.jbd' -ls,"find / -name ""*jbd"" -type f -ls "
+169,-0.06484968818289999,find -type f,find . -type f
+170,-6.975589207186,find . -name core -ok rm {} \;,"find /path/to/directory -name ""file.txt"" -ok rm {} \;"
+171,-0.009308236054630001,ssh remote_user@server.com,ssh remote_user@server.com
+172,-3.3366493554072902,find . -name test -type d -exec rm -r {} \;,"```bash
+find . -type d -name ""test"" -exec rm -rf {} +
+```"
+173,-1.8505037519840999,find / -type f -perm 0777 -print -exec chmod 644 {} \;,`find / -type f -perm 777 -exec chmod 644 {} \;`
+174,-4.4716033734552,column -t -s '' list-of-entries.txt,cat list-of-entries.txt | tr -d '\t' > formatted-list.txt
+175,-11.539408807798,find . -name test -prune,"find . -maxdepth 1 -type f -name ""test"" -execdir basename {} ';'"
+176,-0.019512234750949996,find . -type f -size +500M,find . -type f -size +500M
+177,-6.219824619324942,find . -path ./src/emacs -prune -o -print,"```bash
+find . -type d -not \( -path ""./src/emacs"" -prune \)
+```"
+178,-0.0623171388565,seq 10 | xargs echo,echo {1..10}
+179,-0.19804976964009996,find /var/ -size +10M -ls,find /var -type f -size +10M
+180,-4.4645654391975995,basename /path/to/dir/filename.txt .txt,"echo ""/specified/path/filename.txt"" | sed 's/.*\///;s/\.txt//'"
+181,-0.32830665586380003,find ~/ -atime +100 -exec rm -i {} \;,find ~ -atime +100 -exec rm -i {} \;
+182,-0.3979949579,uname -o,uname -s
+183,-0.8485940805572499,"find /fss/fin -d 1 -type d -name ""*"" -print","```bash
+ls -d /fss/fin/*/
+```"
+184,-0.9511863917513399,find / -type f -perm -002 -print0,"```bash
+find / -perm -002 -print0
+```"
+185,-0.28073513357389995,"find ~/some/directory -name ""*rb"" -exec basename {} \;","find ~/some/directory -type f -name ""*.rb"" -exec basename {} \;"
+186,-0.1315973876679,find /home -type f -perm 0777 -print,find /home -type f -perm 077
+187,-0.75789409243464,sudo yum install glibc,sudo apt install glibc
+188,-0.0106115682243,su - jetty cp file1 file2,cp file1 file2
+189,-2.918703139248,find .  -mtime -14 | sed -e 's/^\.\///',find . -type f -mtime -14 | sed 's/^.\///'
+190,-0.12354370641050001,find . -type f -a -name '*.*',"find . -type f -name ""*.*"""
+191,-2.3919233082461,"rsync -avz --progress local/path/some_file usr@server.com:""/some/path/""",rsync -avz --progress usr@server.com:/local/path/some_file /some/path
+192,-4.21964192734605,"echo ""0a.00.1 usb controller some text device 4dc9"" | rev | cut -b1-4 | rev","```bash
+echo ""your_string_here"" | tail -c 5
+```"
+193,-2.9893735758049997,ls `readlink somelink`,"[ -e ""somelink"" ] && echo ""File exists"" || echo ""File does not exist"""
+194,-2.31236497917895,echo suspend | sudo tee /sys/bus/usb/devices/usb3/power/level,"```bash
+echo ""suspend"" | sudo tee /sys/bus/usb/devices/usb3/power/level
+```"
+195,-11.4628669683,w | sort,w | awk 'NR > 2' | sort -k1
+196,-2.6447008921278607,"find ./js/ -name ""*.js.compiled"" -print0","find . -name ""*js.compiled"" -print0"
+197,-3.245891193494,df -k .,du -s -k .
+198,-1.2322577039812996,"find . -type f -name ""*.$extension""","```bash
+find . -type f -name ""*.$extension""
+```"
+199,-0.45457091774959985,find . -name \*.c -print | xargs grep wait_event_interruptible /dev/null,"grep -r ""wait_event_interruptible"" --include=""*.c"" ."
+200,-0.21441552281360002,find / -mmin -60,find . -type f -mmin -60
+0,-0.14274924413989998,"yes | grep y | sed 100q | awk '{printf( ""%03d "", NR )}'; echo",echo {001..100}
