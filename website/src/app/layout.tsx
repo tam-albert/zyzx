@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Zyzx | Natural Language Terminal",
   description:
-    "Zyzx is a natural language terminal that supercharges your development workflow. Powered by offline, safe and secure AI.",
+    "Zyzx is a natural language terminal that supercharges your development workflow. Powered by AI that is offline, safe, and secure.",
 };
 
 export default function RootLayout({
