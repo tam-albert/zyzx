@@ -24,6 +24,20 @@ client = OpenAI(api_key="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")
 import csv
 import json
 import ast
+import re
+
+
+def parse_list_of_list_string(s):
+    s = s[1:-1]
+    s = s.split("],")
+    s = [x[1:-1].split(", ") for x in s]
+    return s
+
+
+def parse_list_string(s):
+    s = s[1:-1]
+    s = s.split(", ")
+    return s
 
 
 def get_score():
@@ -52,17 +66,10 @@ def get_score():
             s = 0.0
             if not actual_keys:
                 continue
-            actual_keys = json.dumps(actual_keys)
-            pred_keys = json.dumps(pred_keys)
-            actual_keys = ast.literal_eval(actual_keys)
-            pred_keys = ast.literal_eval(pred_keys)
-            actual_utils = json.dumps(actual_utils)
-            pred_utils = json.dumps(pred_utils)
-            actual_utils = ast.literal_eval(actual_utils)
-            pred_utils = ast.literal_eval(pred_utils)
-
-            print("should be good", actual_utils, len(actual_utils))
-
+            actual_keys = parse_list_of_list_string(actual_keys)
+            pred_keys = parse_list_of_list_string(pred_keys)
+            actual_utils = parse_list_string(actual_utils)
+            pred_utils = parse_list_string(pred_utils)
             T = max(len(actual_utils), len(pred_utils))
             for i in range(max(len(actual_utils), len(pred_utils))):
                 if i >= len(actual_utils):
@@ -74,10 +81,6 @@ def get_score():
                 if actual_utils[i] != pred_utils[i]:
                     s -= 1 / T
                     continue
-                # actual_utils[i] == pred_utils[i]
-                print(actual_keys, pred_keys, i)
-                print(actual_utils, pred_utils, i)
-                print(len(actual_utils), len(pred_utils))
                 N = max(len(actual_keys[i]), len(pred_keys[i]))
                 Sf = (
                     1
@@ -90,6 +93,7 @@ def get_score():
                 s += 1 / T * Sf
             all_s.append(s)
         mx = max(all_s)
+        print(all_s)
         if mx > 0:
             return mx
         else:
@@ -97,3 +101,4 @@ def get_score():
 
 
 print(get_score())
+# print(parse_list_of_list_string("[[type, name, prune, mtime, print]]"))

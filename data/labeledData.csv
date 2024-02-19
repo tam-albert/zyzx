@@ -18,8 +18,8 @@ find . -type f -name ""*.mp3""
 13,-3.850698733,groups user,`groups <username>`,[groups],[groups],[[]],[[]]
 14,-2.991502063,"find . -type f -fprintf /tmp/files.txt ""%i,%b,%M,%n,%u,%g,%s,%CY-%Cm-%Cd %CT,%p\n""","find . -printf ""%i %D %M %n %u %g %s %t %p\n"" > /tmp/files.txt","[find,f]",[find],"[[type],[fprintf]]",[[printf]]
 15,-0.0283266305,find . -print,find .,[find],[find],[[print]],[[]]
-16,-0.6774115473,du -sh */ | sort -n,du -h --max-depth=1 | sort -h,"[du, sort]","[du, sort]","[[sh],[n]]",[[h]]
+16,-0.6774115473,du -sh */ | sort -n,du -h --max-depth=1 | sort -h,"[du, sort]","[du, sort]","[[sh],[n]]","[[h], []]"
 17,-6.878434542,"ifconfig | grep ""inet addr:"" | grep -v ""127.0.0.1"" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'  | head -1",ip addr show | grep inet | awk 'NR==2 {print $2}',"[ifconfig,grep]","[show,grep,awk]",,
 18,-5.751175352,find /home/family/Music -name '*.m4a' -print0 | xargs -0 -i ffmpeg -i {} -acodec libvorbis -aq 6 -vn -ac 2 {}.ogg,"`find /home/family/Music -type f -name ""*.m4a"" -exec ffmpeg -i {} -c:a libvorbis {}.ogg \;`","[find,xargs,ffmpeg,libvorbis]","[find, f, ffmpeg, libvorbis]","[[name, print0],[0,i],[i],[acodec],[aq,vn,ac]]","[[type],[name],[exec,i],[c]]"
-19,-1.151098426,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} \;,"[find, d, chmod]","[find, d, chmod]","[[type, exec]]","[[type, exec]]"
+19,-1.151098426,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +,find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} \;,"[find, d, chmod]","[find, d, chmod]","[[type, exec],[],[]]","[[type, exec],[],[]]"
 23,-1.280785033,"find /path -type f -iname ""*.ext"" -printf ""%h\n""","find /path -type f -iname ""*.ext"" -exec dirname {} \;","[find, f]","[find, f]","[[type], [iname]]","[[type], [iname]]"
