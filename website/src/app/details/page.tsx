@@ -22,7 +22,12 @@ export default function Home() {
           </div>
           <div className={`${classes.blogContent}`}>
             <div className={`${classes.flex}`}>
-              <img src="/images/terminal.png" alt="term" width={700}></img>
+              <img
+                src="/images/terminal.png"
+                alt="term"
+                width={700}
+                className={classes.blogImage}
+              ></img>
             </div>
             <p>
               Our goal with this project was to address the issue of a lack of a
@@ -90,7 +95,11 @@ export default function Home() {
 
             <div className={classes.flex}>
               <div className={classes.flex}>
-                <img src="/images/1to2.png" width={600} />
+                <img
+                  src="/images/1to2.png"
+                  width={600}
+                  className={classes.blogImage}
+                />
                 <i>First stage of fine-tuning</i>
               </div>
               <div className={classes.flex}>
@@ -98,6 +107,7 @@ export default function Home() {
                   src="/images/2to3.png"
                   width={600}
                   style={{ marginTop: "3rem" }}
+                  className={classes.blogImage}
                 />
                 <i style={{ marginBottom: "2rem" }}>
                   Second stage of fine-tuning
@@ -121,7 +131,11 @@ export default function Home() {
             </p>
 
             <div className={classes.flex}>
-              <img src="/images/pipeline.png" width={600}></img>
+              <img
+                src="/images/pipeline.png"
+                width={600}
+                className={classes.blogImage}
+              ></img>
               <i>Fine-tuning pipeline</i>
             </div>
 

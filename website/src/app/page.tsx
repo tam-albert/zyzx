@@ -58,7 +58,7 @@ export default function Home() {
         <img
           src={"/images/terminal.png"}
           alt="terminal"
-          className={`${classes.terminal} ${classes.animate}`}
+          className={`${classes.terminal} ${classes.animate} ${classes.blogImage}`}
         />
       </div>
     </main>
