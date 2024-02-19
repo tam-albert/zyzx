@@ -214,3 +214,497 @@ find /home/username/public_html/sites/default/files -type d -exec chmod 770 {} +
 49,"Print summary of new/missing files, and which files differ between folder1 and folder2.",diff -arq folder1 folder2,[/INST] `diff -r folder1 folder2 | diff -x folder1 -x folder2 --summary`</s>
 49,"Print summary of new/missing files, and which files differ between folder1 and folder2.",diff -arq folder1 folder2,[/INST] `diff -r folder1 folder2 | diff -x folder1 -x folder2 --summary`</s>
 49,"Print summary of new/missing files, and which files differ between folder1 and folder2.",diff -arq folder1 folder2,[/INST] `diff -r folder1 folder2 | diff -x folder1 -x folder2 --summary`</s>
+50,"Updates all software in system, prints update log on terminal and saves to 'mylogfile'.",yum update | tee mylogfile,"[/INST] `softwareupdate -l && softwareupdate --install --all && echo ""Update log:"" >> mylogfile && cat /Library/Receipts/InstallHistory.plist >> mylogfile` This command will list all available updates, install them, print the update log to the terminal, and save the log to a file named ""mylogfile"" in the current directory.</s>"
+50,"Updates all software in system, prints update log on terminal and saves to 'mylogfile'.",yum update | tee mylogfile,"[/INST] `softwareupdate -l && softwareupdate --install --all && echo ""Update log:"" >> mylogfile && cat /Library/Receipts/InstallHistory.plist >> mylogfile` This command will list all available updates, install them, print the update log to the terminal, and save the log to a file named ""mylogfile"" in the current directory.</s>"
+50,"Updates all software in system, prints update log on terminal and saves to 'mylogfile'.",yum update | tee mylogfile,"[/INST] `softwareupdate -l && softwareupdate --install --all && echo ""Update log:"" >> mylogfile && cat /Library/Receipts/InstallHistory.plist >> mylogfile` This command will list all available updates, install them, print the update log to the terminal, and save the log to a file named 'mylogfile' in the current directory.</s>"
+51,"find all files under the current directory, redirecting error messages to the output and filtering any lines containing the text ""Permission denied"", writing the remaining output to some_file",find . 2>&1 | grep -v 'Permission denied' > some_file,"[/INST] ```bash
+find . 2>&1 | grep -v ""Permission denied"" > some_file
+```</s>"
+51,"find all files under the current directory, redirecting error messages to the output and filtering any lines containing the text ""Permission denied"", writing the remaining output to some_file",find . 2>&1 | grep -v 'Permission denied' > some_file,"[/INST] ```bash
+find . 2>&1 | grep -v ""Permission denied"" > some_file
+```</s>"
+51,"find all files under the current directory, redirecting error messages to the output and filtering any lines containing the text ""Permission denied"", writing the remaining output to some_file",find . 2>&1 | grep -v 'Permission denied' > some_file,"[/INST] ```bash
+find . 2>&1 | grep -v ""Permission denied"" > some_file
+```</s>"
+52,list all files under .performance_test directory except .performance_test/prune_me directory,"find "".performance_test"" -path "".performance_test/prune_me"" -prune -o -exec bash -c 'echo ""$0""' {} \;","[/INST] `find .performance\_test -type f ! -path ""*.performance\_test/prune\_me/*"" `</s>"
+52,list all files under .performance_test directory except .performance_test/prune_me directory,"find "".performance_test"" -path "".performance_test/prune_me"" -prune -o -exec bash -c 'echo ""$0""' {} \;","[/INST] `find .performance\_test -type f ! -path ""*.performance\_test/prune\_me/*"" `</s>"
+52,list all files under .performance_test directory except .performance_test/prune_me directory,"find "".performance_test"" -path "".performance_test/prune_me"" -prune -o -exec bash -c 'echo ""$0""' {} \;","[/INST] `find .performance\_test -type f ! -path ""*.performance\_test/prune\_me/*"" `</s>"
+53,"Copy directory hierarchy from ""$sourceDir"" to ""$targetDir""","find ""$sourceDir"" -type d | sed -e ""s?$sourceDir?$targetDir?"" | xargs mkdir -p","[/INST] `cp -R ""$sourceDir"" ""$targetDir""`</s>"
+53,"Copy directory hierarchy from ""$sourceDir"" to ""$targetDir""","find ""$sourceDir"" -type d | sed -e ""s?$sourceDir?$targetDir?"" | xargs mkdir -p","[/INST] `cp -R ""$sourceDir"" ""$targetDir""`</s>"
+53,"Copy directory hierarchy from ""$sourceDir"" to ""$targetDir""","find ""$sourceDir"" -type d | sed -e ""s?$sourceDir?$targetDir?"" | xargs mkdir -p","[/INST] `cp -R ""$sourceDir"" ""$targetDir""`</s>"
+54,Look for any files that have not been modified in the last two days,find -mtime +2,[/INST] `find . -type f -mtime +2`</s>
+54,Look for any files that have not been modified in the last two days,find -mtime +2,[/INST] `find . -type f -mtime +2`</s>
+54,Look for any files that have not been modified in the last two days,find -mtime +2,[/INST] `find . -type f -mtime +2`</s>
+55,Find all files/directories with case insensitive name pattern $TARGET that are located in minimum 10 level down the current directory,find -mindepth 10 -iname $TARGET,[/INST] `find . -path '*/*/*/*/*/*/*' -name '$TARGET' 2>/dev/null`</s>
+55,Find all files/directories with case insensitive name pattern $TARGET that are located in minimum 10 level down the current directory,find -mindepth 10 -iname $TARGET,[/INST] `find . -path '*/*/*/*/*/*/*' -name '$TARGET' 2>/dev/null`</s>
+55,Find all files/directories with case insensitive name pattern $TARGET that are located in minimum 10 level down the current directory,find -mindepth 10 -iname $TARGET,[/INST] `find . -path '*/*/*/*/*/*/*' -name '$TARGET' 2>/dev/null`</s>
+56,Find all directories under current directory whose names are 33 characters long,"find . -type d -name ""?????????????????????????????????""","[/INST] `find . -type d -name '??????????????????????'`
+
+This command uses the `find` command to search for directories (`-type d`) in the current directory (`.`) whose names are exactly 33 characters long (`-name '??????????????????????'`). The `?` character is a wildcard that matches any single character, and there are 33 of"
+56,Find all directories under current directory whose names are 33 characters long,"find . -type d -name ""?????????????????????????????????""","[/INST] `find . -type d -name '??????????????????????'`
+
+This command uses `find` to search for directories (`-type d`) in the current directory (`.`) whose names are exactly 33 characters long (`-name '??????????????????????'`). The `?` character is a wildcard that matches any single character, so `??????????????"
+56,Find all directories under current directory whose names are 33 characters long,"find . -type d -name ""?????????????????????????????????""","[/INST] `find . -type d -name '??????????????????????'`
+
+This command uses `find` to search for directories (`-type d`) in the current directory (`.`) whose names are exactly 33 characters long (`-name '??????????????????????'`). The `?` character is a wildcard that matches any single character, so `??????????????"
+57,Find all directories under /path/to/base/dir and change their permission to 755,find /path/to/base/dir -type d -print0 | xargs -0 chmod 755,[/INST] `find /path/to/base/dir -type d -exec chmod 755 {} +`</s>
+57,Find all directories under /path/to/base/dir and change their permission to 755,find /path/to/base/dir -type d -print0 | xargs -0 chmod 755,[/INST] `find /path/to/base/dir -type d -exec chmod 755 {} +`</s>
+57,Find all directories under /path/to/base/dir and change their permission to 755,find /path/to/base/dir -type d -print0 | xargs -0 chmod 755,[/INST] `find /path/to/base/dir -type d -exec chmod 755 {} +`</s>
+58,display all the regular/normal files in current directory,find . -type f,"[/INST] `ls -p | grep -v /`
+
+This command will display all the regular/normal files in the current directory by listing all files and directories (`ls -p`) and then filtering out the directories (`grep -v /`).</s>"
+58,display all the regular/normal files in current directory,find . -type f,"[/INST] `ls -p | grep -v /`
+
+This command will display all the regular/normal files in the current directory by listing all files and directories (`ls -p`) and then filtering out the directories (`grep -v /`).</s>"
+58,display all the regular/normal files in current directory,find . -type f,"[/INST] `ls -p | grep -v /`
+
+This command will display all the regular/normal files in the current directory by listing all files and directories (`ls -p`) and then filtering out the directories (`grep -v /`).</s>"
+59,"Find files whose pathnames end in ""config""",find .  -path '*/*config',"[/INST] `find . -name ""config""`</s>"
+59,"Find files whose pathnames end in ""config""",find .  -path '*/*config',"[/INST] `find . -name ""config""`</s>"
+59,"Find files whose pathnames end in ""config""",find .  -path '*/*config',"[/INST] `find . -name ""config""`</s>"
+60,"Download 10000 web pages ""https://www.example.com/page{}.html"" 100 at a time where ""{}"" ranges from 1 to 10000",seq 10000 | parallel -j100 wget https://www.example.com/page{}.html,"[/INST] `for i in $(seq -f ""%04g"" 1 100); do curl -o page${i}.html ""https://www.example.com/page${i}.html""; done;`
+
+This command uses a for loop to download 100 webpages at a time, where the {} placeholder in the URL is replaced by a 4-digit number ranging from 0001 to 1000. The `"
+60,"Download 10000 web pages ""https://www.example.com/page{}.html"" 100 at a time where ""{}"" ranges from 1 to 10000",seq 10000 | parallel -j100 wget https://www.example.com/page{}.html,"[/INST] `for i in $(seq -f ""%04g"" 1 100); do curl -o page${i}.html ""https://www.example.com/page${i}.html""; done;`
+
+This command uses a for loop to download 100 webpages at a time, where the {} placeholder in the URL is replaced by a 4-digit number ranging from 0001 to 1000. The `"
+60,"Download 10000 web pages ""https://www.example.com/page{}.html"" 100 at a time where ""{}"" ranges from 1 to 10000",seq 10000 | parallel -j100 wget https://www.example.com/page{}.html,"[/INST] `for i in $(seq -f ""%04g"" 1 100); do curl -o page${i}.html ""https://www.example.com/page${i}.html""; done;`
+
+This command uses a for loop to download 100 webpages at a time, where the {} placeholder in the URL is replaced by a 4-digit number ranging from 0001 to 1000. The `"
+61,Find all the files whose permissions are 777 in the current directory,find . -type f -perm 0777 -print,[/INST] `find . -type f -perm 0777`</s>
+61,Find all the files whose permissions are 777 in the current directory,find . -type f -perm 0777 -print,[/INST] `find . -type f -perm 0777`</s>
+61,Find all the files whose permissions are 777 in the current directory,find . -type f -perm 0777 -print,[/INST] `find . -type f -perm 0777`</s>
+62,Find all directories in maximum 1 level down the current directory and remove the . entry from the output,find . -maxdepth 1 -type d | sed '/^\.$/d',[/INST] `ls -d */..?*`</s>
+62,Find all directories in maximum 1 level down the current directory and remove the . entry from the output,find . -maxdepth 1 -type d | sed '/^\.$/d',[/INST] `ls -d */..?*`</s>
+62,Find all directories in maximum 1 level down the current directory and remove the . entry from the output,find . -maxdepth 1 -type d | sed '/^\.$/d',[/INST] `ls -d */..?*`</s>
+63,Find all broken symlinks under /path/to/search directory,find /path/to/search -type l -xtype l,"[/INST] `find /path/to/search -type l -exec test -e {} \; -print -o -print0 | xargs -0 rm -f`<br>
+This command will find all broken symlinks under the specified directory and remove them. If you want to only find the broken symlinks without deleting them, you can use the following command:<br>
+`find /path/to/search -type l -exec test -e {} \; -print"
+63,Find all broken symlinks under /path/to/search directory,find /path/to/search -type l -xtype l,"[/INST] `find /path/to/search -type l -exec test -e {} \; -print -o -print0 | xargs -0 rm -f`<br>
+This command will find all broken symlinks under the specified directory and remove them. If you want to only find the broken symlinks without deleting them, you can use the following command:<br>
+`find /path/to/search -type l -exec test -e {} \; -print"
+63,Find all broken symlinks under /path/to/search directory,find /path/to/search -type l -xtype l,"[/INST] `find /path/to/search -type l -exec test -e {} \; -print -o -print0 | xargs -0 rm -f`<br>
+This command will find all broken symlinks under the specified directory and remove them. If you want to only find the broken symlinks without deleting them, you can use the following command:<br>
+`find /path/to/search -type l -exec test -e {} \; -print"
+64,"Search the current directory recursively for files containing ""needle text""","find . -type f -print0 | xargs -0 grep -I ""needle text""","[/INST] `grep -r ""needle text"" .`</s>"
+64,"Search the current directory recursively for files containing ""needle text""","find . -type f -print0 | xargs -0 grep -I ""needle text""","[/INST] `grep -r ""needle text"" .`</s>"
+64,"Search the current directory recursively for files containing ""needle text""","find . -type f -print0 | xargs -0 grep -I ""needle text""","[/INST] `grep -r ""needle text"" .`</s>"
+65,Find all files that belong to group root,find / -group root,[/INST] `find / -group root`</s>
+65,Find all files that belong to group root,find / -group root,[/INST] `find / -group root`</s>
+65,Find all files that belong to group root,find / -group root,[/INST] `find / -group root`</s>
+66,"change the current working directory to ""A"" and display all the files in that folder and save the output to the file ""tmp.txt""",(cd A && find .) > tmp.txt,"[/INST] ```bash
+cd A && ls > tmp.txt
+```</s>"
+66,"change the current working directory to ""A"" and display all the files in that folder and save the output to the file ""tmp.txt""",(cd A && find .) > tmp.txt,"[/INST] ```bash
+cd A && ls > tmp.txt
+```</s>"
+66,"change the current working directory to ""A"" and display all the files in that folder and save the output to the file ""tmp.txt""",(cd A && find .) > tmp.txt,"[/INST] ```bash
+cd A && ls > tmp.txt
+```</s>"
+67,Stores date of last month day in the 'lastdaymonth' variable.,"set lastdaymonth=`cal $month $year  |tr -s "" "" ""\n""|tail -1`","[/INST] `datetime=$(date -v -1m '+%Y-%m-%d'); lastdaymonth=$(date -j -f ""%Y-%m-%d"" ""$datetime"" '+%d')`</s>"
+67,Stores date of last month day in the 'lastdaymonth' variable.,"set lastdaymonth=`cal $month $year  |tr -s "" "" ""\n""|tail -1`","[/INST] `datetime=$(date -v -1m '+%Y-%m-%d'); lastdaymonth=$(date -j -f ""%Y-%m-%d"" ""$datetime"" '+%d')`</s>"
+67,Stores date of last month day in the 'lastdaymonth' variable.,"set lastdaymonth=`cal $month $year  |tr -s "" "" ""\n""|tail -1`","[/INST] `datetime=$(date -v -1m '+%Y-%m-%d'); lastdaymonth=$(date -j -f ""%Y-%m-%d"" ""$datetime"" '+%d')`</s>"
+68,Save the name and first line of each .txt file found in the home directory tree to `report.txt',find $HOME/. -name *.txt -exec head -n 1 -v {} \; > report.txt,"[/INST] find ~ -type f -name ""*.txt"" -exec sh -c 'echo ""$(basename -- ""$1"")"": ""$(head -n 1 ""$1"")""' _ {} \; > report.txt</s></s></s>"
+68,Save the name and first line of each .txt file found in the home directory tree to `report.txt',find $HOME/. -name *.txt -exec head -n 1 -v {} \; > report.txt,"[/INST] find ~ -type f -name ""*.txt"" -exec sh -c 'echo ""$(basename -- ""$1"")"": ""$(head -n 1 ""$1"")""' _ {} \; > report.txt</s></s></s>"
+68,Save the name and first line of each .txt file found in the home directory tree to `report.txt',find $HOME/. -name *.txt -exec head -n 1 -v {} \; > report.txt,"[/INST] find ~ -type f -name ""*.txt"" -exec sh -c 'echo ""$(basename -- ""$1"")"": ""$(head -n 1 ""$1"")""' _ '{}' >> report.txt \;</s>"
+69,Find all pdf files under /dir/containing/unsigned with null character as the delimiter,find /dir/containing/unsigned -name '*.pdf' -print0,"[/INST] `find /dir/containing/unsigned -type f -print0 | xargs -0 file -I{} -d '' -t | grep ': PDF document, version' | cut -d: -f1 | xargs -0 ls -d`</s>"
+69,Find all pdf files under /dir/containing/unsigned with null character as the delimiter,find /dir/containing/unsigned -name '*.pdf' -print0,"[/INST] `find /dir/containing/unsigned -type f -print0 | xargs -0 file -I{} -d '' -t | grep ': PDF document, version' | cut -d: -f1 | xargs -0 ls -d`</s>"
+69,Find all pdf files under /dir/containing/unsigned with null character as the delimiter,find /dir/containing/unsigned -name '*.pdf' -print0,"[/INST] `find /dir/containing/unsigned -type f -print0 | xargs -0 file -I'' -d '' | grep -z 'PDF document, version' | cut -d: -f1 | xargs -0 ls`</s></s></s></s>"
+70,search for all the regular/normal files in the current folder and display only video/image files,find folder -type f -print0 | xargs -0 file --media-type | egrep 'image|video' | cut -f1 -d : | tr '\n' '\0',"[/INST] `find . -type f \( -iname ""*.jpg"" -o -iname ""*.jpeg"" -o -iname ""*.png"" -o -iname ""*.mp4"" -o -iname ""*.mov"" \)`</s>"
+70,search for all the regular/normal files in the current folder and display only video/image files,find folder -type f -print0 | xargs -0 file --media-type | egrep 'image|video' | cut -f1 -d : | tr '\n' '\0',"[/INST] `find . -type f \( -iname ""*.jpg"" -o -iname ""*.jpeg"" -o -iname ""*.png"" -o -iname ""*.mp4"" -o -iname ""*.mov"" \)`</s>"
+70,search for all the regular/normal files in the current folder and display only video/image files,find folder -type f -print0 | xargs -0 file --media-type | egrep 'image|video' | cut -f1 -d : | tr '\n' '\0',"[/INST] `find . -type f \( -iname ""*.jpg"" -o -iname ""*.jpeg"" -o -iname ""*.png"" -o -iname ""*.mp4"" -o -iname ""*.mov"" \)`</s>"
+71,"Search the current directory recursively for *.txt files with lines that match regular expression ""^string""","find . -name ""*.txt"" -exec egrep -l '^string' {} \;","[/INST] `grep -r ""^string"" . --include=""*.txt""`</s>"
+71,"Search the current directory recursively for *.txt files with lines that match regular expression ""^string""","find . -name ""*.txt"" -exec egrep -l '^string' {} \;","[/INST] `grep -r ""^string"" . --include=""*.txt""`</s>"
+71,"Search the current directory recursively for *.txt files with lines that match regular expression ""^string""","find . -name ""*.txt"" -exec egrep -l '^string' {} \;","[/INST] `grep -r ""^string"" . --include=""*.txt""`</s>"
+72,"Remount part of the file hierarchy from ""olddir"" to ""newdir""",mount --bind olddir newdir,[/INST] `sudo mount -t apfs /olddir /newdir -o nobrowse`</s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s>
+72,"Remount part of the file hierarchy from ""olddir"" to ""newdir""",mount --bind olddir newdir,"[/INST] `sudo mount -t apfs -o /olddir /newdir`
+
+Note: This command assumes that the file system is APFS. If it's not, replace ""apfs"" with the appropriate file system type (e.g., hfs, hfsplus, etc.). Also, replace ""/olddir"" and ""/newdir"" with the actual paths to the directories involved in the remount operation.</s>"
+72,"Remount part of the file hierarchy from ""olddir"" to ""newdir""",mount --bind olddir newdir,"[/INST] `sudo mount -t apfs -o /olddir /newdir`
+
+Note: This command requires administrative privileges. Please replace ""/olddir"" and ""/newdir"" with the actual directory paths you want to remount.</s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s>"
+73,"Copy all files matching ""*failed.ipynb"" in the current directory tree to ""./fails"" preserving the directory hierarchy","find . -name ""*failed.ipynb"" | cpio -pd ./fails","[/INST] `find . -name ""*failed.ipynb"" -exec cp --parents {} ./fails/ \;`</s>"
+73,"Copy all files matching ""*failed.ipynb"" in the current directory tree to ""./fails"" preserving the directory hierarchy","find . -name ""*failed.ipynb"" | cpio -pd ./fails","[/INST] `find . -name ""*failed.ipynb"" -exec cp --parents {} ./fails/ \;`</s>"
+73,"Copy all files matching ""*failed.ipynb"" in the current directory tree to ""./fails"" preserving the directory hierarchy","find . -name ""*failed.ipynb"" | cpio -pd ./fails","[/INST] `find . -name ""*failed.ipynb"" -exec cp --parents {} ./fails/ \;`</s>"
+74,"Create symbolic links in the current directory for all files under ""bar1"" that are not directories and do not end in "".cc""",find bar1 -name '*foo*' -not -type d -not -name '*.cc' -exec ln -s $PWD/'{}' bar2/ \;,"[/INST] ```bash
+find bar1 -type f ! -name '*.cc' ! -type d -exec ln -s {} . \;
+```</s>"
+74,"Create symbolic links in the current directory for all files under ""bar1"" that are not directories and do not end in "".cc""",find bar1 -name '*foo*' -not -type d -not -name '*.cc' -exec ln -s $PWD/'{}' bar2/ \;,"[/INST] ```bash
+find bar1 -type f ! -name '*.cc' ! -type d -exec ln -s {} . \;
+```</s>"
+74,"Create symbolic links in the current directory for all files under ""bar1"" that are not directories and do not end in "".cc""",find bar1 -name '*foo*' -not -type d -not -name '*.cc' -exec ln -s $PWD/'{}' bar2/ \;,"[/INST] ```bash
+find bar1 -type f ! -name '*.cc' ! -type d -exec ln -s {} . \;
+```</s>"
+75,Print A record for domain 'domain.' from 8.8.8.8 nameserver,dig @8.8.8.8 domain. a,[/INST] `dig +short A domain. @8.8.8.8`</s>
+75,Print A record for domain 'domain.' from 8.8.8.8 nameserver,dig @8.8.8.8 domain. a,[/INST] `dig +short A domain. @8.8.8.8`</s>
+75,Print A record for domain 'domain.' from 8.8.8.8 nameserver,dig @8.8.8.8 domain. a,[/INST] `dig +short A domain. @8.8.8.8`</s>
+76,Show files in maximum 1 level down the current directory that were modified less than 1 day ago from today,less `find -maxdepth 1 -type f -daystart -mtime -1`,[/INST] `find . -type f -maxdepth 1 -mtime 0`</s>
+76,Show files in maximum 1 level down the current directory that were modified less than 1 day ago from today,less `find -maxdepth 1 -type f -daystart -mtime -1`,[/INST] `find . -type f -maxdepth 1 -mtime 0`</s>
+76,Show files in maximum 1 level down the current directory that were modified less than 1 day ago from today,less `find -maxdepth 1 -type f -daystart -mtime -1`,[/INST] `find . -type f -maxdepth 1 -mtime 0`</s>
+77,Create the directory '.npm-packages' in the user's home directory($HOME),"mkdir ""${HOME}/.npm-packages""",[/INST] `mkdir -p $HOME/.npm-packages`</s>
+77,Create the directory '.npm-packages' in the user's home directory($HOME),"mkdir ""${HOME}/.npm-packages""",[/INST] `mkdir -p $HOME/.npm-packages`</s>
+77,Create the directory '.npm-packages' in the user's home directory($HOME),"mkdir ""${HOME}/.npm-packages""",[/INST] `mkdir -p $HOME/.npm-packages`</s>
+78,"gives the chars in line 5 and chars 5 to 8 of line 5, in tst.txt",head -5 tst.txt | tail -1 |cut -c 5-8,[/INST] `sed -n '5p' tst.txt | paste -d' ' - <(sed -n '5s/.*\\(.\).*/\\1/p' tst.txt) <(sed -n '5s/^.\{4\}\(.*\)/\1/p' tst.txt)`</s>
+78,"gives the chars in line 5 and chars 5 to 8 of line 5, in tst.txt",head -5 tst.txt | tail -1 |cut -c 5-8,[/INST] `sed -n '5p' tst.txt | paste -d' ' - <(sed -n '5s/.*\\(.\).*/\\1/p' tst.txt) <(sed -n '5s/^.\{4\}\(.*\)/\1/p' tst.txt)`</s>
+78,"gives the chars in line 5 and chars 5 to 8 of line 5, in tst.txt",head -5 tst.txt | tail -1 |cut -c 5-8,[/INST] `sed -n '5p' tst.txt | paste -d' ' - <(sed -n '5s/.*\\(.\).*/\\1/p' tst.txt) <(sed -n '5s/^.\{4\}\(.*\)/\1/p' tst.txt)`</s>
+79,"display all files in the directory ""dir"" which have been accessed in the last 60 minutes",find /dir -amin -60,[/INST] `find dir -type f -amin -60`</s>
+79,"display all files in the directory ""dir"" which have been accessed in the last 60 minutes",find /dir -amin -60,[/INST] `find dir -type f -amin -60`</s>
+79,"display all files in the directory ""dir"" which have been accessed in the last 60 minutes",find /dir -amin -60,[/INST] `find dir -type f -amin -60`</s>
+80,Find all *.mpg (regular) files under current directory and run an ffmpeg command on each of them,"find . -name ""*.mpg"" -type f -print0 | xargs -0 -I {} -n 1 -P 4 ffmpeg -i {} {}.mp4",[/INST] `find . -type f -name '*.mpg' -exec ffmpeg -i {} {} \;`</s>
+80,Find all *.mpg (regular) files under current directory and run an ffmpeg command on each of them,"find . -name ""*.mpg"" -type f -print0 | xargs -0 -I {} -n 1 -P 4 ffmpeg -i {} {}.mp4",[/INST] `find . -type f -name '*.mpg' -exec ffmpeg -i {} {} \;`</s>
+80,Find all *.mpg (regular) files under current directory and run an ffmpeg command on each of them,"find . -name ""*.mpg"" -type f -print0 | xargs -0 -I {} -n 1 -P 4 ffmpeg -i {} {}.mp4",[/INST] `find . -type f -name '*.mpg' -exec ffmpeg -i {} {} \;`</s>
+81,"Dump ""file"" as ASCII characters",od -t c file,[/INST] `xxd -p file | tr -d '\n' | xxd -r -p | tr '\000-\037' '\n'`</s>
+81,"Dump ""file"" as ASCII characters",od -t c file,[/INST] `xxd -p file | tr -d '\n' | xxd -r -p | tr '\000-\037' '\n'`</s>
+81,"Dump ""file"" as ASCII characters",od -t c file,[/INST] `xxd -p file | tr -d '\n' | xxd -r -p | tr '\000-\037' '\n'`</s>
+82,Display differences between /destination/dir/1 and /destination/dir/2 excluding XML files.,diff /destination/dir/1 /destination/dir/2 -r -x *.xml,[/INST] `diff -r --exclude='*.xml' /destination/dir/1 /destination/dir/2`</s>
+82,Display differences between /destination/dir/1 and /destination/dir/2 excluding XML files.,diff /destination/dir/1 /destination/dir/2 -r -x *.xml,[/INST] `diff -r --exclude='*.xml' /destination/dir/1 /destination/dir/2`</s>
+82,Display differences between /destination/dir/1 and /destination/dir/2 excluding XML files.,diff /destination/dir/1 /destination/dir/2 -r -x *.xml,[/INST] `diff -r --exclude='*.xml' /destination/dir/1 /destination/dir/2`</s>
+83,"Find all 400 permission files under /data directory, print 'Modifying ' appended with file path for each of them and change their permission to 755",find /data -type f -perm 400 -exec echo Modifying {} \; -exec chmod 755 {} \;,"[/INST] ```bash
+find /data -type f -perm 400 -exec echo ""Modifying: ""{} \; -exec chmod 755 {} \;
+```</s>"
+83,"Find all 400 permission files under /data directory, print 'Modifying ' appended with file path for each of them and change their permission to 755",find /data -type f -perm 400 -exec echo Modifying {} \; -exec chmod 755 {} \;,"[/INST] ```bash
+find /data -type f -perm 400 -exec echo ""Modifying: ""{} \; -exec chmod 755 {} \;
+```</s>"
+83,"Find all 400 permission files under /data directory, print 'Modifying ' appended with file path for each of them and change their permission to 755",find /data -type f -perm 400 -exec echo Modifying {} \; -exec chmod 755 {} \;,"[/INST] ```bash
+find /data -type f -perm 400 -exec echo ""Modifying: ""{} \; -exec chmod 755 {} \;
+```</s>"
+84,Decompress ${set1[@]} files with gzip,gzip -d ${set1[@]} &,[/INST] `gzip -d ${set1[@]}`</s>
+84,Decompress ${set1[@]} files with gzip,gzip -d ${set1[@]} &,[/INST] `gzip -d ${set1[@]}`</s>
+84,Decompress ${set1[@]} files with gzip,gzip -d ${set1[@]} &,[/INST] `gzip -d ${set1[@]}`</s>
+85,"search all the "".sh"" files in the /usr folder and follow the symbolic links to their original file",find /usr -follow -name '*.sh',"[/INST] `find /usr -type f -name ""*.sh"" -exec readlink -f {} \;`</s>"
+85,"search all the "".sh"" files in the /usr folder and follow the symbolic links to their original file",find /usr -follow -name '*.sh',"[/INST] `find /usr -type f -name ""*.sh"" -exec readlink -f {} \;`</s>"
+85,"search all the "".sh"" files in the /usr folder and follow the symbolic links to their original file",find /usr -follow -name '*.sh',"[/INST] `find /usr -type f -name ""*.sh"" -exec readlink -f {} \;`</s>"
+86,display all text files in current folder,"find . -name ""*.txt""",[/INST] `ls *.txt`</s>
+86,display all text files in current folder,"find . -name ""*.txt""",[/INST] `ls *.txt`</s>
+86,display all text files in current folder,"find . -name ""*.txt""",[/INST] `ls *.txt`</s>
+87,"Login to ""user@host"" with key ""keyFile"" and execute ""./script arg1 arg2 > output.txt 2>&1"" in the background","ssh -i keyFile user@host bash -c ""\""nohup ./script arg1 arg2 > output.txt 2>&1 &\""""","[/INST] `ssh -i keyFile user@host ""nohup ./script arg1 arg2 > output.txt 2>&1 &""`</s>"
+87,"Login to ""user@host"" with key ""keyFile"" and execute ""./script arg1 arg2 > output.txt 2>&1"" in the background","ssh -i keyFile user@host bash -c ""\""nohup ./script arg1 arg2 > output.txt 2>&1 &\""""","[/INST] `ssh -i keyFile user@host ""nohup ./script arg1 arg2 > output.txt 2>&1 &""`</s>"
+87,"Login to ""user@host"" with key ""keyFile"" and execute ""./script arg1 arg2 > output.txt 2>&1"" in the background","ssh -i keyFile user@host bash -c ""\""nohup ./script arg1 arg2 > output.txt 2>&1 &\""""","[/INST] `ssh -i keyFile user@host ""nohup ./script arg1 arg2 > output.txt 2>&1 &""`</s>"
+88,find all directories in the current folder,find -type d,[/INST] `find . -type d`</s>
+88,find all directories in the current folder,find -type d,[/INST] `find . -type d`</s>
+88,find all directories in the current folder,find -type d,[/INST] `find . -type d`</s>
+89,find all foo.bar files in the entire file system and which are present in the same partition as root.,find / -name foo.bar -print -xdev,"[/INST] `find / -xdev -name ""foo.bar""`</s>"
+89,find all foo.bar files in the entire file system and which are present in the same partition as root.,find / -name foo.bar -print -xdev,"[/INST] `find / -xdev -name ""foo.bar""`</s>"
+89,find all foo.bar files in the entire file system and which are present in the same partition as root.,find / -name foo.bar -print -xdev,"[/INST] `find / -xdev -name ""foo.bar""`</s>"
+90,Search for 'Processed Files' in all $srch* (case insensitive) files under current directory run the sed script 'N;s/(.*)\n(.*)/\2 \1/' on the output and redirect the final output to temp2 file,"find . -iname ""$srch*"" -exec grep ""Processed Files"" {} \; -print| sed -r 'N;s/(.*)\n(.*)/\2 \1/'  > temp2","[/INST] find . -type f -iname ""srch\*"" \( -name ""*Processed Files*"" -o -name ""*processed files*"" \) -exec grep -i -H 'Processed Files' {} + | sed 'N;s/(.*)\n(.*)/\2 \1/' > temp2</s>"
+90,Search for 'Processed Files' in all $srch* (case insensitive) files under current directory run the sed script 'N;s/(.*)\n(.*)/\2 \1/' on the output and redirect the final output to temp2 file,"find . -iname ""$srch*"" -exec grep ""Processed Files"" {} \; -print| sed -r 'N;s/(.*)\n(.*)/\2 \1/'  > temp2","[/INST] find . -type f -iname ""srch\*"" \( -name ""*Processed Files*"" -o -name ""*processed files*"" \) -exec grep -i -H 'Processed Files' {} + | sed 'N;s/(.*)\n(.*)/\2 \1/' > temp2</s>"
+90,Search for 'Processed Files' in all $srch* (case insensitive) files under current directory run the sed script 'N;s/(.*)\n(.*)/\2 \1/' on the output and redirect the final output to temp2 file,"find . -iname ""$srch*"" -exec grep ""Processed Files"" {} \; -print| sed -r 'N;s/(.*)\n(.*)/\2 \1/'  > temp2","[/INST] find . -type f -iname ""srch\*"" \( -name ""*Processed Files*"" -o -name ""*processed files*"" \) -exec grep -i -H 'Processed Files' {} + | sed 'N;s/(.*)\n(.*)/\2 \1/' > temp2</s>"
+91,Find all files/directories under '/usr' directory tree that have not been modified in the last 356 days counting days from today,find /usr -mtime +356 -daystart,[/INST] `find /usr -type f -or -type d -mtime +356`</s>
+91,Find all files/directories under '/usr' directory tree that have not been modified in the last 356 days counting days from today,find /usr -mtime +356 -daystart,[/INST] `find /usr -type f -or -type d -mtime +356`</s>
+91,Find all files/directories under '/usr' directory tree that have not been modified in the last 356 days counting days from today,find /usr -mtime +356 -daystart,[/INST] `find /usr -type f -or -type d -mtime +356`</s>
+92,Find all files under $dir directory,"find ""$dir"" -type f",[/INST] `find $dir -type f`</s>
+92,Find all files under $dir directory,"find ""$dir"" -type f",[/INST] `find $dir -type f`</s>
+92,Find all files under $dir directory,"find ""$dir"" -type f",[/INST] `find $dir -type f`</s>
+93,Find all *foo files/directories under current directory,find . -name '*foo',[/INST] `find . -name '*foo'`</s>
+93,Find all *foo files/directories under current directory,find . -name '*foo',[/INST] `find . -name '*foo'`</s>
+93,Find all *foo files/directories under current directory,find . -name '*foo',[/INST] `find . -name '*foo'`</s>
+94,"Create tar archive ""dirall.tar"" and copy all files from directory tree /tmp/a1 to it",find /tmp/a1 -print0 | tar --null -T- -cvf dirall.tar,"[/INST] `cd /tmp/a1 && tar -cf ../dirall.tar . && cd -` This command will change the current directory to /tmp/a1, create a tar archive named dirall.tar with all the files in the current directory (which is now /tmp/a1), and then return the current directory back to its original location.</s>"
+94,"Create tar archive ""dirall.tar"" and copy all files from directory tree /tmp/a1 to it",find /tmp/a1 -print0 | tar --null -T- -cvf dirall.tar,"[/INST] `cd /tmp/a1 && tar -cf ../dirall.tar . && cd -` This command will change the current directory to /tmp/a1, create a tar archive named dirall.tar with the contents of the current directory (which is now /tmp/a1), and then return the current directory back to its original location.</s></s>"
+94,"Create tar archive ""dirall.tar"" and copy all files from directory tree /tmp/a1 to it",find /tmp/a1 -print0 | tar --null -T- -cvf dirall.tar,"[/INST] `cd /tmp/a1 && tar -cf ../dirall.tar . && cd -` This command will change the current directory to /tmp/a1, create a tar archive named dirall.tar using the files in the current directory (which is now /tmp/a1), and then return the current directory back to its original location.</s></s>"
+95,Search the file system for regular files whose pathnames are shorter than 25 characters,find / -type f|awk -F'/' '{print $NF}'| awk 'length($0) < 25',"[/INST] `find / -type f -size -25c`
+
+This command will search the file system (`/`) for regular files (`-type f`) whose size is less than 25 characters (`-size -25c`).</s>"
+95,Search the file system for regular files whose pathnames are shorter than 25 characters,find / -type f|awk -F'/' '{print $NF}'| awk 'length($0) < 25',"[/INST] `find / -type f -size -25c`
+
+This command will search the file system (`/`) for regular files (`-type f`) whose size is less than 25 characters (`-size -25c`).</s>"
+95,Search the file system for regular files whose pathnames are shorter than 25 characters,find / -type f|awk -F'/' '{print $NF}'| awk 'length($0) < 25',"[/INST] `find / -type f -size -25c`
+
+This command will search the file system (`/`) for regular files (`-type f`) whose size is less than 25 characters (`-size -25c`).</s>"
+96,find files in a directory and exit the command if the syntax is correct or display invalid command if the syntax is wrong.,"find … -exec sh -c 'trap ""echo \$?"" EXIT; invalid_command ""$0""' {} \;","[/INST] `find .`
+
+This command will find and display files in the current directory. If the syntax is correct, the command will execute and list the files. If the syntax is incorrect, an error message will be displayed indicating an invalid command.</s>"
+96,find files in a directory and exit the command if the syntax is correct or display invalid command if the syntax is wrong.,"find … -exec sh -c 'trap ""echo \$?"" EXIT; invalid_command ""$0""' {} \;","[/INST] `find .`
+
+This command will find and display files in the current directory. If the syntax is correct, the command will execute and list the files. If the syntax is incorrect, an error message will be displayed indicating an invalid command.</s>"
+96,find files in a directory and exit the command if the syntax is correct or display invalid command if the syntax is wrong.,"find … -exec sh -c 'trap ""echo \$?"" EXIT; invalid_command ""$0""' {} \;","[/INST] `find .`
+
+This command will find and display files in the current directory. If the syntax is correct, the command will execute and list the files. If the syntax is incorrect, an error message will be displayed indicating an invalid command.</s>"
+97,"Print a minimal set of differences between files in directories ""a"" and ""b"", ignore differences in whitespace, and print 0 lines of unified context",diff -dbU0 a b,[/INST] `diff -w -B -r -q a b`</s>
+97,"Print a minimal set of differences between files in directories ""a"" and ""b"", ignore differences in whitespace, and print 0 lines of unified context",diff -dbU0 a b,[/INST] `diff -w -B -r -q a b`</s>
+97,"Print a minimal set of differences between files in directories ""a"" and ""b"", ignore differences in whitespace, and print 0 lines of unified context",diff -dbU0 a b,[/INST] `diff -w -B -r -q a b`</s>
+98,find all raw images in the current folder and pass them one at a time to the xargs command and enable parallel processing of the files,find . -type f -iname '*.CR2' -print0 | xargs -0 -n 1 -P 8 -I {},"[/INST] `find . -name '*.CR2' -type f -print0 | xargs -0 -n1 -P8 convert`
+
+This command will find all raw images with the .CR2 extension in the current folder and pass them one at a time to the `convert` command for further processing. The `-P8` option enables parallel processing of up to 8 files simultaneously. Replace `convert` with the command you want to use for processing the images."
+98,find all raw images in the current folder and pass them one at a time to the xargs command and enable parallel processing of the files,find . -type f -iname '*.CR2' -print0 | xargs -0 -n 1 -P 8 -I {},"[/INST] `find . -name '*.CR2' -type f -print0 | xargs -0 -n1 -P8 convert`
+
+This command will find all raw images with the .CR2 extension in the current folder and pass them one at a time to the `convert` command for further processing. The `-P8` option enables parallel processing of up to 8 files simultaneously. Replace `convert` with the command you want to use for processing the images."
+98,find all raw images in the current folder and pass them one at a time to the xargs command and enable parallel processing of the files,find . -type f -iname '*.CR2' -print0 | xargs -0 -n 1 -P 8 -I {},"[/INST] `find . -name '*.CR2' -type f -print0 | xargs -0 -n1 -P8 convert`
+
+This command will find all raw images with the .CR2 extension in the current folder and pass them one at a time to the `convert` command using `xargs`. The `-P8` option enables parallel processing of up to 8 files at a time. Replace `convert` with the command you want to run on each"
+99,Delete file with inode number 314167125,find . -type f -inum 314167125 -delete,[/INST] `find . -inum 314167125 -delete`</s>
+99,Delete file with inode number 314167125,find . -type f -inum 314167125 -delete,[/INST] `find . -inum 314167125 -delete`</s>
+99,Delete file with inode number 314167125,find . -type f -inum 314167125 -delete,[/INST] `find . -inum 314167125 -delete`</s>
+100,"List and remove all regular files named ""core"" under /prog that are larger than 500k",find /prog -type f -size +1000 -print -name core -exec rm {} \;,"[/INST] ```bash
+find /prog -type f -name ""core"" -size +500k -exec rm {} +
+```</s>"
+100,"List and remove all regular files named ""core"" under /prog that are larger than 500k",find /prog -type f -size +1000 -print -name core -exec rm {} \;,"[/INST] ```bash
+find /prog -type f -name ""core"" -size +500k -exec rm {} +
+```</s>"
+100,"List and remove all regular files named ""core"" under /prog that are larger than 500k",find /prog -type f -size +1000 -print -name core -exec rm {} \;,"[/INST] ```bash
+find /prog -type f -name ""core"" -size +500k -exec rm {} +
+```</s>"
+101,"Execute ""chown -R ask:ask /www/askapache.com"" in the background on server ""askapache""","ssh askapache 'sh -c ""( ( nohup chown -R ask:ask /www/askapache.com &>/dev/null ) & )""'",[/INST] ssh user@server 'nohup chown -R ask:ask /www/askapache.com &'</s>
+101,"Execute ""chown -R ask:ask /www/askapache.com"" in the background on server ""askapache""","ssh askapache 'sh -c ""( ( nohup chown -R ask:ask /www/askapache.com &>/dev/null ) & )""'",[/INST] ssh user@server 'nohup chown -R ask:ask /www/askapache.com &'</s>
+101,"Execute ""chown -R ask:ask /www/askapache.com"" in the background on server ""askapache""","ssh askapache 'sh -c ""( ( nohup chown -R ask:ask /www/askapache.com &>/dev/null ) & )""'",[/INST] ssh user@server 'nohup chown -R ask:ask /www/askapache.com &'</s>
+102,Shows status of a shell option 'dotglob'.,shopt dotglob,[/INST] `shopt -p dotglob`</s>
+102,Shows status of a shell option 'dotglob'.,shopt dotglob,[/INST] `shopt -p dotglob`</s>
+102,Shows status of a shell option 'dotglob'.,shopt dotglob,[/INST] `shopt -p dotglob`</s>
+103,display all the text files in the home folder ( case insensitive search ),"find /home -iname ""*.txt""","[/INST] `find ~ -iname ""*.txt"" -or -iname ""*.text"" -or -iname ""*.md"" -or -iname ""*.log"" | cat`<br>
+This command will find all text files in the home folder, including files with extensions .txt, .text, .md, and .log, and display them in the terminal.</s>"
+103,display all the text files in the home folder ( case insensitive search ),"find /home -iname ""*.txt""","[/INST] `find ~ -iname ""*.txt"" -or -iname ""*.text"" -or -iname ""*.md"" -or -iname ""*.log"" | cat`<br>
+This command will find all text files in the home folder, including files with extensions .txt, .text, .md, and .log, and display them in the terminal.</s>"
+103,display all the text files in the home folder ( case insensitive search ),"find /home -iname ""*.txt""","[/INST] `find ~ -iname ""*.txt"" -or -iname ""*.text"" -or -iname ""*.md"" -or -iname ""*.log"" | cat`<br>
+This command will find all text files in the home folder with extensions .txt, .text, .md, and .log, and display them in the terminal.</s></s></s></s>"
+104,find all instances of a specific file in the current directory and discard all the errors and remove all permission denied statements from search results,"find . -name ""openssl"" 2>&1 | sed '/Permission denied/d;'","[/INST] `find . -name ""file\_name"" 2>/dev/null` \
+(where ""file\_name"" is the name of the file you are searching for)</s>"
+104,find all instances of a specific file in the current directory and discard all the errors and remove all permission denied statements from search results,"find . -name ""openssl"" 2>&1 | sed '/Permission denied/d;'","[/INST] `find . -name ""file\_name"" 2>/dev/null` \
+(where ""file\_name"" is the name of the file you are searching for)</s>"
+104,find all instances of a specific file in the current directory and discard all the errors and remove all permission denied statements from search results,"find . -name ""openssl"" 2>&1 | sed '/Permission denied/d;'","[/INST] `find . -name ""file\_name"" 2>/dev/null` \
+(where ""file\_name"" is the name of the file you are searching for)</s>"
+105,"Replace "",,"" with "", ,"" twice in ""data.csv"" and display the "","" delimited result as a table","sed 's/,,/, ,/g;s/,,/, ,/g' data.csv | column -s, -t","[/INST] `sed -i '' 's/,,/, ,/g' data.csv && tr ',' '\n' < data.csv | paste - -`</s>"
+105,"Replace "",,"" with "", ,"" twice in ""data.csv"" and display the "","" delimited result as a table","sed 's/,,/, ,/g;s/,,/, ,/g' data.csv | column -s, -t","[/INST] `sed -i '' 's/,,/, ,/g' data.csv && tr ',' '\n' < data.csv | paste - -`</s>"
+105,"Replace "",,"" with "", ,"" twice in ""data.csv"" and display the "","" delimited result as a table","sed 's/,,/, ,/g;s/,,/, ,/g' data.csv | column -s, -t","[/INST] `sed -i '' 's/,,/, ,/g' data.csv && tr ',' '\n' < data.csv | paste - -`</s>"
+106,Run cmd1 and cmd2 on each file/directory under current directory with the file/directory path as a positional argument to those commands,for i in `find . -exec echo {} \;`; do cmd1 $i; cmd2 $i; done,[/INST] `find . -mindepth 1 -exec cmd1 {} \; -exec cmd2 {} \;`</s>
+106,Run cmd1 and cmd2 on each file/directory under current directory with the file/directory path as a positional argument to those commands,for i in `find . -exec echo {} \;`; do cmd1 $i; cmd2 $i; done,[/INST] `find . -mindepth 1 -exec cmd1 {} \; -exec cmd2 {} \;`</s>
+106,Run cmd1 and cmd2 on each file/directory under current directory with the file/directory path as a positional argument to those commands,for i in `find . -exec echo {} \;`; do cmd1 $i; cmd2 $i; done,[/INST] `find . -mindepth 1 -exec cmd1 {} \; -exec cmd2 {} \;`</s>
+107,"Silently read a single character into variable ""REPLY""",read -n1 -s,[/INST] `read -s REPLY`</s>
+107,"Silently read a single character into variable ""REPLY""",read -n1 -s,[/INST] `read -s REPLY`</s>
+107,"Silently read a single character into variable ""REPLY""",read -n1 -s,[/INST] `read -s REPLY`</s>
+108,Run the file command on every regular file under current directory,find . -type f -exec file '{}' \;,[/INST] `find . -type f -exec file {} \;`</s>
+108,Run the file command on every regular file under current directory,find . -type f -exec file '{}' \;,[/INST] `find . -type f -exec file {} \;`</s>
+108,Run the file command on every regular file under current directory,find . -type f -exec file '{}' \;,[/INST] `find . -type f -exec file {} \;`</s>
+109,Find all *.m4a files under /home/family/Music directory and convert them to ogg,"find /home/family/Music -name '*.m4a' -exec ffmpeg -i ""{}"" -acodec libvorbis -aq 6 -vn -ac 2 ""{}.ogg"" \;","[/INST] ```bash
+find /home/family/Music -name ""*.m4a"" -exec ffmpeg -i {} {}.ogg \;
+```</s>"
+109,Find all *.m4a files under /home/family/Music directory and convert them to ogg,"find /home/family/Music -name '*.m4a' -exec ffmpeg -i ""{}"" -acodec libvorbis -aq 6 -vn -ac 2 ""{}.ogg"" \;","[/INST] ```bash
+find /home/family/Music -name ""*.m4a"" -exec ffmpeg -i {} {}.ogg \;
+```</s>"
+109,Find all *.m4a files under /home/family/Music directory and convert them to ogg,"find /home/family/Music -name '*.m4a' -exec ffmpeg -i ""{}"" -acodec libvorbis -aq 6 -vn -ac 2 ""{}.ogg"" \;","[/INST] ```bash
+find /home/family/Music -name ""*.m4a"" -exec ffmpeg -i {} {}.ogg \;
+```</s>"
+110,Show process tree with command-line arguments of a process that has id 20238.,pstree -a -p 20238,"[/INST] `ps -p 20238 -o pid,ppid,args=`</s>"
+110,Show process tree with command-line arguments of a process that has id 20238.,pstree -a -p 20238,"[/INST] `ps -p 20238 -o pid,ppid,args=`</s>"
+110,Show process tree with command-line arguments of a process that has id 20238.,pstree -a -p 20238,"[/INST] `ps -p 20238 -o pid,ppid,args=`</s>"
+111,Print content of 'file' file reverted characterwise,rev file,"[/INST] `cp /dev/null file; tac file > file.reverted; cat file.reverted`
+
+This command will overwrite the file 'file' with an empty file, then create a new file 'file.reverted' with the contents of 'file' in reverse character order. Note that this will delete the original contents of 'file'. If you want to keep the original contents, use a different filename for the reverted file.</s></s></s>"
+111,Print content of 'file' file reverted characterwise,rev file,"[/INST] `cp /dev/null file; tac file > file.reverted; cat file.reverted`
+
+This command will overwrite the file 'file' with an empty file, then create a new file 'file.reverted' with the contents of 'file' in reverse order (characterwise). Note that this will delete the original contents of 'file'. If you want to keep the original contents, use a different filename for the reverted file.</s>"
+111,Print content of 'file' file reverted characterwise,rev file,"[/INST] `awk '{print substr($0, length($0)) substr($0,1,length($0)-1)}' file`</s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s></s>"
+112,"display all the files in the home folder which begin with ""arrow"" and end with ""xbm""",find ~ -name 'arrow*.xbm',[/INST] `ls ~/arrow*xbm`</s>
+112,"display all the files in the home folder which begin with ""arrow"" and end with ""xbm""",find ~ -name 'arrow*.xbm',[/INST] `ls ~/arrow*xbm`</s>
+112,"display all the files in the home folder which begin with ""arrow"" and end with ""xbm""",find ~ -name 'arrow*.xbm',[/INST] `ls ~/arrow*xbm`</s>
+113,replaces the last occurrence of 'a' with 'c',"tac infile.txt | sed ""s/a/c/; ta ; b ; :a ; N ; ba"" | tac","[/INST] ```bash
+sed -i '' 's/a/c/g' | tail -n 1
+```
+This command will replace the last occurrence of 'a' with 'c' in the file. If you want to replace the last occurrence of 'a' with 'c' in a string, you can use:
+```bash
+echo ""your string"" | sed 's/a/c/g' | tail -n 1"
+113,replaces the last occurrence of 'a' with 'c',"tac infile.txt | sed ""s/a/c/; ta ; b ; :a ; N ; ba"" | tac","[/INST] ```bash
+sed -i '' 's/a/c/g' | tail -n 1
+```
+This command will replace the last occurrence of 'a' with 'c' in the file. If you want to replace the last occurrence of 'a' with 'c' in a string, you can use:
+```bash
+echo ""your string"" | sed 's/a/c/g' | tail -n 1"
+113,replaces the last occurrence of 'a' with 'c',"tac infile.txt | sed ""s/a/c/; ta ; b ; :a ; N ; ba"" | tac","[/INST] ```bash
+sed -i '' 's/a/c/g' | tail -n 1
+```
+This command will replace the last occurrence of 'a' with 'c' in the file. If you want to replace the last occurrence of 'a' with 'c' in a string, you can use:
+```bash
+echo ""your string"" | sed 's/a/c/g' | tail -n 1"
+114,find all the regular files in a folder which do not start with the word find and assign the output to a variable,"files = ""`find ""'""$dirs""'"" -type f |& grep -v '^find: '`""","[/INST] ```bash
+find /path/to/folder -type f \( ! -name 'find*' \) -print0 | xargs -0 -I{} echo ""File: {}"" > file_list.txt
+readonly file_list=$(cat file_list.txt)
+```
+This command will find all regular files in the specified folder (replace `/path/to/folder` with your actual folder path) that do not start with the word """
+114,find all the regular files in a folder which do not start with the word find and assign the output to a variable,"files = ""`find ""'""$dirs""'"" -type f |& grep -v '^find: '`""","[/INST] ```bash
+find /path/to/folder -type f \( ! -name 'find*' \) -print0 | xargs -0 -I{} echo ""File: {}"" > file_list.txt
+readonly file_list=$(cat file_list.txt)
+```
+This command will find all regular files in the specified folder (replace `/path/to/folder` with your actual folder path) that do not start with the word """
+114,find all the regular files in a folder which do not start with the word find and assign the output to a variable,"files = ""`find ""'""$dirs""'"" -type f |& grep -v '^find: '`""","[/INST] ```bash
+find /path/to/folder -type f \( ! -name 'find*' \) -print0 | xargs -0 -I{} echo ""File: {}"" > file_list.txt
+readonly file_list=$(cat file_list.txt)
+```
+This command will find all regular files in the specified folder (replace `/path/to/folder` with the actual folder path) that do not start with the word """
+115,Creates alias for network interface 'eth0' with IP address '192.0.2.55' and network mask '255.255.255.255'.,ifconfig eth0:fakenfs 192.0.2.55 netmask 255.255.255.255,"[/INST] `sudo ifconfig eth0 alias 192.0.2.55 255.255.255.255`
+
+Note: This command assumes that the 'eth0' network interface exists on your MacOS system. However, MacOS typically names network interfaces as 'en0', 'en1', etc. and does not have an 'eth0' interface. Also, the 'ifconfig' command is deprecated"
+115,Creates alias for network interface 'eth0' with IP address '192.0.2.55' and network mask '255.255.255.255'.,ifconfig eth0:fakenfs 192.0.2.55 netmask 255.255.255.255,"[/INST] `sudo ifconfig eth0 alias 192.0.2.55 255.255.255.255`
+
+Note: This command assumes that the 'eth0' network interface exists on your MacOS system. However, MacOS typically names network interfaces as 'en0', 'en1', etc. and does not have an 'eth0' interface. Also, the 'ifconfig' command is deprecated"
+115,Creates alias for network interface 'eth0' with IP address '192.0.2.55' and network mask '255.255.255.255'.,ifconfig eth0:fakenfs 192.0.2.55 netmask 255.255.255.255,"[/INST] `sudo ifconfig eth0 alias 192.0.2.55 255.255.255.255`
+
+Note: This command assumes that the 'eth0' network interface exists on your MacOS system. However, MacOS typically names network interfaces as 'en0', 'en1', etc. and does not have an 'eth0' interface. Also, the 'ifconfig' command is deprecated"
+116,Counts total lines in all *.php files in the current directory recursively,find . -name '*.php' -type f | xargs cat | wc -l,"[/INST] `find . -name ""*.php"" -exec cat {} + | wc -l`</s>"
+116,Counts total lines in all *.php files in the current directory recursively,find . -name '*.php' -type f | xargs cat | wc -l,"[/INST] `find . -name ""*.php"" -exec cat {} + | wc -l`</s>"
+116,Counts total lines in all *.php files in the current directory recursively,find . -name '*.php' -type f | xargs cat | wc -l,"[/INST] `find . -name ""*.php"" -exec cat {} + | wc -l`</s>"
+117,"Split ""INPUT_FILE_NAME"" into files of at most 500 MiB each with a numeric suffix of length 4 and prefix ""input.part.""",split -b 500M -d -a 4 INPUT_FILE_NAME input.part.,"[/INST] `split -b 500m INPUT_FILE_NAME input.part.` followed by `for i in input.part.*; do j=$(printf '%04d' ""$((10#${i#input.part.}+1))""); mv ""$i"" ""input.part.${j}""; done`</s>"
+117,"Split ""INPUT_FILE_NAME"" into files of at most 500 MiB each with a numeric suffix of length 4 and prefix ""input.part.""",split -b 500M -d -a 4 INPUT_FILE_NAME input.part.,"[/INST] `split -b 500m INPUT_FILE_NAME input.part.` followed by `for i in input.part.*; do j=$(printf '%04d' ""$((10#${i#input.part.}+1))""); mv ""$i"" ""input.part.${j}""; done`</s>"
+117,"Split ""INPUT_FILE_NAME"" into files of at most 500 MiB each with a numeric suffix of length 4 and prefix ""input.part.""",split -b 500M -d -a 4 INPUT_FILE_NAME input.part.,"[/INST] `split -b 500m INPUT_FILE_NAME input.part.` followed by `for i in input.part.*; do j=$(printf '%04d' ""$((10#${i#input.part.} + 1))""); mv ""$i"" ""input.part.$j""; done`</s></s>"
+118,Find all files under current directory that match the case insensitive regex .\|./.git and replace (all occurrences) the text matching the case insensitive regex expanded by $1 with $upper2 in these files,"find . -type f \! -iregex '.\|./.git' -exec perl -i'' -pe ""s/$1/$upper2/gi"" {} +","[/INST] ```bash
+find . -type f -iregex '.*/.*|\./.git' -exec perl -i -pe ""s/\$1/\$upper2/gi"" {} +
+```</s>"
+118,Find all files under current directory that match the case insensitive regex .\|./.git and replace (all occurrences) the text matching the case insensitive regex expanded by $1 with $upper2 in these files,"find . -type f \! -iregex '.\|./.git' -exec perl -i'' -pe ""s/$1/$upper2/gi"" {} +","[/INST] ```bash
+find . -type f -iregex '.*/.*|\./.git' -exec perl -i -pe ""s/\$1/\$upper2/gi"" {} +
+```</s>"
+118,Find all files under current directory that match the case insensitive regex .\|./.git and replace (all occurrences) the text matching the case insensitive regex expanded by $1 with $upper2 in these files,"find . -type f \! -iregex '.\|./.git' -exec perl -i'' -pe ""s/$1/$upper2/gi"" {} +","[/INST] ```bash
+find . -type f -iregex '.*/.*|\./.git' -exec perl -i -pe ""s/\$1/\$upper2/gi"" {} +
+```</s>"
+119,Find *.conf files/directories only upto 1 level down under /etc directory and show a few lines of output from the end,"find /etc -maxdepth 1 -name ""*.conf"" | tail",[/INST] `grep -rIlU --include='*.conf' . /etc | tail`</s>
+119,Find *.conf files/directories only upto 1 level down under /etc directory and show a few lines of output from the end,"find /etc -maxdepth 1 -name ""*.conf"" | tail",[/INST] `grep -rIlU --include='*.conf' . /etc | tail`</s>
+119,Find *.conf files/directories only upto 1 level down under /etc directory and show a few lines of output from the end,"find /etc -maxdepth 1 -name ""*.conf"" | tail",[/INST] `grep -rIlU --include='*.conf' . /etc | tail`</s>
+120,"Compress all "".txt"" files in the current directory tree with gzip","find . -type f -name ""*.txt"" -exec gzip {} \;","[/INST] `find . -name ""*.txt"" -exec gzip {} \;`</s>"
+120,"Compress all "".txt"" files in the current directory tree with gzip","find . -type f -name ""*.txt"" -exec gzip {} \;","[/INST] `find . -name ""*.txt"" -exec gzip {} \;`</s>"
+120,"Compress all "".txt"" files in the current directory tree with gzip","find . -type f -name ""*.txt"" -exec gzip {} \;","[/INST] `find . -name ""*.txt"" -exec gzip {} \;`</s>"
+121,Find all regular files starting from / that have permissions 777,find / -type f -perm 0777,[/INST] `find / -type f -perm 777`</s>
+121,Find all regular files starting from / that have permissions 777,find / -type f -perm 0777,[/INST] `find / -type f -perm 777`</s>
+121,Find all regular files starting from / that have permissions 777,find / -type f -perm 0777,[/INST] `find / -type f -perm 777`</s>
+122,Gets a job with defined number back to the foreground.,fg 1,"[/INST] `fg %jobnumber`
+
+(Replace ""jobnumber"" with the number of the job you want to bring to the foreground.)</s>"
+122,Gets a job with defined number back to the foreground.,fg 1,"[/INST] `fg %jobnumber`
+
+(Replace ""jobnumber"" with the number of the job you want to bring to the foreground.)</s>"
+122,Gets a job with defined number back to the foreground.,fg 1,"[/INST] `fg %jobnumber`
+
+(Replace ""jobnumber"" with the number of the job you want to bring to the foreground.)</s>"
+123,display all files in the current folder which start with met,find -name met*,[/INST] `ls met*`</s>
+123,display all files in the current folder which start with met,find -name met*,[/INST] `ls met*`</s>
+123,display all files in the current folder which start with met,find -name met*,[/INST] `ls met*`</s>
+124,Move all files from the `sourceDir' directory tree to the `destDir' directory,"find sourceDir -mindepth 1 -exec mv ""{}"" --target-directory=destDir \;","[/INST] `mv -t destDir /path/to/sourceDir/**`
+
+Note: This command uses the `**` wildcard to match all files in the `sourceDir` directory tree, and the `-t` option to specify the destination directory first. Make sure to replace `/path/to/sourceDir` with the actual path to your `sourceDir` directory.</s></s></s>"
+124,Move all files from the `sourceDir' directory tree to the `destDir' directory,"find sourceDir -mindepth 1 -exec mv ""{}"" --target-directory=destDir \;","[/INST] `mv -t destDir /**/* sourceDir`
+
+Note: This command uses the `mv` command to move files, the `-t` flag to specify the destination directory, and the wildcard `**/*` to match all files in the `sourceDir` directory tree. Make sure to replace `destDir` and `sourceDir` with your actual source and destination directories.</s>"
+124,Move all files from the `sourceDir' directory tree to the `destDir' directory,"find sourceDir -mindepth 1 -exec mv ""{}"" --target-directory=destDir \;","[/INST] `mv -t destDir /**/* sourceDir`
+
+Note: This command uses the `mv` command to move files, the `-t` flag to specify the destination directory, and the wildcard `**/*` to match all files in the `sourceDir` directory tree. Make sure to replace `destDir` and `sourceDir` with your actual source and destination directories.</s>"
+125,display all the empty files in the folder /opt (file size 0 bytes),find /opt -type f -empty,[/INST] `find /opt -type f -size 0`</s>
+125,display all the empty files in the folder /opt (file size 0 bytes),find /opt -type f -empty,[/INST] `find /opt -type f -size 0`</s>
+125,display all the empty files in the folder /opt (file size 0 bytes),find /opt -type f -empty,[/INST] `find /opt -type f -size 0`</s>
+126,Find all directories in the /data1/realtime directory tree that were modified within the last 60 minutes,find /data1/realtime -mmin -60 -type d,"[/INST] `find /data1/realtime -type d -mtime 0`
+
+This command will find all directories (-type d) in the /data1/realtime directory tree that were modified within the last 1 day (-mtime 0). If you want to find directories modified within the last 60 minutes, you can use the following command:
+
+`find /data1/realtime -type d -mmin 60`</s>"
+126,Find all directories in the /data1/realtime directory tree that were modified within the last 60 minutes,find /data1/realtime -mmin -60 -type d,"[/INST] `find /data1/realtime -type d -mtime 0`
+
+This command will find all directories (-type d) in the /data1/realtime directory tree that were modified within the last 1 day (-mtime 0). If you want to find directories modified within the last 60 minutes, you can use the following command:
+
+`find /data1/realtime -type d -mmin 60`</s>"
+126,Find all directories in the /data1/realtime directory tree that were modified within the last 60 minutes,find /data1/realtime -mmin -60 -type d,"[/INST] `find /data1/realtime -type d -mtime 0`
+
+This command will find all directories (-type d) in the /data1/realtime directory tree that were modified within the last 1 day (-mtime 0). If you want to find directories modified within the last 60 minutes, you can use the following command:
+
+`find /data1/realtime -type d -mmin 60`</s>"
+127,Find files with 002 permission in entire file system,find / -type f -perm -002,"[/INST] ```bash
+sudo find / -type f -perm 002
+```</s>"
+127,Find files with 002 permission in entire file system,find / -type f -perm -002,"[/INST] ```bash
+sudo find / -type f -perm 002
+```</s>"
+127,Find files with 002 permission in entire file system,find / -type f -perm -002,"[/INST] ```bash
+sudo find / -type f -perm 002
+```</s>"
+128,"Archive ""/path/to/copy"" to ""/path/to/local/storage"" on host ""host.remoted.from"" as user ""user"" updating files with different checksums, showing human readable progress and statistics, and compressing data during transmission",rsync -chavzP --stats /path/to/copy user@host.remoted.from:/path/to/local/storage,[/INST] `rsync -avz --progress --checksum user@host.remoted.from:/path/to/copy/ /path/to/local/storage/`</s>
+128,"Archive ""/path/to/copy"" to ""/path/to/local/storage"" on host ""host.remoted.from"" as user ""user"" updating files with different checksums, showing human readable progress and statistics, and compressing data during transmission",rsync -chavzP --stats /path/to/copy user@host.remoted.from:/path/to/local/storage,[/INST] `rsync -avz --progress --checksum user@host.remoted.from:/path/to/copy/ /path/to/local/storage/`</s>
+128,"Archive ""/path/to/copy"" to ""/path/to/local/storage"" on host ""host.remoted.from"" as user ""user"" updating files with different checksums, showing human readable progress and statistics, and compressing data during transmission",rsync -chavzP --stats /path/to/copy user@host.remoted.from:/path/to/local/storage,[/INST] `rsync -avz --progress --checksum user@host.remoted.from:/path/to/copy/ /path/to/local/storage/`</s>
+129,find all the files in the current folder which are bigger than 1MB,find . — size +1000k -print,[/INST] `find . -type f -size +1000k`</s>
+129,find all the files in the current folder which are bigger than 1MB,find . — size +1000k -print,[/INST] `find . -type f -size +1000k`</s>
+129,find all the files in the current folder which are bigger than 1MB,find . — size +1000k -print,[/INST] `find . -type f -size +1000k`</s>
+130,Show files in /home owned by group `test',find /home -group test,[/INST] `ls -l /home | grep :test:`</s>
+130,Show files in /home owned by group `test',find /home -group test,[/INST] `ls -l /home | grep :test:`</s>
+130,Show files in /home owned by group `test',find /home -group test,[/INST] `ls -l /home | grep :test:`</s>
+131,Delete all matches to the regex '^.*iframe bla bla bla.*$' in all the php files under current directory tree and modify the files in-place,find ./ -type f -name \*.php -exec sed -i ’s/^.*iframe bla bla bla.*$//g’ {} \;,[/INST] find . -type f -name '*.php' -exec perl -pi -e 's/^.*iframe bla bla bla.*$//g' {} \;</s>
+131,Delete all matches to the regex '^.*iframe bla bla bla.*$' in all the php files under current directory tree and modify the files in-place,find ./ -type f -name \*.php -exec sed -i ’s/^.*iframe bla bla bla.*$//g’ {} \;,[/INST] find . -type f -name '*.php' -exec perl -pi -e 's/^.*iframe bla bla bla.*$//g' {} \;</s>
+131,Delete all matches to the regex '^.*iframe bla bla bla.*$' in all the php files under current directory tree and modify the files in-place,find ./ -type f -name \*.php -exec sed -i ’s/^.*iframe bla bla bla.*$//g’ {} \;,[/INST] find . -type f -name '*.php' -exec perl -pi -e 's/^.*iframe bla bla bla.*$//g' {} \;</s>
+132,Find all PHP files under current directory,find . -type f -name *.php,"[/INST] `find . -name ""*.php""`</s>"
+132,Find all PHP files under current directory,find . -type f -name *.php,"[/INST] `find . -name ""*.php""`</s>"
+132,Find all PHP files under current directory,find . -type f -name *.php,"[/INST] `find . -name ""*.php""`</s>"
+133,Filter out current date in current time zone from the GMT+30 and GMT+20 representations of current date and show the last one,"echo -e ""$(TZ=GMT+30 date +%Y-%m-%d)\n$(TZ=GMT+20 date +%Y-%m-%d)"" | grep -v $(date +%Y-%m-%d) | tail -1","[/INST] ```python
+python -c ""from datetime import datetime, timedelta, timezone; now = datetime.now(timezone.utc).astimezone(); print( (now - timedelta(hours=30) if now.hour >= 30 else now - timedelta(hours=20)).strftime('%Y-%m-%d'))""
+```</s>"
+133,Filter out current date in current time zone from the GMT+30 and GMT+20 representations of current date and show the last one,"echo -e ""$(TZ=GMT+30 date +%Y-%m-%d)\n$(TZ=GMT+20 date +%Y-%m-%d)"" | grep -v $(date +%Y-%m-%d) | tail -1","[/INST] ```python
+python -c ""from datetime import datetime, timedelta, timezone; now = datetime.now(timezone.utc).astimezone(); print( (now - timedelta(hours=30) if now.hour >= 30 else now - timedelta(hours=20)).strftime('%Y-%m-%d'))""
+```</s>"
+133,Filter out current date in current time zone from the GMT+30 and GMT+20 representations of current date and show the last one,"echo -e ""$(TZ=GMT+30 date +%Y-%m-%d)\n$(TZ=GMT+20 date +%Y-%m-%d)"" | grep -v $(date +%Y-%m-%d) | tail -1","[/INST] ```python
+python -c ""from datetime import datetime, timedelta, timezone; now = datetime.now(timezone.utc).astimezone(); print( (now - timedelta(hours=30) if now.hour >= 30 else now - timedelta(hours=20)).strftime('%Y-%m-%d'))""
+```</s>"
+134,Find and remove all .core files,"find / -name ""*.core"" | xargs rm",[/INST] `find . -type f -name '*.core' -delete`</s>
+134,Find and remove all .core files,"find / -name ""*.core"" | xargs rm",[/INST] `find . -type f -name '*.core' -delete`</s>
+134,Find and remove all .core files,"find / -name ""*.core"" | xargs rm",[/INST] `find . -type f -name '*.core' -delete`</s>
+135,"Send one ping request to host with local address in the 10.0.0.x range, with last number specified by variable ""i"", waiting 1 second for a reply, and output only lines containing ""from"" to standard output.",ping -W 1 -c 1 10.0.0.$i | grep 'from' &,[/INST] `ping -c 1 -W 1 10.0.0.$i | grep 'from'`</s>
+135,"Send one ping request to host with local address in the 10.0.0.x range, with last number specified by variable ""i"", waiting 1 second for a reply, and output only lines containing ""from"" to standard output.",ping -W 1 -c 1 10.0.0.$i | grep 'from' &,[/INST] `ping -c 1 -W 1 10.0.0.$i | grep 'from'`</s>
+135,"Send one ping request to host with local address in the 10.0.0.x range, with last number specified by variable ""i"", waiting 1 second for a reply, and output only lines containing ""from"" to standard output.",ping -W 1 -c 1 10.0.0.$i | grep 'from' &,[/INST] `ping -c 1 -W 1 10.0.0.$i | grep 'from'`</s>
+136,"Replace ""foo"" with ""bar"" in all files in the current directory tree",find . | xargs sed -i ‘s/foo/bar/g’,[/INST] `find . -type f -exec sed -i 's/foo/bar/g' {} +`</s>
+136,"Replace ""foo"" with ""bar"" in all files in the current directory tree",find . | xargs sed -i ‘s/foo/bar/g’,[/INST] `find . -type f -exec sed -i 's/foo/bar/g' {} +`</s>
+136,"Replace ""foo"" with ""bar"" in all files in the current directory tree",find . | xargs sed -i ‘s/foo/bar/g’,[/INST] `find . -type f -exec sed -i 's/foo/bar/g' {} +`</s>
+137,"find all the "".c"" files in the folder ""/home/you"" which have been accessed in the last 30*24 hours","find /home/you -iname ""*.c"" -atime -30 -type -f","[/INST] `find /home/you -name ""*.c"" -type f -accessed -30d`</s>"
+137,"find all the "".c"" files in the folder ""/home/you"" which have been accessed in the last 30*24 hours","find /home/you -iname ""*.c"" -atime -30 -type -f","[/INST] `find /home/you -name ""*.c"" -type f -accessed -30d`</s>"
+137,"find all the "".c"" files in the folder ""/home/you"" which have been accessed in the last 30*24 hours","find /home/you -iname ""*.c"" -atime -30 -type -f","[/INST] `find /home/you -name ""*.c"" -type f -accessed -30d`</s>"
+138,find all the links that have been modified on a specific day and copy them to another directory,find . -type l -daystart -mtime $date_dif -exec copy_it.sh $verbose -s {} -t $to_dir \;,"[/INST] `find /path/to/source -type l -newerct ""yyyy-mm-dd"" -exec cp {} /path/to/destination \;`
+
+This command will find all the symbolic links (`-type l`) in the source directory (`/path/to/source`) that have been modified on or after the specific date (`-newerct ""yyyy-mm-dd""`) and execute the `cp` command to copy them"
+138,find all the links that have been modified on a specific day and copy them to another directory,find . -type l -daystart -mtime $date_dif -exec copy_it.sh $verbose -s {} -t $to_dir \;,"[/INST] `find /path/to/source -type l -newerct ""yyyy-mm-dd"" -exec cp {} /path/to/destination \;`
+
+This command will find all the symbolic links (`-type l`) in the source directory (`/path/to/source`) that have been modified on or after the specific date (`-newerct ""yyyy-mm-dd""`) and execute the `cp` command to copy them"
+138,find all the links that have been modified on a specific day and copy them to another directory,find . -type l -daystart -mtime $date_dif -exec copy_it.sh $verbose -s {} -t $to_dir \;,"[/INST] `find /path/to/source -type l -newerct ""yyyy-mm-dd"" -exec cp {} /path/to/destination \;`
+
+This command will find all the symbolic links (`-type l`) in the source directory (`/path/to/source`) that have been modified on or after the specific date (`-newerct ""yyyy-mm-dd""`) and execute the `cp` command to copy them"
+139,Find all empty directories under /tmp and below,find /tmp -type d -empty,"[/INST] ```bash
+find /tmp -type d -empty
+```</s>"
+139,Find all empty directories under /tmp and below,find /tmp -type d -empty,"[/INST] ```bash
+find /tmp -type d -empty
+```</s>"
+139,Find all empty directories under /tmp and below,find /tmp -type d -empty,"[/INST] ```bash
+find /tmp -type d -empty
+```</s>"
+140,Find all files under /somefolder matching the extended regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$' in their paths,find -E /somefolder -type f -regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$',[/INST] `find /somefolder -E -regex '.\/(.*\.error.*|second.*log|.*FFPC\.log)$'`</s>
+140,Find all files under /somefolder matching the extended regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$' in their paths,find -E /somefolder -type f -regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$',[/INST] `find /somefolder -E -regex '.\/(.*\.error.*|second.*log|.*FFPC\.log)$'`</s>
+140,Find all files under /somefolder matching the extended regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$' in their paths,find -E /somefolder -type f -regex '\./(.*\.error.*|second.*log|.*FFPC\.log)$',[/INST] `find /somefolder -E -regex '.\/(.*\.error.*|second.*log|.*FFPC\.log)$'`</s>
+141,"search for regular/normal file with the name ""myfile"" in the entire file system and discard all the errors",find / -name myfile -type f -print 2> /dev/null,[/INST] `sudo find / -name myfile 2>/dev/null`</s>
+141,"search for regular/normal file with the name ""myfile"" in the entire file system and discard all the errors",find / -name myfile -type f -print 2> /dev/null,[/INST] `sudo find / -name myfile 2>/dev/null`</s>
+141,"search for regular/normal file with the name ""myfile"" in the entire file system and discard all the errors",find / -name myfile -type f -print 2> /dev/null,[/INST] `sudo find / -name myfile 2>/dev/null`</s>
+142,Find files with 002 permission in entire file system and print them with the string 'has world write permissions' appended after every path,find / -type f -perm -002 -printf '%p has world write permissions\n',[/INST] `find / -type f -perm 002 -exec echo '{} has world write permissions' \;`</s>
+142,Find files with 002 permission in entire file system and print them with the string 'has world write permissions' appended after every path,find / -type f -perm -002 -printf '%p has world write permissions\n',[/INST] `find / -type f -perm 002 -exec echo '{} has world write permissions' \;`</s>
+142,Find files with 002 permission in entire file system and print them with the string 'has world write permissions' appended after every path,find / -type f -perm -002 -printf '%p has world write permissions\n',[/INST] `find / -type f -perm 002 -exec echo 'has world write permissions' {} \;`</s>
+143,"Print which files differ between ""folder1"" and ""folder2"" treating all files as text",diff -arq folder1 folder2,[/INST] `diff -r --text folder1 folder2`</s>
+143,"Print which files differ between ""folder1"" and ""folder2"" treating all files as text",diff -arq folder1 folder2,[/INST] `diff -r --text folder1 folder2`</s>
+143,"Print which files differ between ""folder1"" and ""folder2"" treating all files as text",diff -arq folder1 folder2,[/INST] `diff -r --text folder1 folder2`</s>
+144,List all IPV4 addresses found in all files under /etc directory,find /etc -type f -exec cat '{}' \; | tr -c '.[:digit:]' '\n'  | grep '^[^.][^.]*\.[^.][^.]*\.[^.][^.]*\.[^.][^.]*$',"[/INST] `grep -r -e '([0-9]{1,3}\.){3}[0-9]{1,3}' /etc`</s>"
+144,List all IPV4 addresses found in all files under /etc directory,find /etc -type f -exec cat '{}' \; | tr -c '.[:digit:]' '\n'  | grep '^[^.][^.]*\.[^.][^.]*\.[^.][^.]*\.[^.][^.]*$',"[/INST] `grep -r -e '([0-9]{1,3}\.){3}[0-9]{1,3}' /etc`</s>"
+144,List all IPV4 addresses found in all files under /etc directory,find /etc -type f -exec cat '{}' \; | tr -c '.[:digit:]' '\n'  | grep '^[^.][^.]*\.[^.][^.]*\.[^.][^.]*\.[^.][^.]*$',"[/INST] `grep -r -e '([0-9]{1,3}\.){3}[0-9]{1,3}' /etc`</s>"
+145,"Create a copy of index.html in all directories in current directory, pausing for confirmation before overwriting any existing files - names may not contain spaces - names may not contain spaces.",find . -mindepth 1 -maxdepth 1 -type d| xargs -n 1 cp -i index.html,"[/INST] `find . -type f -name 'index.html' -exec sh -c 'cp ""$0"" ""${0%.html}_copy.html""' {} \; -ok`</s>"
+145,"Create a copy of index.html in all directories in current directory, pausing for confirmation before overwriting any existing files - names may not contain spaces - names may not contain spaces.",find . -mindepth 1 -maxdepth 1 -type d| xargs -n 1 cp -i index.html,"[/INST] `find . -type f -name 'index.html' -exec sh -c 'cp ""$0"" ""${0%.html}_copy.html""' {} \; -ok`</s>"
+145,"Create a copy of index.html in all directories in current directory, pausing for confirmation before overwriting any existing files - names may not contain spaces - names may not contain spaces.",find . -mindepth 1 -maxdepth 1 -type d| xargs -n 1 cp -i index.html,"[/INST] `find . -type f -name 'index.html' -exec sh -c 'cp ""$0"" ""${0%.html}_copy.html""' {} \; -ok`</s>"
+146,Delete all directories found in $LOGDIR that are more than a work-week old,find $LOGDIR -type d -mtime +5 -exec rm -rf {} \;,"[/INST] `find $LOGDIR -type d -mtime +10 -exec rm -rf {} +` \
+(This command will find all directories in $LOGDIR that were modified more than 10 days ago (a work-week) and recursively remove them.)</s>"
+146,Delete all directories found in $LOGDIR that are more than a work-week old,find $LOGDIR -type d -mtime +5 -exec rm -rf {} \;,"[/INST] `find $LOGDIR -type d -mtime +10 -exec rm -rf {} +` \
+(This command will find all directories in $LOGDIR that were modified more than 10 days ago (a work-week) and recursively remove them.)</s>"
+146,Delete all directories found in $LOGDIR that are more than a work-week old,find $LOGDIR -type d -mtime +5 -exec rm -rf {} \;,"[/INST] `find $LOGDIR -type d -mtime +10 -exec rm -rf {} +` \
+(This command will find all directories in $LOGDIR that were modified more than 10 days ago (a work-week) and recursively remove them.)</s>"
+147,"Find files in the current directory tree that match ""pattern"" and run ""git diff"" on them","find . -name ""pattern"" | xargs git diff --","[/INST] `find . -type f -name ""*pattern*"" -exec git diff {} \;`</s>"
+147,"Find files in the current directory tree that match ""pattern"" and run ""git diff"" on them","find . -name ""pattern"" | xargs git diff --","[/INST] `find . -type f -name ""*pattern*"" -exec git diff {} \;`</s>"
+147,"Find files in the current directory tree that match ""pattern"" and run ""git diff"" on them","find . -name ""pattern"" | xargs git diff --","[/INST] `find . -type f -name ""*pattern*"" -exec git diff {} \;`</s>"
+148,"insert ""e"" when it's pressed","bind '""e"":self-insert'","[/INST] `echo 'insert ""e"" when it\'s pressed' >> ~/.inputrc`</s>"
+148,"insert ""e"" when it's pressed","bind '""e"":self-insert'","[/INST] `echo 'insert ""e"" when it\'s pressed' >> ~/.inputrc`</s>"
+148,"insert ""e"" when it's pressed","bind '""e"":self-insert'","[/INST] `echo 'insert ""e"" when it\'s pressed' >> ~/.inputrc`</s>"
+149,find files with the extension .conf in the /etc directory,find /etc -name '*.conf',"[/INST] `find /etc -name ""*.conf""`</s>"
+149,find files with the extension .conf in the /etc directory,find /etc -name '*.conf',"[/INST] `find /etc -name ""*.conf""`</s>"
+149,find files with the extension .conf in the /etc directory,find /etc -name '*.conf',"[/INST] `find /etc -name ""*.conf""`</s>"
+150,Find all files/directories named 'findcommandexamples.txt' (case insensitive) in the entire filesystem,find  / -iname findcommandexamples.txt,"[/INST] `find / -iname ""findcommandexamples.txt"" 2>/dev/null`</s>"
+150,Find all files/directories named 'findcommandexamples.txt' (case insensitive) in the entire filesystem,find  / -iname findcommandexamples.txt,"[/INST] `find / -iname ""findcommandexamples.txt"" 2>/dev/null`</s>"
+150,Find all files/directories named 'findcommandexamples.txt' (case insensitive) in the entire filesystem,find  / -iname findcommandexamples.txt,[/INST] `find / -iname findcommandexamples.txt`</s></s></s></s></s></s></s></s></s>
+151,Find all hidden files in the current directory,"find . -type f -name "".*""",[/INST] `find . -name '.*'`</s>
+151,Find all hidden files in the current directory,"find . -type f -name "".*""",[/INST] `find . -name '.*'`</s>
+151,Find all hidden files in the current directory,"find . -type f -name "".*""",[/INST] `find . -name '.*'`</s>
+152,"Find with combine multiple search criterias , in this command serach  files that begin with abc in there name and dont have .py extension .",find . -type f -name 'abc*' ! -name '*.py',"[/INST] `find . -name ""abc*"" -type f ! -name ""*.py""`</s>"
+152,"Find with combine multiple search criterias , in this command serach  files that begin with abc in there name and dont have .py extension .",find . -type f -name 'abc*' ! -name '*.py',"[/INST] `find . -name ""abc*"" -type f ! -name ""*.py""`</s>"
+152,"Find with combine multiple search criterias , in this command serach  files that begin with abc in there name and dont have .py extension .",find . -type f -name 'abc*' ! -name '*.py',"[/INST] `find . -name ""abc*"" -type f ! -name ""*.py""`</s>"
+153,"Find all files under /path/you/need, calculate their md5sums and redirect the results to checksums.md5",find /path/you/need -type f -exec md5sum {} \; > checksums.md5,[/INST] `find /path/you/need -type f -exec md5 {} + > checksums.md5`</s>
+153,"Find all files under /path/you/need, calculate their md5sums and redirect the results to checksums.md5",find /path/you/need -type f -exec md5sum {} \; > checksums.md5,[/INST] `find /path/you/need -type f -exec md5 {} + > checksums.md5`</s>
+153,"Find all files under /path/you/need, calculate their md5sums and redirect the results to checksums.md5",find /path/you/need -type f -exec md5sum {} \; > checksums.md5,[/INST] `find /path/you/need -type f -exec md5 {} + > checksums.md5`</s>
