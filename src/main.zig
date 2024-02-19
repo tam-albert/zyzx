@@ -8,6 +8,7 @@ const stdout = std.io.getStdOut().writer();
 var context_cnt: u8 = 0;
 var max_contexts: u8 = 0;
 var verbose: bool = false;
+var skip_query: bool = false;
 
 var contexts: [10][4096]u8 = undefined;
 var c_index: u8 = 0; //index of the next context to be added
@@ -48,6 +49,7 @@ fn processCommand() !void {
 
     while (true) {
         // try stdout.print("bruh\n", .{});
+        skip_query = false;
         var needUserInput: bool = true;
 
         var request = std.ArrayList(u8).init(allocator);
@@ -122,6 +124,7 @@ fn processCommand() !void {
                 if (c == 0) break;
             }
         }
+        if (skip_query) continue;
 
         // var thread = try std.Thread.spawn(.{}, waitingAnimation, .{});
 
@@ -135,8 +138,10 @@ fn processCommand() !void {
         try stdout.print("\n\x1b[38;5;55m───────────────────────────────────────────────────────────────────────────────────────\x1b[0m\n", .{});
         add_context(&in, res);
 
+        // look for a ``` ``` code block
         var it = std.mem.tokenizeSequence(u8, res, "\n");
         var codeBlock = false;
+
         while (it.next()) |line| {
             if (line[0] == '`' and line[1] == '`' and line[2] == '`') break;
         }
@@ -147,10 +152,25 @@ fn processCommand() !void {
             try argv.writer().print("{s}\n", .{line});
         }
 
+        if (!codeBlock) {
+            // look for the ` ` code block at the very beginning
+            if (std.mem.indexOf(u8, res, "`")) |first_backtick| {
+                if (std.mem.indexOf(u8, res[first_backtick + 1 ..], "`")) |second_backtick| {
+                    try argv.writer().print("{s}\n", .{res[first_backtick + 1 .. first_backtick + second_backtick + 1]});
+                    codeBlock = true;
+                }
+            }
+        }
+
+        if (!codeBlock) {
+            // assume the whole thing is a command
+            try argv.writer().print("{s}\n", .{res});
+        }
+
         // should_stop.store(true, std.atomic.Ordering.SeqCst);
         // thread.join();
 
-        make_file(argv.items, !codeBlock) catch |err| {
+        make_file(argv.items) catch |err| {
             try stdout.print("\x1B[38;5;124m\x1B[1mError Creating File: {}\n", .{err});
         };
 
@@ -267,6 +287,7 @@ fn parse_response(in: *[4096]u8) !?[]const u8 {
                 try stdout.print("    \x1B[38;5;99m\x1B[1m-v(erbose)\x1B[22m\x1B[38;5;69m - toggles verbose setting. query responses will come with an explanation in addition to shell code. this setting is currently {s}.\n", .{if (verbose) "on" else "off"});
                 try stdout.print("    \x1B[38;5;99m\x1B[1m-h(elp)\x1B[22m\x1B[38;5;69m - this page\n", .{});
                 try stdout.print("All flags must be placed before natural language queries.\n\x1B[0m", .{});
+                skip_query = true;
             } else {
                 return "invalid flag";
             }
@@ -285,18 +306,17 @@ fn parse_response(in: *[4096]u8) !?[]const u8 {
     return null;
 }
 
-fn make_file(argv: []u8, useless: bool) !void {
+fn make_file(argv: []u8) !void {
     var file = try std.fs.cwd().createFile("bash.sh", .{});
     defer file.close();
     try file.writeAll(argv);
     var it = std.mem.tokenizeSequence(u8, argv, "\n");
-    if (!useless) {
-        try stdout.print("\n\x1b[38;5;216m╭─\x1b[38;5;160m\x1b[3m\x1b[48;5;224m bash.sh \x1b[0m\x1b[38;5;216m ────────────────────────────────────────────────────────────────────╮\n>\x1b[0m", .{});
-        while (it.next()) |line| {
-            try stdout.print("\n\x1b[38;5;216m>\x1b[0m {s}", .{line});
-        }
-        try stdout.print("\n\x1b[38;5;216m>\n╰───────────────────────────────────────────────────────────────────────────────╯\x1b[0m\n", .{});
+
+    try stdout.print("\n\x1b[38;5;216m╭─\x1b[38;5;160m\x1b[3m\x1b[48;5;224m bash.sh \x1b[0m\x1b[38;5;216m ────────────────────────────────────────────────────────────────────╮\n>\x1b[0m", .{});
+    while (it.next()) |line| {
+        try stdout.print("\n\x1b[38;5;216m>\x1b[0m {s}", .{line});
     }
+    try stdout.print("\n\x1b[38;5;216m>\n╰───────────────────────────────────────────────────────────────────────────────╯\x1b[0m\n", .{});
 }
 
 fn run_sh(allocator: std.mem.Allocator, assistantResponse: []const u8) !void {
@@ -340,9 +360,10 @@ fn run_sh(allocator: std.mem.Allocator, assistantResponse: []const u8) !void {
                 //     .allocator = alloc,
                 //     .argv = &argv,
                 // });
+                // proc.stdout
                 // try stdout.print("\n{s}", .{proc.stdout});
-                // if (child.stderr.len > 0) {
-                //     try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{child.stderr});
+                // if (proc.stderr.len > 0) {
+                //     try stdout.print("\x1B[38;5;124m\x1B[1mError while running: {s} \x1B[0m", .{proc.stderr});
                 // } else {
                 //     try stdout.print("\x1B[38;5;46m\x1B[1mProgram ran successfully \n\x1B[0m", .{});
                 // }
