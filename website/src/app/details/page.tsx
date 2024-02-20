@@ -181,8 +181,9 @@ export default function Home() {
               <InlineMath math="\delta" /> is the probability of the prediction
               given by the logits of each token. The probability of a single
               prediction is given by total score function
-              <BlockMath math="\sum_{i=1}^T \frac{\delta}{T}\left(\mathbb{1}[U(C_{pred})_i = U(C_{ref})_i]\times \frac{(1+S_F^i(C_{pred}, C_{ref}))}{2} + \mathbb{1}[U(C_{pred})_i \neq U(C_{ref})_i]\right)." />
-              Finally, the score over all predictions{" "}
+              <BlockMath math="\sum_{i=1}^T \frac{\delta}{T}\left(\mathbb{1}[U(C_{pred})_i = U(C_{ref})_i]\times \frac{(1+S_F^i(C_{pred}, C_{ref}))}{2} + \mathbb{1}[U(C_{pred})_i \neq U(C_{ref})_i]\right)," />
+              where the sum is taken over all the max size of the two utility
+              sets. Finally, the score over all predictions{" "}
               <InlineMath math="\mathcal{P}" /> for a single input is given by{" "}
               <InlineMath math="\max_{p\in \mathcal{P}} S(p)" />, if there is a
               single prediction for which this is positive, otherwise{" "}
@@ -218,7 +219,7 @@ export default function Home() {
               <li>
                 While it was nice to see the improvement, this result
                 shouldn&apos;t be surprising, given that we fine-tuned on a
-                pretty-niche task.
+                pretty niche task.
               </li>
               <li>
                 Given more time, we would be interested in seeing whether or not
