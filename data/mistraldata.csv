@@ -1,0 +1,42 @@
+0,display all the files in the current folder which have been modified in the last 24 hours excluding all directories,find . \( -type d ! -name . -prune \) -o \( -mtime -1 -print \),[/INST] `find . -type f -mtime 0`</s>,[find],[find],"[[type, name, prune, mtime, print]]","[[type, mtime]]"
+1,"Search for the extended regex expanded by""$MONTH\/$YEAR.*GET.*ad=$ADVERTISER HTTP\/1"" in the decompressed contents of the /var/log/apache2/access*.gz files that are newer than ./tmpoldfile and older than ./tmpnewfile","find /var/log/apache2/access*.gz -type f -newer ./tmpoldfile ! -newer ./tmpnewfile \ | xargs zcat | grep -E ""$MONTH\/$YEAR.*GET.*ad=$ADVERTISER HTTP\/1"" -c","[/INST] zgrep -E ""(?=$MONTH\/$YEAR.*GET.*ad=$ADVERTISER HTTP/1)"" /var/log/apache2/access*.gz | grep -zlf - ./tmpoldfile | grep -zlf - ./tmpnewfile
+
+Note: This command assumes that the environment variables $MONTH, $YEAR, $ADVERTISER, ./tmpoldfile, and ./tmpnewfile are already set","[find, grep]","[zgrep, grep]","[[type, newer], [E, c]]","[[E], [zlf]]"
+2,search for a word in all c files in the current folder,find . -name '*.c' | xargs grep 'stdlib.h',[/INST] `grep -r -i 'word' ./*.c`</s>,"[find, grep]",[grep],"[[name], []]","[[],[r,i]]"
+3,Find all directories under $path,find $path -type d,"[/INST] `find ""$path"" -type d`</s>",[find],[find],[[type]],[[type]]
+4,"Write the list of all files on the system to ""masterfilelist.out""",find  /   -print > masterfilelist.out,[/INST] `sudo find / -type f -print > masterfilelist.out`</s>,[find],[find],[[print]],"[[type, print]]"
+5,Find all files/directories under directory '.cache/chromium/Default/Cache/' which are bigger than 100MB and which are atleast 1 level deep and delete them,find .cache/chromium/Default/Cache/ -mindepth 1 -size +100M -delete,[/INST] `find '/.cache/chromium/Default/Cache/' -type f -size +100000000c -mindepth 1 -delete`</s>,[find],[find],"[[mindepth, size, delete]]","[[mindepth, size, delete]]"
+6,Remove all .php files in the /var/www/ directory,find /var/www/*.php -type f -exec rm {} \;,"[/INST] find /var/www/\* -name ""*.php"" -type f -exec rm {} \;</s>",[find],[find],"[[type, exec]]","[[name, type, exec]]"
+7,Print amount of space available on the file system containing path to the current working directory in megabytes.,df . -B MB | tail -1 | awk {'print $4'} | grep  .[0-9]*,"[/INST] `df -h | awk '/\/$/ { print $4}' | cut -d'M' -f1`
+
+This command will print the amount of available space in the file system of the current working directory in megabytes.</s>","[df, tail, awk, grep]","[df, awk, cut]","[[B],[],[],[]]","[[h],[],[f1]]"
+8,"Find all .txt files in the dir/ directory tree and copy them along with times, permissions, and ownership to dir_txt/",find dir/ -name '*.txt' | xargs cp -a --target-directory=dir_txt/ --parents,[/INST] `find dir/ -name '*.txt' -exec cp -p {} dir_txt/ \;`</s>,"[find, cp]","[find, cp]","[[name],[]]","[[name],[]]"
+9,Removes '/var/lib/mongodb/mongod.lock' in 'sudo' mode.,sudo rm /var/lib/mongodb/mongod.lock,[/INST] `sudo rm /var/lib/mongodb/mongod.lock`</s>,[rm],[rm],[[]],[[]]
+10,Finds shell options with 'login' in name.,shopt | grep login,"[/INST] `find / -name ""*login*"" 2>/dev/null`</s>",[shopt],[find],[[]],[[name]]
+11,"display all the files in the current folder excluding those that are present in the sub directory aa and display those files that start with the word ""file""",find . \( -type d -name aa -prune \) -o \( -type f -name 'file*' -print \),"[/INST] `ls -d */|cut -d'/' -f1|grep -v aa/ && find . -type f -name ""file*""`</s>",[find],"[ls,grep,find]","[[type, name, prune, print]]","[[],[v],[type,name]]"
+12,"Continuously print ""123456789"" and line buffer the output via ""grep"" for input to ""{ head -n 1; head -n 1; }""",yes 123456789 | grep --line-buffered . | { head -n 1; head -n 1; },[/INST] `yes 123456789 | grep -P '(.)\1' | head -n 2`</s>,"[yes, grep, head]","[yes, grep, head]","[[123],[--line-buffered],[n]]","[[123],[--line-buffered],[n]]"
+13,"Search for the string ""ERROR"" in all XML files in the current working directory tree","find . -name ""*.xml"" -exec grep ""ERROR"" /dev/null '{}' \+","[/INST] `grep -r ""ERROR"" *.xml`</s>","[find, grep]",[grep],"[[name],[]]",[[]]
+14,Creates temporary file with appended suffix '.cmd' and saves path to it in 'LGT_TEMP_FILE' variable.,"LGT_TEMP_FILE=""$(mktemp --suffix .cmd)""","[/INST] ```bash
+LGT_TEMP_FILE=$(mktemp /tmp/myapp.XXXXXX.cmd)
+```</s>",[mktemp],[mktemp],[[]],[[]]
+15,"Output lines 16224 to 16482 of 'file', not recommended with large files that contain many lines after the ones needed.","awk 'NR==16224, NR==16482' file","[/INST] `sed -n '16224,16482p' file`</s>",[awk],[sed],[[]],[[]]
+16,"Save the current working directory and the directory name of the current script to variable ""DIR""",DIR=`pwd`/`dirname $0`,"[/INST] ```bash
+DIR=""$(pwd)""
+```</s>",[pwd],[pwd],[[]],[[]]
+17,display all the files in current folder which have not been modified in the last 7 days,find . -mtime +7,[/INST] `find . -type f -mtime +7 -exec ls -l {} \;`</s>,[find],[find],[[mtime]],"[[type,mtime]]"
+18,"Convert all characters in ""$a"" to upper case and save to variable ""b""","b=`echo ""$a"" | sed 's/./\U&/g'`","[/INST] `b=$(echo ""$a"" | tr '[:lower:]' '[:upper:]')`</s>",[echo],[echo],[[]],[[]]
+19,"Find any files in the current directory and its sub-directories that were last accessed more than 7 days or are larger than 10 * 1024 * 2 blocks in size, that is larger than 20480 blocks.",find . -atime +7 -o -size +`expr 10 \* 1024 \* 2` -print,[/INST] `find . -type f \( -size +20480c -o -atime +7 \) -print`</s>,[find],[find],"[[atime,o,size]]","[[atime,o,size]]"
+20,Find and remove the file with inode number 782263 in the current directory tree,find . -inum 782263 -exec rm -i {} \;,[/INST] `find . -inum 782263 -type f -delete`</s>,[find],[find],"[[inum,exec]]","[[inum,type]]"
+21,Search the current directory for all files with no 'read' privilege for 'others',find . -maxdepth 1 ! -perm  -o=r,"[/INST] `find . -type f -perm -o=r -exec echo ""{}"" \; -print`</s>",[find],[find],"[[perm,o,maxdepth]]","[[perm,o]]"
+23,find all the files in the home folder which have been modified after a file,find $HOME -newer ~joeuser/lastbatch.txt,"[/INST] `find ~ -type f -newer <file>`
+
+Replace `<file>` with the name of the file you want to compare modification times with. This command will find all files in the home folder (`~`) that have been modified more recently than the specified file.</s>",[find],[find],[[newer]],[[newer]]
+23,find all the files in the home folder which have been modified after a file,find $HOME -newer ~joeuser/lastbatch.txt,"[/INST] `find ~ -type f -newer <file>`
+
+Replace `<file>` with the name of the file you want to compare modification times with. This command will find all files in the home folder (`~`) that have been modified more recently than the specified file.</s>",,,,
+24,"Force create a symbolic link named ""id_rsa"" to ""$keyname""",ln -sf $keyname     id_rsa,[/INST] ln -s `echo $keyname` id\_rsa</s>,[ln],[ln],"[[s,f]]",[[s]]
+25,find all the jpg files in current folder and sort them,"find . -type f|grep -i ""\.jpg$"" |sort","[/INST] `find . -name ""*.jpg"" | sort`</s>","[find, grep, sort]","[find, sort]","[[type],[i],[]]","[[name],[]]"
+26,"Search the current directory tree for regular files modified within the past 24 hours whose names do not end with "".DS_Store""",find . -mtime -1 ! -name '.DS_Store' -type f -printf '%f\n',"[/INST] `find . -type f -mtime 0 ! -name ""*.DS_Store""`</s></s></s></s></s>",[find],[find],"[[mtime,name,type]]","[[mtime,name,type]]"
+27,Get the current shell's executable name from the output of 'ps'.,ps -p $$ | awk '$1 == PP {print $4}' PP=$$,"[/INST] ```bash
+ps -p $$ -o command=
+```</s>","[ps,awk]",[ps],"[[p],[]]","[[p,o]]"
