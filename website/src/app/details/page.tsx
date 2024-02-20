@@ -209,42 +209,43 @@ export default function Home() {
             <ul>
               <li>
                 Due to time constraints, this was a pretty small sample size, so
-                we can't say for sure whether this is actually statistically
-                significant. We would have liked to know if the authors had a
-                good way to perform this experiment at scale; we ended up
-                running through each command and collecting utilities and flags
-                by hand, which was quite inefficient.
+                we can&apos;t say for sure whether this is actually
+                statistically significant. We would have liked to know if the
+                authors had a good way to perform this experiment at scale; we
+                ended up running through each command and collecting utilities
+                and flags by hand, which was quite inefficient.
               </li>
               <li>
-                While it was nice to see the improvement, this result shouldn't
-                be surprising, given that we fine-tuned on a pretty-niche task.
+                While it was nice to see the improvement, this result
+                shouldn&apos;t be surprising, given that we fine-tuned on a
+                pretty-niche task.
               </li>
               <li>
                 Given more time, we would be interested in seeing whether or not
                 our model improved over the two phases of fine-tuning.
               </li>
               <li>
-                These numbers don't exactly match up with state-of-the-art that
-                was in the paper. We suspect that this could be due to one of
-                two reasons: (1) There was some uncertainty about how we should
-                be calculating certain parts of the metric, e.g., specific edge
-                cases about what constitutes a `utility` or a `flag`, how we
-                should be treating deviations of the same flag, etc. We saw some
-                pretty high variance in the scoring metric based on different
-                interpretations, and we would have liked to clarify some
-                details; we're still not confident that we were able to recreate
-                the experiment exactly as it was done for the paper. (2) These
-                models just aren't as good. This wouldn't be surprising, given
-                our limited timeframe.
+                These numbers don&apos;t exactly match up with state-of-the-art
+                that was in the paper. We suspect that this could be due to one
+                of two reasons: (1) There was some uncertainty about how we
+                should be calculating certain parts of the metric, e.g.,
+                specific edge cases about what constitutes a `utility` or a
+                `flag`, how we should be treating deviations of the same flag,
+                etc. We saw some pretty high variance in the scoring metric
+                based on different interpretations, and we would have liked to
+                clarify some details; we&apos;re still not confident that we
+                were able to recreate the experiment exactly as it was done for
+                the paper. (2) These models just aren&apos;t as good. This
+                wouldn&apos;t be surprising, given our limited timeframe.
               </li>
               <li>
                 This metric is not exactly the best metric, because it does not
                 take into account that there can be multiple reasonable ways to
-                write the same command. It also doesn't test whether the output
-                command even runs! The paper briefly talked about some ways to
-                cover these cases; we believe it might have been interesting to
-                see how our models performed under combinations of these
-                metrics.
+                write the same command. It also doesn&apos;t test whether the
+                output command even runs! The paper briefly talked about some
+                ways to cover these cases; we believe it might have been
+                interesting to see how our models performed under combinations
+                of these metrics.
               </li>
             </ul>
             <p>
