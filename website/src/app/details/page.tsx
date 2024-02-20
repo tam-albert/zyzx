@@ -1,6 +1,8 @@
 "use client";
 
 import classes from "../page.module.css";
+import "katex/dist/katex.min.css";
+import { InlineMath, BlockMath } from "react-katex";
 
 export default function Home() {
   return (
@@ -71,7 +73,6 @@ export default function Home() {
                 language, and more.
               </li>
             </ul>
-
             <h1>Model</h1>
             <p>
               The LLM behind the scenes is a heavily fine-tuned Mistral
@@ -92,7 +93,6 @@ export default function Home() {
               , a dataset of roughly 10k bash commands paired with a natural
               language description of each command.
             </p>
-
             <div className={classes.flex}>
               <div className={classes.flex}>
                 <img
@@ -100,7 +100,7 @@ export default function Home() {
                   width={600}
                   className={classes.blogImage}
                 />
-                <i>First stage of fine-tuning</i>
+                <i>Fig 1. First stage of fine-tuning</i>
               </div>
               <div className={classes.flex}>
                 <img
@@ -110,11 +110,10 @@ export default function Home() {
                   className={classes.blogImage}
                 />
                 <i style={{ marginBottom: "2rem" }}>
-                  Second stage of fine-tuning
+                  Fig 2. Second stage of fine-tuning
                 </i>
               </div>
             </div>
-
             <p className={classes.mt}>
               The results from the first stage of fine-tuning led us to believe
               that we could further improve performance with another round of
@@ -129,17 +128,131 @@ export default function Home() {
               synthetic dataset of around 10k more pairs of bash commands and
               their natural language counterparts.
             </p>
-
             <div className={classes.flex}>
               <img
                 src="/images/pipeline.png"
                 width={600}
                 className={classes.blogImage}
               ></img>
-              <i>Fine-tuning pipeline</i>
+              <i>Fig 3. Fine-tuning pipeline</i>
             </div>
-
-            <div>...</div>
+            <h2>Model Performance</h2>
+            Out of curiosity, we were interested to see how our fine-tuned model
+            would compare in performance to GPT3.5. To do this, we used a metric
+            for evaluating bash commands in{" "}
+            <a
+              href="https://arxiv.org/pdf/2103.02523.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              NLC2CMD
+            </a>
+            , a friendly competition that used the{" "}
+            <a
+              href="https://arxiv.org/abs/1802.08979"
+              target="_blank"
+              rel="noreferrer"
+            >
+              NL2Bash
+            </a>{" "}
+            dataset to train models.
+            <p>
+              A short explantion for why this metric looks so complicated is
+              that evaluating the performance of bash commands is a difficult
+              task. Bash is turing-complete, meaning that the equivalence of two
+              commands is undecidable. Therefore, instead of just comparing the
+              outputs of the two commands, which might vary based on runtime
+              rather than the correctness of the command itself, the authors
+              devised a metric that would instead compare the <i>utilities</i>{" "}
+              and <i>flags</i> of each command.
+            </p>
+            <p>
+              Let <InlineMath math="U(c)_i" /> denote the{" "}
+              <InlineMath math="i" />
+              th utility in the command <InlineMath math="c" />. Let{" "}
+              <InlineMath math="F(u)" /> be the set of flags for utility{" "}
+              <InlineMath math="u" />. Then, given a prediction command{" "}
+              <InlineMath math="C_{pred}" /> and a target command{" "}
+              <InlineMath math="C_{ref}" />, the <i>flag score</i> is given by
+              <BlockMath math="S_F^i(C_{pred}, C_{ref}) = \frac{1}{N}\left(2\times \vert F(U(C_{pred})_i)\cap F(U(C_{ref})_i)\vert - \vert F(U(C_{pred})_i)\cup F(U(C_{ref})_i)\vert\right)," />
+              where <InlineMath math="N" /> is the max number of flags in either
+              set. In general, the models will produce a list of predictions{" "}
+              <InlineMath math="p=\langle C_{pred},\delta\rangle" />, where{" "}
+              <InlineMath math="\delta" /> is the probability of the prediction
+              given by the logits of each token. The probability of a single
+              prediction is given by total score function
+              <BlockMath math="\sum_{i=1}^T \frac{\delta}{T}\left(\mathbb{1}[U(C_{pred})_i = U(C_{ref})_i]\times \frac{(1+S_F^i(C_{pred}, C_{ref}))}{2} + \mathbb{1}[U(C_{pred})_i \neq U(C_{ref})_i]\right)." />
+              Finally, the score over all predictions{" "}
+              <InlineMath math="\mathcal{P}" /> for a single input is given by{" "}
+              <InlineMath math="\max_{p\in \mathcal{P}} S(p)" />, if there is a
+              single prediction for which this is positive, otherwise{" "}
+              <InlineMath math="\frac{1}{\vert \mathcal{P}\vert}\sum_{p\in \mathcal{P}}S(p)." />
+              The final score is given by the average score over all inputs.
+            </p>
+            <p>
+              After calculating this result for around 20 input commands from
+              the validation set, we found the following results:
+            </p>
+            <div className={classes.flex}>
+              <img
+                src="/images/results.png"
+                alt="results"
+                width={500}
+                className={`${classes.blogImage}`}
+              ></img>
+              <i>Fig 4. Model results</i>
+            </div>
+            <p>
+              Our model ended up outperforming GPT3.5! This is a promising
+              result, but there are a few things to keep in mind here:{" "}
+            </p>
+            <ul>
+              <li>
+                Due to time constraints, this was a pretty small sample size, so
+                we can't say for sure whether this is actually statistically
+                significant. We would have liked to know if the authors had a
+                good way to perform this experiment at scale; we ended up
+                running through each command and collecting utilities and flags
+                by hand, which was quite inefficient.
+              </li>
+              <li>
+                While it was nice to see the improvement, this result shouldn't
+                be surprising, given that we fine-tuned on a pretty-niche task.
+              </li>
+              <li>
+                Given more time, we would be interested in seeing whether or not
+                our model improved over the two phases of fine-tuning.
+              </li>
+              <li>
+                These numbers don't exactly match up with state-of-the-art that
+                was in the paper. We suspect that this could be due to one of
+                two reasons: (1) There was some uncertainty about how we should
+                be calculating certain parts of the metric, e.g., specific edge
+                cases about what constitutes a `utility` or a `flag`, how we
+                should be treating deviations of the same flag, etc. We saw some
+                pretty high variance in the scoring metric based on different
+                interpretations, and we would have liked to clarify some
+                details; we're still not confident that we were able to recreate
+                the experiment exactly as it was done for the paper. (2) These
+                models just aren't as good. This wouldn't be surprising, given
+                our limited timeframe.
+              </li>
+              <li>
+                This metric is not exactly the best metric, because it does not
+                take into account that there can be multiple reasonable ways to
+                write the same command. It also doesn't test whether the output
+                command even runs! The paper briefly talked about some ways to
+                cover these cases; we believe it might have been interesting to
+                see how our models performed under combinations of these
+                metrics.
+              </li>
+            </ul>
+            <p>
+              In conclusion, we were happy to see some promising results from
+              our model. There would have been a lot more to explore given more
+              time, but we are proud of what we were able to accomplish in 36
+              hours (:
+            </p>
           </div>
         </div>
       </div>

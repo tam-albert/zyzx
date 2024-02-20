@@ -2,3 +2,7 @@
   background-color: black;
   color: white;
 }
+
+span.vlist {
+  height: 0px !important;
+}
